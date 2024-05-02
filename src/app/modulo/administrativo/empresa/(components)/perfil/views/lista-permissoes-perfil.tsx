@@ -1,5 +1,5 @@
+import { PermissaoPerfilType } from '../../../schemas/SchemaModulo'
 import { DataTablePermissoes } from '../components/tabela/permissoes-perfil/tabela-permissoes'
-import { PermissaoPerfilType } from '../schema/SchemaModulo'
 
 interface ListaPermissoesPerfilProps {
   idPerfil: string
