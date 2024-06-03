@@ -37,6 +37,7 @@ export default function CalendarioEventos({ eventos }: calendarioEventosProps) {
       plugins={[dayGridPlugin]}
       initialView="dayGridMonth"
       events={eventos}
+      
     />
   )
 }
