@@ -92,72 +92,70 @@ export function EdicaoEquipamentoForm({ id, codigo, nome, especificacao, frequen
   return (
     <Form {...formEdicaoEquipamento}>
       <form className="space-y-4" onSubmit={formEdicaoEquipamento.handleSubmit(processarFormulario)}>
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
-          <div className="md:col-span-2">
-            <div className="grid">
-              <FormField
-                control={formEdicaoEquipamento.control}
-                name="nome"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nome</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Equipamento A1" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+        <div className="grid grid-cols-1 gap-2">
+          <div className="grid">
+            <FormField
+              control={formEdicaoEquipamento.control}
+              name="nome"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nome</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Equipamento A1" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <FormField
-                control={formEdicaoEquipamento.control}
-                name="codigo"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Código</FormLabel>
-                    <FormControl>
-                      <Input placeholder="12345" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={formEdicaoEquipamento.control}
-                name="frequencia"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Frequência inspeção (DIAS)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="30 dias" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="grid gap-2">
-              <FormField
-                control={formEdicaoEquipamento.control}
-                name="especificacao"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Especificações</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Equipamento responsavel por..."
-                        className="resize-none"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <FormField
+              control={formEdicaoEquipamento.control}
+              name="codigo"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Código</FormLabel>
+                  <FormControl>
+                    <Input placeholder="12345" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={formEdicaoEquipamento.control}
+              name="frequencia"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Frequência inspeção (DIAS)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="30 dias" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="grid gap-2">
+            <FormField
+              control={formEdicaoEquipamento.control}
+              name="especificacao"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Especificações</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Equipamento responsavel por..."
+                      className="resize-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-            </div>
           </div>
         </div>
         <DialogFooter>
