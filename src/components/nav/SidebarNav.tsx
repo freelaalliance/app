@@ -70,14 +70,14 @@ export function SidebarNav({
               href={item.href}
               className={cn(
                 buttonVariants({ variant: 'ghost' }),
-                pathname === item.href
+                pathname.includes(item.href)
                   ? 'bg-sky-600  hover:bg-sky-700 '
                   : 'bg-sky-400 hover:bg-sky-500',
                 'lg:justify-between shadow-md text-padrao-white justify-center hover:text-white capitalize inline-flex min-w-[90px]',
               )}
             >
               {item.title}
-              {pathname === item.href && (
+              {pathname.includes(item.href) && (
                 <ChevronRight className="hidden lg:flex" />
               )}
             </Link>

@@ -1,4 +1,6 @@
 import { type ClassValue, clsx } from 'clsx'
+import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 import { toast } from 'sonner'
 import { twMerge } from 'tailwind-merge'
 
@@ -124,9 +126,7 @@ export async function handleDownloadFile(
 }
 
 export function formatarDataBrasil(data: Date): string {
-  const dia = data.getDate().toString().padStart(2, '0')
-  const mes = (data.getMonth() + 1).toString().padStart(2, '0')
-  const ano = data.getFullYear()
-
-  return `${dia}/${mes}/${ano}`
+  return format(data, 'dd/MM/yyyy HH:mm', {
+    locale: ptBR,
+  })
 }

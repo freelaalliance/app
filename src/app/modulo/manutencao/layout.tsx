@@ -6,17 +6,17 @@ interface CalibracaoLayoutProps {
   children: React.ReactNode
 }
 
-export default function LayoutModuloManutencao({ children }: CalibracaoLayoutProps){
+export default function LayoutModuloManutencao({ children }: CalibracaoLayoutProps) {
   return (
     <>
       <HeaderApp />
       <main className="space-y-6 pb-16 md:block container mt-4">
         <section className="space-y-0.5">
           <h2 className="text-2xl font-bold tracking-tight">
-            {'Módulo de manutenção'}
+            Módulo de manutenção
           </h2>
           <p className="text-muted-foreground">
-            {'...'}
+            Gestão de infraestrutura, equipamentos, periféricos e itens críticos à organização
           </p>
         </section>
         <Separator className="my-6" />
