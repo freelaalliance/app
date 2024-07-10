@@ -38,7 +38,7 @@ export default function PageEmpresas() {
           <ListaEmpresas />
           <Dialog>
             <DialogTrigger asChild>
-              <Button className="shadow-md bg-sky-400 hover:bg-sky-500">
+              <Button className="shadow-md bg-sky-500 hover:bg-sky-600">
                 {'Nova empresa'}
               </Button>
             </DialogTrigger>

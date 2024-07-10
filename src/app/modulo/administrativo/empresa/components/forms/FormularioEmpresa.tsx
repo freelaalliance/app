@@ -82,7 +82,7 @@ export function FormularioNovaEmpresa() {
             name="cnpj"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Documento</FormLabel>
+                <FormLabel>CNPJ</FormLabel>
                 <FormControl>
                   <Input placeholder="Documento da empresa" {...field} />
                 </FormControl>

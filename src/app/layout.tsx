@@ -6,6 +6,7 @@ import { Toaster } from '@/components/ui/sonner'
 import { cn } from '@/lib/utils'
 
 import Providers from './provider'
+import { TooltipProvider } from '@/components/ui/tooltip'
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -30,7 +31,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
           fontSans.variable,
         )}
       >
-        <Providers>{children}</Providers>
+        <Providers>
+          <TooltipProvider>
+            {children}
+          </TooltipProvider>
+        </Providers>
         <Toaster richColors />
       </body>
     </html>
