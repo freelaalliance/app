@@ -1,64 +1,47 @@
 'use client'
 
+import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, useReactTable } from "@tanstack/react-table";
+import { DadosManutencaoEquipamentoType } from "../../../schemas/ManutencaoSchema";
+import { colunasManutencaoEquipamento } from "./colunas-tabela-manutencao";
 import { Button } from "@/components/ui/button";
-import { DadosInspecoesEquipamentoType } from "../../../schemas/EquipamentoSchema";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { flexRender, getCoreRowModel, getFacetedUniqueValues, getFilteredRowModel, getPaginationRowModel, useReactTable } from "@tanstack/react-table";
-import { colunasInspecoesEquipamento } from "./colunas-tabela-inspecoes";
 import { Skeleton } from "@/components/ui/skeleton";
-import { FiltroStatusInspecao } from "./filtro-status-tabela-inspecoes";
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+import { Plus } from "lucide-react";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { NovaInspecaoEquipamentoDialog } from "../../dialogs/(inspecao)/NovaInspecaoEquipamentoDialog";
-import { useState } from "react";
-import { Stethoscope } from "lucide-react";
+import { NovaOrdemManutencaoDialog } from "../../dialogs/(manutencao)/DialogNovaOrdemManutencao";
 
-interface TabelaInspecoesEquipamentoProps {
-  idEquipamento: string
-  data: Array<DadosInspecoesEquipamentoType>
-  carregandoInspecoes: boolean
+interface TabelaManutencaoProps {
+  idEquipamento: string;
+  data: Array<DadosManutencaoEquipamentoType>;
+  carregandoManutencoes: boolean;
 }
 
-export const optionsStatusInspecao = [
-  {
-    label: 'Aprovado',
-    value: 'aprovado',
-  },
-  {
-    label: 'Reprovado',
-    value: 'reprovado',
-  },
-]
-
-export function TabelaInspecoesEquipamento({ idEquipamento, data, carregandoInspecoes }: TabelaInspecoesEquipamentoProps) {
-  const [modalInspecaoAberto, abrirModalInspecao] = useState(false)
+export function TabelaManutencoesEquipamento({ idEquipamento, data, carregandoManutencoes }: TabelaManutencaoProps) {
   const tabela = useReactTable({
     data,
-    columns: colunasInspecoesEquipamento,
+    columns: colunasManutencaoEquipamento,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues()
   })
 
+  const manutencaoAberto = data.filter((manutencoes) => manutencoes.criadoEm && (!manutencoes.finalizadoEm && !manutencoes.canceladoEm))
+
   return (
-    <div className="space-y-2 w-full">
+    <div className="flex-1 space-y-2">
       <div className="flex gap-2">
-        <Dialog open={modalInspecaoAberto} onOpenChange={abrirModalInspecao}>
+        <Dialog>
           <DialogTrigger asChild>
-            <Button className="shadow bg-sky-500 hover:bg-sky-600 gap-2">
-              <Stethoscope className="size-5" />
-              Nova inspeção
+            <Button
+              disabled={manutencaoAberto.length > 0}
+              className="shadow bg-sky-500 hover:bg-sky-600 gap-2"
+            >
+              <Plus className="size-5" />
+              Abrir ordem de manutenção
             </Button>
           </DialogTrigger>
-          <NovaInspecaoEquipamentoDialog idEquipamento={idEquipamento ?? ''} fecharModalInspecao={() => {
-            abrirModalInspecao(false)
-          }} />
+          <NovaOrdemManutencaoDialog equipamentoId={idEquipamento}/>
         </Dialog>
-        <FiltroStatusInspecao
-          options={optionsStatusInspecao}
-          title="Status inspeção"
-          column={tabela.getColumn('statusInspecao')}
-        />
       </div>
       <div className="rounded-md border shadow-md bg-gray-50">
         <Table>
@@ -82,25 +65,25 @@ export function TabelaInspecoesEquipamento({ idEquipamento, data, carregandoInsp
           </TableHeader>
           <TableBody>
             {
-              carregandoInspecoes ? (
+              carregandoManutencoes ? (
                 <>
                   <TableRow>
                     <TableCell
-                      colSpan={colunasInspecoesEquipamento.length}
+                      colSpan={colunasManutencaoEquipamento.length}
                     >
                       <Skeleton className="h-4 w-full rounded" />
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell
-                      colSpan={colunasInspecoesEquipamento.length}
+                      colSpan={colunasManutencaoEquipamento.length}
                     >
                       <Skeleton className="h-4 w-full rounded" />
                     </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell
-                      colSpan={colunasInspecoesEquipamento.length}
+                      colSpan={colunasManutencaoEquipamento.length}
                     >
                       <Skeleton className="h-4 w-full rounded" />
                     </TableCell>
@@ -125,10 +108,10 @@ export function TabelaInspecoesEquipamento({ idEquipamento, data, carregandoInsp
               ) : (
                 <TableRow>
                   <TableCell
-                    colSpan={colunasInspecoesEquipamento.length}
+                    colSpan={colunasManutencaoEquipamento.length}
                     className="h-16 text-center text-padrao-gray-200 text-sm font-medium mt-5 md:text-base lg:text-lg"
                   >
-                    Nenhuma inspeção encontrada!
+                    Nenhuma manutenção encontrada!
                   </TableCell>
                 </TableRow>
               )

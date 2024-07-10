@@ -7,16 +7,16 @@ import { buscarDadosEquipamento, listarPecasEquipamento } from "@/app/modulo/man
 import { NovaInspecaoForm } from "../../forms/(inspecoes)/FormularioInspecaoEquimento";
 import { InformacaoEquipamento } from "../../InfoEquipamento";
 
-export interface NovaInspecaoEquipamentoProps{
-  idEquipamento: string
-  fecharModalInspecao: () => void;
+export interface NovaInspecaoEquipamentoProps {
+  idEquipamento: string,
+  fecharModalInspecao: () => void
 }
 
 export function NovaInspecaoEquipamentoDialog({ idEquipamento, fecharModalInspecao }: NovaInspecaoEquipamentoProps) {
 
   const { data: dadosEquipamento, isLoading: carregandoInfoEquipamento } = useQuery({
     queryKey: ['dadosEquipamentoInspecao', idEquipamento],
-    queryFn: () => buscarDadosEquipamento({ idEquipamento })
+    queryFn: () => buscarDadosEquipamento({ equipamentoId: idEquipamento })
   })
 
   const { data: listaPecasEquipamanto, isLoading: carregandoPecas } = useQuery({

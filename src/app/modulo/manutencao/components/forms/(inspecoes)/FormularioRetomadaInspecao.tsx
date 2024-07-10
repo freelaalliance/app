@@ -42,7 +42,8 @@ export function RetomadaInspecaoForm({
           inspecionadoEm: ponto.inspecionadoEm ? new Date(ponto.inspecionadoEm) : new Date(),
           inspecionado: ponto.inspecionadoEm ? true : false
         })
-      )
+      ),
+      observacao: undefined
     },
     mode: 'onChange',
   })

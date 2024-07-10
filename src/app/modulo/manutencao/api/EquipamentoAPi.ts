@@ -79,8 +79,8 @@ export async function buscarAgendamentosEquipamento({ idEquipamento }: TabelaPec
   return response.data
 }
 
-export async function buscarDadosEquipamento({ idEquipamento }: NovaInspecaoEquipamentoProps) {
-  const response = await axiosInstance.get<DadosEquipamentoType>(`equipamento/${idEquipamento}`)
+export async function buscarDadosEquipamento({ equipamentoId }: EquipamentoApiProps) {
+  const response = await axiosInstance.get<DadosEquipamentoType>(`equipamento/${equipamentoId}`)
 
   return response.data
 }

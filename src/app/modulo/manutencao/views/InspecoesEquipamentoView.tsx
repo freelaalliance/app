@@ -1,19 +1,18 @@
 'use client'
 
-import { DadosEquipamentoType } from "../schemas/EquipamentoSchema"
 import { useQuery } from "@tanstack/react-query"
 import { buscarInspecoesEquipamento } from "../api/InspecaoEquipamentoAPI"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
-import { IndicadorInformativo } from "../components/IndicadorInfo"
 import { ListaInspecoesAberto } from "../components/lists/ListaInspecoesAberto"
 import { TabelaInspecoesEquipamento } from "../components/tables/inspecoes/tabela-inspecoes"
+import IndicadoresInspecaoEquipamento from "../components/charts/IndicadorInspecaoEquipamento"
 
-interface InspecaoEquipamentoProps{
+interface InspecaoEquipamentoProps {
   idEquipamento?: string
 }
 
-export default function InspecoesEquipamentoView({idEquipamento}: InspecaoEquipamentoProps){
+export default function InspecoesEquipamentoView({ idEquipamento }: InspecaoEquipamentoProps) {
   const { data: listaInspecoesEquipamento, isLoading: carregandoInspecoes } = useQuery({
     queryKey: ['listaInspecoesEquipamento', idEquipamento],
     queryFn: () => buscarInspecoesEquipamento({ equipamentoId: idEquipamento ?? '' }),
@@ -21,7 +20,7 @@ export default function InspecoesEquipamentoView({idEquipamento}: InspecaoEquipa
   })
 
   return (
-    <section className="space-y-2">      
+    <section className="space-y-2">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
         <Card>
           <CardHeader>
@@ -43,38 +42,24 @@ export default function InspecoesEquipamentoView({idEquipamento}: InspecaoEquipa
           <CardHeader>
             <CardTitle>{`Indicadores`}</CardTitle>
             <CardDescription>
-              Resumo de indicadores de inspeções do equipamento 
+              Resumo de indicadores de inspeções do equipamento
             </CardDescription>
           </CardHeader>
           <CardContent>
             {
               carregandoInspecoes ? (
-                <div className="flex flex-col md:flex-row justify-between gap-2">
-                  <Skeleton className="h-28 w-full" />
-                  <Skeleton className="h-28 w-full" />
-                  <Skeleton className="h-28 w-full" />
+                <div className="flex flex-col md:flex-row justify-center gap-2">
+                  <Skeleton className="h-52 w-52 rounded-full my-6" />
                 </div>
               ) : (
-                <div className="grid space-y-10">
-                  <div className="flex flex-col md:flex-row justify-between gap-2">
-                    <IndicadorInformativo
-                      titulo="em aberto"
-                      info={listaInspecoesEquipamento?.filter((inspecoes) => !inspecoes.finalizadoEm).length ?? 0}
-                    />
-                    <IndicadorInformativo
-                      titulo="aprovadas"
-                      info={listaInspecoesEquipamento?.filter((inspecoes) => inspecoes.statusInspecao === 'aprovado' && inspecoes.finalizadoEm).length ?? 0}
-                    />
-                    <IndicadorInformativo
-                      titulo="reprovadas"
-                      info={listaInspecoesEquipamento?.filter((inspecoes) => inspecoes.statusInspecao === 'reprovado' && inspecoes.finalizadoEm).length ?? 0}
-                    />
-                  </div>
-                  <IndicadorInformativo
-                    titulo="inspeções registradas"
-                    info={listaInspecoesEquipamento?.length ?? 0}
-                  />
-                </div>
+                <IndicadoresInspecaoEquipamento inspecoes={
+                  {
+                    aberta: listaInspecoesEquipamento?.filter((inspecoes) => !inspecoes.finalizadoEm).length ?? 0,
+                    aprovada: listaInspecoesEquipamento?.filter((inspecoes) => inspecoes.statusInspecao === 'aprovado' && inspecoes.finalizadoEm).length ?? 0,
+                    reprovada: listaInspecoesEquipamento?.filter((inspecoes) => inspecoes.statusInspecao === 'reprovado' && inspecoes.finalizadoEm).length ?? 0,
+                    total: listaInspecoesEquipamento?.length ?? 0,
+                  }}
+                />
               )
             }
           </CardContent>

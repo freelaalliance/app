@@ -64,12 +64,12 @@ export default function PageInspecaoEquipamento() {
           >
             Inspeções
           </TabsTrigger>
-          {/* <TabsTrigger
+          <TabsTrigger
             className="shadow-md bg-sky-400 text-white data-[state=active]:bg-sky-600 data-[state=active]:text-white hover:bg-sky-500"
             value="manutencoes"
           >
             Manutenções
-          </TabsTrigger> */}
+          </TabsTrigger>
         </TabsList>
         <TabsContent className="space-y-4" value="inspecoes">
           <InspecoesEquipamentoView idEquipamento={idEquipamento ?? ''}/>

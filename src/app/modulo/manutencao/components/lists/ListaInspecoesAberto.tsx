@@ -22,9 +22,9 @@ export function ListaInspecoesAberto({ carregandoInspecoes, listaInspecoes }: Li
   return (
     carregandoInspecoes ? (
       <div className="flex-1 justify-center items-center space-y-2" >
-        <Skeleton className="w-full h-10 rounded shadow" />
-        <Skeleton className="w-full h-10 rounded shadow" />
-        <Skeleton className="w-full h-10 rounded shadow" />
+        <Skeleton className="w-full h-15 md:h-20 rounded shadow" />
+        <Skeleton className="w-full h-15 md:h-20 rounded shadow" />
+        <Skeleton className="w-full h-15 md:h-20 rounded shadow" />
       </div>
     ) :
       listaInspecoes?.length > 0 ? (
@@ -76,8 +76,5 @@ export function ListaInspecoesAberto({ carregandoInspecoes, listaInspecoes }: Li
           <p>Nenhuma inspeção em aberto</p>
         </div>
       )
-
-
-
   )
 }
