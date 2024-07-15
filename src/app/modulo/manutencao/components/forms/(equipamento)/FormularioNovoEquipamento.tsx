@@ -14,6 +14,7 @@ import { useLayoutEffect } from "react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { criarEquipamento } from "@/app/modulo/manutencao/api/EquipamentoAPi"
+import { MAX_PECAS_EQUIPAMENTO } from "./utils-equipamento"
 
 export function NovoEquipamentoForm() {
 
@@ -77,24 +78,21 @@ export function NovoEquipamentoForm() {
   return (
     <Form {...formNovoEquipamento}>
       <form className="space-y-4" onSubmit={formNovoEquipamento.handleSubmit(processarFormulario)}>
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
-          <div className="md:col-span-2">
-            <div className="grid">
-              <FormField
-                control={formNovoEquipamento.control}
-                name="nome"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nome</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Equipamento A1" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-5 space-y-2 md:space-x-4">
+          <div className="md:col-span-2 space-y-2">
+            <FormField
+              control={formNovoEquipamento.control}
+              name="nome"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nome</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Equipamento A1" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               <FormField
                 control={formNovoEquipamento.control}
@@ -123,95 +121,89 @@ export function NovoEquipamentoForm() {
                 )}
               />
             </div>
-            <div className="grid gap-2">
-              <FormField
-                control={formNovoEquipamento.control}
-                name="especificacao"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Especificações</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Equipamento responsavel por..."
-                        className="resize-none"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-            </div>
+            <FormField
+              control={formNovoEquipamento.control}
+              name="especificacao"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Observações</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Detalhes do que deve ser verificado"
+                      className="resize-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
-          <div className="md:col-span-3">
-            <div className="grid">
-              <div className="flex flex-col gap-2">
-                <Button
-                  className="shadow-md text-sm uppercase leading-none rounded text-white bg-green-600  hover:bg-green-700"
-                  type="button"
-                  onClick={() =>
-                    adicionarPeca({ nome: '', descricao: '' })
-                  }
-                >
-                  Adicionar item
-                </Button>
-                <ScrollArea className="max-h-72 w-full rounded-md border px-2">
-                  {pecas.map((peca, index) => (
-                    <>
-                      <div
+          <div className="md:col-span-3 grid space-y-2">
+            <Button
+              className="shadow-md text-sm uppercase leading-none rounded text-white bg-green-600  hover:bg-green-700"
+              type="button"
+              disabled={pecas.length >= MAX_PECAS_EQUIPAMENTO}
+              onClick={() =>
+                adicionarPeca({ nome: '', descricao: '' })
+              }
+            >
+              Adicionar item
+            </Button>
+            <ScrollArea className="max-h-52 md:max-h-72 w-full overflow-auto">
+              {pecas.map((peca, index) => (
+                <>
+                  <div
+                    key={index}
+                    className="flex flex-row justify-between space-x-2 mb-4"
+                  >
+                    <div className="grid w-full gap-2">
+                      <FormField
+                        key={peca.id}
+                        control={formNovoEquipamento.control}
+                        name={`pecas.${index}.nome`}
+                        render={({ field }) => (
+                          <FormItem className="w-full">
+                            <FormControl>
+                              <Input {...field} placeholder="Nome do item" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
                         key={index}
-                        className="flex flex-row justify-between gap-2 my-2"
-                      >
-                        <div className="flex flex-col w-full gap-2">
-                          <FormField
-                            key={peca.id}
-                            control={formNovoEquipamento.control}
-                            name={`pecas.${index}.nome`}
-                            render={({ field }) => (
-                              <FormItem className="w-full">
-                                <FormControl>
-                                  <Input {...field} placeholder="Nome do item" />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            key={index}
-                            control={formNovoEquipamento.control}
-                            name={`pecas.${index}.descricao`}
-                            render={({ field }) => (
-                              <FormItem className="w-full">
-                                <FormControl>
-                                  <Textarea
-                                    placeholder="Item responsável por..."
-                                    className="resize-none"
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                        <Button
-                          className="shadow-md text-sm uppercase leading-none bg-padrao-red rounded text-white hover:bg-red-800"
-                          variant={'destructive'}
-                          type="button"
-                          onClick={() => removerPeca(index)}
-                        >
-                          <Trash />
-                        </Button>
-                      </div>
-                    </>
-                  ))}
-                </ScrollArea>
-              </div>
-            </div>
+                        control={formNovoEquipamento.control}
+                        name={`pecas.${index}.descricao`}
+                        render={({ field }) => (
+                          <FormItem className="w-full">
+                            <FormControl>
+                              <Textarea
+                                placeholder="Item responsável por..."
+                                className="resize-none"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <Button
+                      className="shadow-md text-sm uppercase leading-none bg-padrao-red rounded text-white hover:bg-red-800"
+                      variant={'destructive'}
+                      type="button"
+                      onClick={() => removerPeca(index)}
+                    >
+                      <Trash />
+                    </Button>
+                  </div>
+                </>
+              ))}
+            </ScrollArea>
           </div>
         </div>
-        <DialogFooter>
+        <DialogFooter className="gap-2 md:gap-0">
           <DialogClose asChild>
             <Button
               type="button"

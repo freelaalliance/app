@@ -28,10 +28,10 @@ export function TabelaPecasEquipamento({ idEquipamento }: TabelaPecasEquipamento
 
   return (
     <div className="space-y-2 w-full">
-      <div className="flex flex-col items-center gap-2 py-4 md:flex-row">
+      <div className="flex-1">
         <Input
           placeholder="Filtrar pelo nome da peça..."
-          className="w-full md:w-64"
+          className="md:w-64"
           disabled={listaPecas?.length === 0}
           value={(tabela.getColumn('nome')?.getFilterValue() as string) ?? ''}
           onChange={(event) =>

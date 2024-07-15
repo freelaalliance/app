@@ -7,7 +7,7 @@ export const colunasPecasEquipamento: ColumnDef<DadosPecasEquipamentoType>[] = [
     id: 'acoes',
     enableHiding: false,
     cell: ({ row }) => (
-      <div className="w-10">
+      <div className="md:w-10">
         <MenuTabelaPecasEquipamento row={row.original} />
       </div>
     ),
@@ -17,13 +17,13 @@ export const colunasPecasEquipamento: ColumnDef<DadosPecasEquipamentoType>[] = [
     header: 'Nome',
     enableColumnFilter: false,
     enableHiding: false,
-    cell: ({ row }) => <div className="capitalize w-28">{row.getValue('nome')}</div>,
+    cell: ({ row }) => <div className="capitalize md:w-28">{row.getValue('nome')}</div>,
   },
   {
     accessorKey: 'descricao',
     header: 'Descrição',
     enableColumnFilter: false,
     enableHiding: false,
-    cell: ({ row }) => <div className="w-full line-clamp-2">{row.getValue('descricao')}</div>,
+    cell: ({ row }) => <div className="md:w-full line-clamp-2">{row.getValue('descricao')}</div>,
   }
 ]

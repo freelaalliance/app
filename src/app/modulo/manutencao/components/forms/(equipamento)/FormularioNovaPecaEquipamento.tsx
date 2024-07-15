@@ -7,13 +7,14 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { useMutation } from "@tanstack/react-query"
-import { Trash } from "lucide-react"
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { Loader2, Trash } from "lucide-react"
 import { useLayoutEffect } from "react"
 import { useFieldArray, useForm } from "react-hook-form"
 import { z } from "zod"
-import { salvarNovasPecas } from "@/app/modulo/manutencao/api/EquipamentoAPi"
+import { listarPecasEquipamento, salvarNovasPecas } from "@/app/modulo/manutencao/api/EquipamentoAPi"
 import { toast } from "sonner"
+import { MAX_PECAS_EQUIPAMENTO } from "./utils-equipamento"
 
 export interface NovaPecaEquipamentoProps {
   idEquipamento: string
@@ -32,6 +33,11 @@ const schemaNovaPecaEquipamento = z.object({
 })
 
 export function FormularioNovaPeca({ idEquipamento }: NovaPecaEquipamentoProps) {
+
+  const { data: listaPecas, isLoading: carregandoPecas } = useQuery({
+    queryKey: ['pecasEquipamento', idEquipamento],
+    queryFn: () => listarPecasEquipamento({ idEquipamento })
+  })
 
   const formNovaPecaEquipamento = useForm<z.infer<typeof schemaNovaPecaEquipamento>>({
     resolver: zodResolver(schemaNovaPecaEquipamento),
@@ -75,7 +81,11 @@ export function FormularioNovaPeca({ idEquipamento }: NovaPecaEquipamentoProps) 
     }
   })
 
-  return (
+  return carregandoPecas ? (
+    <div className="flex justify-center">
+      <Loader2 className="size-10 animate-spin" />
+    </div>
+  ) : (
     <Form {...formNovaPecaEquipamento}>
       <form className="space-y-4" onSubmit={formNovaPecaEquipamento.handleSubmit(async (data: z.infer<typeof schemaNovaPecaEquipamento>) => {
         await salvarPecasEquipamento(data)
@@ -85,17 +95,18 @@ export function FormularioNovaPeca({ idEquipamento }: NovaPecaEquipamentoProps) 
             <Button
               className="shadow-md text-sm uppercase leading-none rounded text-white bg-green-600  hover:bg-green-700"
               type="button"
+              disabled={(pecas.length + (listaPecas?.length ?? 0)) >= MAX_PECAS_EQUIPAMENTO}
               onClick={() =>
                 adicionarPeca({ nome: '', descricao: '', equipamentoId: idEquipamento })
               }
             >
               Adicionar peça
             </Button>
-            <ScrollArea className="max-h-72 w-full rounded-md border px-2">
+            <ScrollArea className="max-h-52 md:max-h-72 w-full overflow-auto">
               {pecas.map((peca, index) => (
                 <div
                   key={index}
-                  className="flex flex-row justify-between gap-2 my-2"
+                  className="flex flex-row justify-between gap-2 mb-4"
                 >
                   <div className="flex flex-col w-full gap-2">
                     <FormField
@@ -142,7 +153,7 @@ export function FormularioNovaPeca({ idEquipamento }: NovaPecaEquipamentoProps) 
             </ScrollArea>
           </div>
         </div>
-        <DialogFooter>
+        <DialogFooter className="gap-2 md:gap-0">
           <DialogClose asChild>
             <Button
               type="button"
