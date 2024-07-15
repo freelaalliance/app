@@ -157,7 +157,7 @@ export function EdicaoEquipamentoForm({ id, codigo, nome, especificacao, frequen
 
           </div>
         </div>
-        <DialogFooter>
+        <DialogFooter className="gap-2 md:gap-0">
           <DialogClose asChild>
             <Button
               type="button"

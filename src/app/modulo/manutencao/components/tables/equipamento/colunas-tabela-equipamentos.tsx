@@ -7,7 +7,7 @@ export const colunasEquipamento: ColumnDef<DadosEquipamentoType>[] = [
     id: 'acoes',
     enableHiding: false,
     cell: ({ row }) => (
-      <div className="flex-1 justify-center w-10">
+      <div className="flex-1 justify-center md:w-10">
         <MenuTabelaEquipamento row={row.original} />
       </div>
     ),
@@ -17,13 +17,13 @@ export const colunasEquipamento: ColumnDef<DadosEquipamentoType>[] = [
     header: 'Nome',
     enableColumnFilter: false,
     enableHiding: false,
-    cell: ({ row }) => <div className="capitalize w-full">{row.getValue('nome')}</div>,
+    cell: ({ row }) => <div className="capitalize md:w-full">{row.getValue('nome')}</div>,
   },
   {
     accessorKey: 'codigo',
     header: 'Código',
     enableColumnFilter: false,
     enableHiding: false,
-    cell: ({ row }) => <div className="w-16">{row.getValue('codigo')}</div>,
+    cell: ({ row }) => <div className="md:w-16">{row.getValue('codigo')}</div>,
   }
 ]

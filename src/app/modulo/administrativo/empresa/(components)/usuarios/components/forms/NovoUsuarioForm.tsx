@@ -156,7 +156,8 @@ export function NovoUsuarioForm({ idEmpresa }: FormularioNovoUsuarioProps) {
                   <Input
                     autoComplete="new-password"
                     type="password"
-                    placeholder="password"
+                    placeholder="Nova senha"
+                    autoCorrect="off"
                     {...field}
                   />
                 </FormControl>

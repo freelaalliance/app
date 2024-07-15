@@ -3,7 +3,7 @@ import { NovoEquipamentoForm } from "../../forms/(equipamento)/FormularioNovoEqu
 
 export function NovoEquipamentoDialog() {
   return (
-    <DialogContent className="max-w-5xl">
+    <DialogContent className="max-w-5xl h-screen lg:h-auto overflow-auto">
       <DialogHeader>
         <DialogTitle>Novo equipamento</DialogTitle>
         <DialogDescription>Área para cadastro de novos equipamentos</DialogDescription>

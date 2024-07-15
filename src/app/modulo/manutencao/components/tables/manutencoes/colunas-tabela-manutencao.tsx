@@ -9,7 +9,7 @@ export const colunasManutencaoEquipamento: ColumnDef<DadosManutencaoEquipamentoT
     id: 'acoes',
     enableHiding: false,
     cell: ({ row }) => (
-      <div className="w-4">
+      <div className="md:w-4">
         <MenuTabelaManutencaoEquipamento row={row.original} />
       </div>
     ),
@@ -55,7 +55,7 @@ export const colunasManutencaoEquipamento: ColumnDef<DadosManutencaoEquipamentoT
       }
 
       return (
-        <div className="w-full">{status}</div>
+        <div className="md:w-full">{status}</div>
       )
     },
   },
@@ -78,7 +78,7 @@ export const colunasManutencaoEquipamento: ColumnDef<DadosManutencaoEquipamentoT
       }
 
       return (
-        <div className="w-full">{`${duracao} min`}</div>
+        <div className="md:w-full">{`${duracao} min`}</div>
       )
     },
   },
@@ -98,7 +98,7 @@ export const colunasManutencaoEquipamento: ColumnDef<DadosManutencaoEquipamentoT
       }
 
       return (
-        <div className="w-full">{`${duracao} min`}</div>
+        <div className="md:w-full">{`${duracao} min`}</div>
       )
     },
   }
