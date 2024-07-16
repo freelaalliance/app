@@ -18,14 +18,14 @@ interface IndicadorMediaDuracaoManutencaoProps {
 export default function IndicadoresMediaDuracaoManutencoesEquipamento({ listaManutencoes }: IndicadorMediaDuracaoManutencaoProps) {
   const manutencoesFinalizadas = listaManutencoes.filter(manutencoes => manutencoes.duracao !== null)
 
-  const duracoesTotalManutencoes = manutencoesFinalizadas.reduce((duracaoTotal, manutencoes) => {
+  const duracoesTotalManutencoes = manutencoesFinalizadas?.reduce((duracaoTotal, manutencoes) => {
     return duracaoTotal + Number(manutencoes.duracao)
   }, 0)
 
-  const mediaDuracao = (duracoesTotalManutencoes / manutencoesFinalizadas.length)
+  const mediaDuracao = Number((duracoesTotalManutencoes ?? 0 / manutencoesFinalizadas.length))
 
   const chartData = [
-    { type: 'manutencao', media: mediaDuracao.toFixed(2), fill: 'var(--color-media)' }
+    { type: 'manutencao', media: (mediaDuracao > 0 ? mediaDuracao.toFixed(2) : 0), fill: 'var(--color-media)' }
   ]
 
   const chartConfig = {
@@ -49,7 +49,7 @@ export default function IndicadoresMediaDuracaoManutencoesEquipamento({ listaMan
     <>
       <ChartContainer
         config={chartConfig}
-        className="mx-auto aspect-square max-h-[250px]"
+        className="mx-auto aspect-square max-h-[250px] w-full"
       >
         <RadialBarChart
           data={chartData}
@@ -99,15 +99,14 @@ export default function IndicadoresMediaDuracaoManutencoesEquipamento({ listaMan
           </PolarRadiusAxis>
         </RadialBarChart>
       </ChartContainer>
-      <CardFooter className="flex-col gap-2 text-sm">
-        <div className="flex items-center gap-2 font-medium leading-none">
+      <CardFooter className="flex flex-col gap-2 text-sm text-center">
+        <div className="font-medium leading-none">
           {`Neste mês foram realizadas ${manutencoesRealizadasMesAtual?.length} manutenções`}
         </div>
         <div className="leading-none text-muted-foreground">
-          {`Neste equipamento possui ${listaManutencoes?.length} registradas`}
+          {`Este equipamento possui o total de ${listaManutencoes?.length} manutenções`}
         </div>
       </CardFooter>
     </>
-
   )
 }

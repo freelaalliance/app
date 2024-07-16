@@ -268,7 +268,7 @@ export function RetomadaInspecaoForm({
               )
             }
           </div>
-          <DialogFooter>
+          <DialogFooter className="gap-2 md:gap-0">
             <DialogClose asChild>
               <Button
                 type="button"

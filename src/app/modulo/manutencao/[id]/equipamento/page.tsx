@@ -59,23 +59,23 @@ export default function PageInspecaoEquipamento() {
       <Tabs defaultValue="inspecoes" className="space-y-4">
         <TabsList className="flex bg-transparent space-x-2 justify-between md:justify-start">
           <TabsTrigger
-            className="shadow-md bg-sky-400 text-white data-[state=active]:bg-sky-600 data-[state=active]:text-white hover:bg-sky-500"
+            className="shadow w-full bg-sky-400 text-white data-[state=active]:bg-sky-600 data-[state=active]:text-white hover:bg-sky-500 md:w-auto"
             value="inspecoes"
           >
             Inspeções
           </TabsTrigger>
           <TabsTrigger
-            className="shadow-md bg-sky-400 text-white data-[state=active]:bg-sky-600 data-[state=active]:text-white hover:bg-sky-500"
+            className="shadow w-full bg-sky-400 text-white data-[state=active]:bg-sky-600 data-[state=active]:text-white hover:bg-sky-500 md:w-auto"
             value="manutencoes"
           >
             Manutenções
           </TabsTrigger>
         </TabsList>
-        <TabsContent className="space-y-4" value="inspecoes">
-          <InspecoesEquipamentoView idEquipamento={idEquipamento ?? ''}/>
+        <TabsContent value="inspecoes">
+          <InspecoesEquipamentoView idEquipamento={idEquipamento ?? ''} />
         </TabsContent>
-        <TabsContent className="space-y-4" value="manutencoes">
-          <ManutencoesEquipamentoView idEquipamento={idEquipamento ?? ''}/>
+        <TabsContent value="manutencoes">
+          <ManutencoesEquipamentoView idEquipamento={idEquipamento ?? ''} />
         </TabsContent>
       </Tabs>
     </div>
