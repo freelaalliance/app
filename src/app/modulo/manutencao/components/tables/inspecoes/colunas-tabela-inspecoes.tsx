@@ -9,7 +9,7 @@ export const colunasInspecoesEquipamento: ColumnDef<DadosInspecoesEquipamentoTyp
     id: 'acoes',
     enableHiding: false,
     cell: ({ row }) => (
-      <div className="flex-1 justify-center w-1">
+      <div className="flex-1 justify-center md:w-1">
         <MenuTabelaInspecoesEquipamento row={row.original} />
       </div>
     ),
@@ -28,7 +28,7 @@ export const colunasInspecoesEquipamento: ColumnDef<DadosInspecoesEquipamentoTyp
     enableHiding: false,
     cell: ({ row }) => {
       const usuario: any = row.getValue('usuario')
-      return (<div className="capitalize w-full">{usuario.pessoa.nome}</div>)
+      return (<div className="capitalize md:w-full">{usuario.pessoa.nome}</div>)
     },
   },
   {
@@ -46,7 +46,7 @@ export const colunasInspecoesEquipamento: ColumnDef<DadosInspecoesEquipamentoTyp
       }
 
       return (
-        <div className="flex w-6 items-center">
+        <div className="flex md:w-6 items-center">
           <span>{status.label}</span>
         </div>
       )
@@ -60,6 +60,6 @@ export const colunasInspecoesEquipamento: ColumnDef<DadosInspecoesEquipamentoTyp
     header: 'Finalizado em',
     enableColumnFilter: false,
     enableHiding: false,
-    cell: ({ row }) => <div className="capitalize w-full">{row.getValue('finalizadoEm') ? formatarDataBrasil(new Date(row.getValue('finalizadoEm'))) : 'Em andamento'}</div>,
+    cell: ({ row }) => <div className="capitalize md:w-full">{row.getValue('finalizadoEm') ? formatarDataBrasil(new Date(row.getValue('finalizadoEm'))) : 'Em andamento'}</div>,
   }
 ]

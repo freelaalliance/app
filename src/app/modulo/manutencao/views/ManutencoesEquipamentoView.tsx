@@ -1,6 +1,6 @@
 'use client'
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { buscarDuracaoManutencoesEquipamento, buscarManutencoesEquipamento } from "../api/ManutencaoEquipamentoAPI"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -9,9 +9,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Check, MailWarning, Play } from "lucide-react"
 import { ptBR } from "date-fns/locale"
 import { Button } from "@/components/ui/button"
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
+import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { TabelaManutencoesEquipamento } from "../components/tables/manutencoes/tabela-manutencao-equipamento"
-import { toast } from "sonner"
 import { AlertIniciarManutencaoEquipamento } from "../components/dialogs/(manutencao)/AlertDialogIniciarManutencao"
 import { AlertEncerrarManutencaoEquipamento } from "../components/dialogs/(manutencao)/AlertDialogEncerrarManutencao"
 import RankingDurancaoManutencaoEquipamento from "../components/charts/IndicadorTempoManutencaoEquipamento"
@@ -23,8 +22,6 @@ interface ManutencaoEquipamentoProps {
 }
 
 export default function ManutencoesEquipamentoView({ idEquipamento }: ManutencaoEquipamentoProps) {
-
-  const queryClient = useQueryClient()
 
   const { data: estatisticasDuracaoManutencoesEquipamento, isLoading: carregandoEstatisticaDuracao } = useQuery({
     queryKey: ['estatisticaDuracaoManutencoesEquipamento', idEquipamento],
@@ -42,7 +39,7 @@ export default function ManutencoesEquipamentoView({ idEquipamento }: Manutencao
   const tempoEquipamentoParado = manutencaoAndamento ? differenceInMinutes(new Date(), new Date(manutencaoAndamento?.criadoEm)) : 0
 
   return (
-    <section className="grid space-y-2">
+    <section className="flex flex-col space-y-2">
       {manutencaoAndamento && (
         <Alert variant={'destructive'} className="shadow bg-red-100">
           <MailWarning className="size-5" />
@@ -76,7 +73,7 @@ export default function ManutencoesEquipamentoView({ idEquipamento }: Manutencao
         </Alert>
       )}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-        <Card className="flex flex-col">
+        <Card className="grid">
           <CardHeader>
             <CardTitle>Ranking manutenções</CardTitle>
             <CardDescription>
@@ -85,11 +82,21 @@ export default function ManutencoesEquipamentoView({ idEquipamento }: Manutencao
               }
             </CardDescription>
           </CardHeader>
-          <CardContent className="px-2">
-            <RankingDurancaoManutencaoEquipamento dados={estatisticasDuracaoManutencoesEquipamento ?? []} />
+          <CardContent className="px-0 mx-4">
+            {
+              carregandoEstatisticaDuracao ? (
+                <div className="flex-1 justify-center gap-2">
+                  <Skeleton className="h-52 w-52 rounded-full my-6" />
+                </div>
+              ) : (
+                <div className="flex-1">
+                  <RankingDurancaoManutencaoEquipamento dados={estatisticasDuracaoManutencoesEquipamento ?? []} />
+                </div>
+              )
+            }
           </CardContent>
         </Card>
-        <Card className="flex flex-col">
+        <Card className="grid">
           <CardHeader className="items-center pb-0">
             <CardTitle>Equipamento parado</CardTitle>
             <CardDescription>
@@ -99,11 +106,13 @@ export default function ManutencoesEquipamentoView({ idEquipamento }: Manutencao
           <CardContent className="flex-1 pb-0">
             {
               carregandoManutencoes ? (
-                <div className="flex flex-col md:flex-row justify-center gap-2">
+                <div className="flex flex-col md:flex-row justify-center items-center gap-2">
                   <Skeleton className="h-52 w-52 rounded-full my-6" />
                 </div>
               ) : (
-                <IndicadoresMediaEquipamentoParado listaManutencoes={manutencoesEquipamento ?? []} />
+                <div className="flex-1 justify-center">
+                  <IndicadoresMediaEquipamentoParado listaManutencoes={manutencoesEquipamento ?? []} />
+                </div>
               )
             }
           </CardContent>
@@ -118,7 +127,7 @@ export default function ManutencoesEquipamentoView({ idEquipamento }: Manutencao
           <CardContent className="flex-1 pb-0">
             {
               carregandoManutencoes ? (
-                <div className="flex flex-col md:flex-row justify-center gap-2">
+                <div className="flex flex-col md:flex-row justify-center items-center gap-2">
                   <Skeleton className="h-52 w-52 rounded-full my-6" />
                 </div>
               ) : (

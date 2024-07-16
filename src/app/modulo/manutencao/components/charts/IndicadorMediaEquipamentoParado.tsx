@@ -22,10 +22,10 @@ export default function IndicadoresMediaEquipamentoParado({ listaManutencoes }: 
     return duracaoTotal + Number(manutencoes.equipamentoParado)
   }, 0)
 
-  const mediaTempoParado: Number = (duracoesTotalParadas / manutencoesFinalizadas.length)
+  const mediaTempoParado = isNaN(duracoesTotalParadas) ? 0 : Number(duracoesTotalParadas / manutencoesFinalizadas.length)
 
   const chartData = [
-    { type: 'parada', media: mediaTempoParado.toFixed(2), fill: 'var(--color-media)' }
+    { type: 'parada', media: (mediaTempoParado > 0 ? mediaTempoParado.toFixed(2) : 0), fill: 'var(--color-media)' }
   ]
 
   const chartConfig = {
@@ -45,9 +45,11 @@ export default function IndicadoresMediaEquipamentoParado({ listaManutencoes }: 
     }
   })
 
-  const mediaTempoParadoMesAtual = manutencoesRealizadasMesAtual.reduce((duracaoTotal, manutencoes) => {
+  const somaTotalTempoParadoMesAtual = manutencoesRealizadasMesAtual?.reduce((duracaoTotal, manutencoes) => {
     return duracaoTotal + Number(manutencoes.equipamentoParado)
   }, 0)
+
+  const mediaTempoParadoMesAtual = isNaN(somaTotalTempoParadoMesAtual) ? 0 : (somaTotalTempoParadoMesAtual / manutencoesRealizadasMesAtual.length)
 
   return (
     <>
@@ -103,9 +105,9 @@ export default function IndicadoresMediaEquipamentoParado({ listaManutencoes }: 
           </PolarRadiusAxis>
         </RadialBarChart>
       </ChartContainer>
-      <CardFooter className="flex-col gap-2 text-sm">
-        <div className="flex items-center gap-2 font-medium leading-none text-center">
-          {`O tempo médio de equipamento parado este mês é ${(mediaTempoParadoMesAtual / manutencoesRealizadasMesAtual.length).toFixed(2)} minutos`}
+      <CardFooter className="text-sm">
+        <div className="font-medium leading-none text-center">
+          {`O tempo médio de equipamento parado este mês é ${mediaTempoParadoMesAtual > 0 ? mediaTempoParado.toFixed(2) : 0} minutos`}
         </div>
       </CardFooter>
     </>

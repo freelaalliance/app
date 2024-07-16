@@ -65,9 +65,7 @@ export default function RankingDurancaoManutencaoEquipamento({ dados }: RankingD
       },
     ]
   })
-
-  console.log(chartData)
-
+  
   const chartConfig = {
     duracao: {
       label: "Min",

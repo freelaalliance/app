@@ -270,7 +270,7 @@ export function NovaInspecaoForm({
             )
           }
         </div>
-        <DialogFooter>
+        <DialogFooter className="gap-2 md:gap-0">
           <Button
             onClick={formInspecao.handleSubmit(pausarInspecao)}
             disabled={pecasEquipamento.length === 0 || todosItensInspecionado}

@@ -72,7 +72,7 @@ export function ListaInspecoesAberto({ carregandoInspecoes, listaInspecoes }: Li
           </ScrollArea>
         </div>
       ) : (
-        <div className="flex-1 items-center">
+        <div className="text-center">
           <p>Nenhuma inspeção em aberto</p>
         </div>
       )
