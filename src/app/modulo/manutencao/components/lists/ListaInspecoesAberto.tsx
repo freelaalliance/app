@@ -73,7 +73,7 @@ export function ListaInspecoesAberto({ carregandoInspecoes, listaInspecoes }: Li
         </div>
       ) : (
         <div className="text-center">
-          <p>Nenhuma inspeção em aberto</p>
+          <p>Nenhuma preventiva em aberta</p>
         </div>
       )
   )

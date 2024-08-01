@@ -34,10 +34,10 @@ export function TabelaManutencoesEquipamento({ idEquipamento, data, carregandoMa
           <DialogTrigger asChild>
             <Button
               disabled={manutencaoAberto.length > 0}
-              className="shadow bg-sky-500 hover:bg-sky-600 gap-2"
+              className="shadow bg-padrao-red hover:bg-red-800 gap-2"
             >
               <Plus className="size-5" />
-              Abrir ordem de manutenção
+              Nova ordem de serviço
             </Button>
           </DialogTrigger>
           <NovaOrdemManutencaoDialog equipamentoId={idEquipamento}/>

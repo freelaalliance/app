@@ -45,9 +45,9 @@ export function TabelaInspecoesEquipamento({ idEquipamento, data, carregandoInsp
       <div className="flex gap-2">
         <Dialog open={modalInspecaoAberto} onOpenChange={abrirModalInspecao}>
           <DialogTrigger asChild>
-            <Button className="shadow bg-sky-500 hover:bg-sky-600 gap-2">
+            <Button className="shadow bg-padrao-red hover:bg-red-800 gap-2">
               <Stethoscope className="size-5" />
-              Nova inspeção
+              Nova manutenção
             </Button>
           </DialogTrigger>
           <NovaInspecaoEquipamentoDialog idEquipamento={idEquipamento ?? ''} fecharModalInspecao={() => {
@@ -56,7 +56,7 @@ export function TabelaInspecoesEquipamento({ idEquipamento, data, carregandoInsp
         </Dialog>
         <FiltroStatusInspecao
           options={optionsStatusInspecao}
-          title="Status inspeção"
+          title="Status"
           column={tabela.getColumn('statusInspecao')}
         />
       </div>

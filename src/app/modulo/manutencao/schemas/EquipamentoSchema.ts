@@ -5,7 +5,10 @@ export const schemaDadosEquipamento = z.object({
   codigo: z.string(),
   nome: z.string(),
   especificacao: z.string().optional(),
-  frequencia: z.number()
+  frequencia: z.number(),
+  inspecionadoEm: z.coerce.date().optional(),
+  concertadoEm: z.coerce.date().optional(),
+  status: z.enum(['operando', 'parado']),
 })
 
 export type DadosEquipamentoType = z.infer<typeof schemaDadosEquipamento>

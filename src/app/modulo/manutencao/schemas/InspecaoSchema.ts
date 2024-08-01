@@ -48,3 +48,15 @@ export const schemaFormFinalizacaoInspecao = z.object({
 })
 
 export type DadosFinalizacaoInspecaoType = z.infer<typeof schemaFormFinalizacaoInspecao>
+
+export type AgendaInspecoesEmpresa = {
+  id: number;
+  equipamento: {
+    id: string;
+    nome: string;
+    codigo: string;
+    frequencia: number;
+  };
+  agendadoPara: Date;
+  inspecaoRealizada: boolean;
+}

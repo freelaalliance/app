@@ -93,20 +93,8 @@ export function MenuTabelaEquipamento({ row }: MenuTabelaEquipamentoProps) {
           <NovaPecaEquipamentoDialog idEquipamento={row.id} />
         </Dialog>
         <DropdownMenuSeparator />
-        <Dialog>
-          <DialogTrigger asChild>
-            <DropdownMenuItem
-              onSelect={(e) => {
-                e.preventDefault()
-              }}
-            >
-              Agenda
-            </DropdownMenuItem>
-          </DialogTrigger>
-          <AgendaEquipamentoDialog idEquipamento={row.id}/>
-        </Dialog>
         <DropdownMenuItem asChild>
-          <Link href={`${idModulo}/equipamento?id=${row.id}&nome=${row.nome}`}>Inspeções e manutenções</Link>
+          <Link href={`${idModulo}/equipamento?id=${row.id}&nome=${row.nome}`}>Preventivas e corretivas</Link>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

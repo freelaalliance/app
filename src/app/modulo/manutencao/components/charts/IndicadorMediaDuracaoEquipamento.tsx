@@ -34,7 +34,7 @@ export default function IndicadoresMediaDuracaoManutencoesEquipamento({ listaMan
     },
     media: {
       label: "Média",
-      color: "hsl(360, 92%, 35%)",
+      color: "hsl(0, 0%, 15%)",
     },
   } satisfies ChartConfig
 
