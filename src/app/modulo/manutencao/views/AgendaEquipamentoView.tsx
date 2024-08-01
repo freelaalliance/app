@@ -1,6 +1,6 @@
 'use client'
 
-import CalendarioEventos from "@/components/calendario/CalendarioEventos"
+import CalendarioEventos, { eventoCalendario } from "@/components/calendario/CalendarioEventos"
 import { useQuery } from "@tanstack/react-query"
 import { differenceInDays } from "date-fns"
 import { Loader2 } from "lucide-react"
@@ -20,25 +20,15 @@ export default function AgendaEquipoamentoView({
     queryFn: () => buscarAgendamentosEquipamento({ idEquipamento })
   })
 
-  const eventos: Array<{
-    id: string
-    allDay: boolean
-    start: Date | string
-    title: string
-    display:
-    | 'auto'
-    | 'block'
-    | 'list-item'
-    | 'background'
-    | 'inverse-background'
-    | 'none'
-    backgroundColor?: string
-    textColor: string
-    borderColor: string
-    color?: string
-  }> | undefined = agendaEquipamento?.map((agendamento) => {
+  const eventos: eventoCalendario = agendaEquipamento?.map((agendamento) => {
 
-    const diferencaDias = differenceInDays(new Date(agendamento.agendadoPara), new Date())
+    const dataAgendamento = new Date(agendamento.agendadoPara)
+    const dataAtual = new Date()
+
+    const diferencaDias = differenceInDays(
+      new Date(dataAgendamento.getFullYear(), dataAgendamento.getMonth(), dataAgendamento.getDate()),
+      new Date(dataAtual.getFullYear(), dataAtual.getMonth(), dataAtual.getDate())
+    )
 
     if (agendamento.inspecaoRealizada) {
       return {
@@ -93,7 +83,7 @@ export default function AgendaEquipoamentoView({
         color: '#E52207'
       }
     }
-  })
+  }) ?? []
 
 
   return (

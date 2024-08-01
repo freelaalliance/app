@@ -32,3 +32,20 @@ export const schemaFormNovaOrdemManutencao = z.object({
 })
 
 export type DadosNovaOrdemManutencaoType = z.infer<typeof schemaFormNovaOrdemManutencao>
+
+export type estatisticasEquipamentoType = {
+  qtd_equipamentos_parados: number
+  qtd_equipamentos_funcionando: number
+}
+
+export type estatisticasManutencaoType = {
+  qtd_equipamentos_manutencao_em_dia: number
+  qtd_manutencoes_em_andamento: number
+}
+
+export type dadosIndicadoresManutencaoType = {
+  total_tempo_parado: number;
+  qtd_manutencoes: number;
+}
+
+export type indicadoresFalhasEquipamentoType = { mtbf: number; mttr: number }
