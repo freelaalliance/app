@@ -6,6 +6,7 @@ export const schemaDadosEquipamento = z.object({
   nome: z.string(),
   especificacao: z.string().optional(),
   frequencia: z.number(),
+  tempoOperacao: z.number(),
   inspecionadoEm: z.coerce.date().optional(),
   concertadoEm: z.coerce.date().optional(),
   status: z.enum(['operando', 'parado']),
@@ -25,6 +26,11 @@ export const schemaFormularioNovoEquipamento = z.object({
     message: 'Necessário informar o nome do equipamento'
   }),
   especificacao: z.string().optional(),
+  tempoOperacao: z.coerce.number({
+    required_error: 'Necessário informar o tempo de operação do equipamento'
+  }).min(1, {
+    message: 'Necessário informar o tempo mínimo de operação do equipamento'
+  }),
   frequencia: z.coerce.number({
     required_error: 'Necessário informar a frequência de inspeção para o equipamento'
   }).min(1, {

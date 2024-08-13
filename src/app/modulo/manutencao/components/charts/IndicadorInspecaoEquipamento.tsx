@@ -54,7 +54,7 @@ export default function IndicadoresInspecaoEquipamento({inspecoes}: DadosIndicad
           data={chartData}
           dataKey="inspecoes"
           nameKey="type"
-          innerRadius={60}
+          innerRadius={85}
           strokeWidth={5}
         >
           <Label

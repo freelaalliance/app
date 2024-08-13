@@ -28,7 +28,7 @@ export function TabelaManutencoesEquipamento({ idEquipamento, data, carregandoMa
   const manutencaoAberto = data.filter((manutencoes) => manutencoes.criadoEm && (!manutencoes.finalizadoEm && !manutencoes.canceladoEm))
 
   return (
-    <div className="space-y-2">
+    <div className="w-full space-y-2">
       <div className="flex-1">
         <Dialog>
           <DialogTrigger asChild>

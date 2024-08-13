@@ -1,6 +1,5 @@
 import { ExcelLib } from '@/lib/ExcelLib'
 import { formatarDataBrasil } from '@/lib/utils'
-import { indicadoresFalhasEquipamentoType } from '../schemas/ManutencaoSchema';
 
 interface RelatorioEquipamentoProps {
   dados: Array<{

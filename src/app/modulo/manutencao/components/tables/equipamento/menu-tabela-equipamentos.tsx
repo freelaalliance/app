@@ -7,7 +7,6 @@ import { MoreVertical } from "lucide-react";
 import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import Link from "next/link";
-import { AgendaEquipamentoDialog } from "../../dialogs/(equipamento)/AgendaEquipamentoDialog";
 import { EdicaoEquipamentoDialog } from "../../dialogs/(equipamento)/EdicaoEquipamentoDialog";
 import { ExclusaoEquipamentoDialog } from "../../dialogs/(equipamento)/ExclusaoEquipamentoDialog";
 import { NovaPecaEquipamentoDialog } from "../../dialogs/(equipamento)/NovaPecaEquipamentoDialog";
@@ -51,6 +50,7 @@ export function MenuTabelaEquipamento({ row }: MenuTabelaEquipamentoProps) {
             codigo={row.codigo}
             especificacao={row.especificacao}
             frequencia={row.frequencia}
+            tempoOperacao={row.tempoOperacao}
             nome={row.nome}
           />
         </Dialog>

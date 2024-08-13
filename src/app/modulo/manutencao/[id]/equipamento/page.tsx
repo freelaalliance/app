@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { buscarInspecoesEquipamento } from "../../api/InspecaoEquipamentoAPI";
 import { useQuery } from "@tanstack/react-query";
-import { buscarDuracaoManutencoesEquipamento, buscarManutencoesEquipamento, consultaIndicadoresManutencaoEmpresa } from "../../api/ManutencaoEquipamentoAPI";
+import { buscarDuracaoManutencoesEquipamento, buscarManutencoesEquipamento, consultaIndicadoresManutencaoEquipamento } from "../../api/ManutencaoEquipamentoAPI";
 import { buscarAgendamentosEquipamento } from "../../api/EquipamentoAPi";
 import { differenceInDays } from "date-fns";
 import { eventoCalendario } from "@/components/calendario/CalendarioEventos";
@@ -36,7 +36,7 @@ const ManutencoesEquipamentoView = dynamic(() => import('../../views/Manutencoes
   ssr: true,
 })
 
-const MetricasManutencaoView = dynamic(() => import('../../views/MetricasView'), {
+const MetricasManutencaoView = dynamic(() => import('../../views/MetricasEquipamentoView'), {
   loading: () => {
     return (
       <div className="flex justify-center">
@@ -73,7 +73,7 @@ export default function PageInformacoesEquipamento() {
 
   const estatisticasManutencaoMTTReMTBFEquipamento = useQuery({
     queryKey: ['estatisticasManutencaoMTTRMTBFEquipamento', idEquipamento],
-    queryFn: () => consultaIndicadoresManutencaoEmpresa({equipamentoId: idEquipamento}),
+    queryFn: () => consultaIndicadoresManutencaoEquipamento({equipamentoId: idEquipamento}),
     staleTime: Infinity
   })
 
@@ -194,7 +194,8 @@ export default function PageInformacoesEquipamento() {
             indicadores={{
               dados: estatisticasManutencaoMTTReMTBFEquipamento.data ?? {
                 qtd_manutencoes: 0,
-                total_tempo_parado: 0
+                total_tempo_parado: 0,
+                total_tempo_operacao: 0
               },
               carregandoIndicadores: true
             }}
