@@ -1,7 +1,8 @@
 import { axiosInstance } from "@/lib/AxiosLib";
 import { EquipamentoApiProps } from "./EquipamentoAPi";
 import { 
-  dadosIndicadoresManutencaoType,
+  dadosIndicadoresManutencaoEquipamentoEmpresaType,
+  dadosIndicadoresManutencaoEquipamentoType,
   DadosManutencaoEquipamentoType, 
   DadosNovaOrdemManutencaoType, 
   DuracaoManutencoesEquipamentoType, 
@@ -83,8 +84,8 @@ export async function consultaEstatatisticaManutencao(){
   return response.data
 }
 
-export async function consultaIndicadoresManutencaoEmpresa({ equipamentoId }: EquipamentoProps){
-  const response = await axiosInstance.get<dadosIndicadoresManutencaoType>(`manutencao/indicadores`, {
+export async function consultaIndicadoresManutencaoEquipamento({ equipamentoId }: EquipamentoProps){
+  const response = await axiosInstance.get<dadosIndicadoresManutencaoEquipamentoType>(`manutencao/indicadores/equipamento`, {
     params: {
       equipamentoId
     }
@@ -92,3 +93,11 @@ export async function consultaIndicadoresManutencaoEmpresa({ equipamentoId }: Eq
 
   return response.data
 }
+
+
+export async function consultaIndicadoresManutencaoEquipamentosEmpresa(){
+  const response = await axiosInstance.get<Array<dadosIndicadoresManutencaoEquipamentoEmpresaType>>(`manutencao/indicadores/equipamentos/empresa`)
+
+  return response.data
+}
+

@@ -10,6 +10,7 @@ export type DadosManutencaoEquipamentoType = {
   observacoes: string;
   duracao: Number | null;
   equipamentoParado: Number | null;
+  tempoMaquinaOperacao: Number;
   usuario: {
     pessoa: {
       nome: string;
@@ -43,9 +44,26 @@ export type estatisticasManutencaoType = {
   qtd_manutencoes_em_andamento: number
 }
 
-export type dadosIndicadoresManutencaoType = {
-  total_tempo_parado: number;
-  qtd_manutencoes: number;
+export type dadosIndicadoresManutencaoEquipamentoType = {
+  total_tempo_parado: number
+  qtd_manutencoes: number
+  total_tempo_operacao: number
 }
 
-export type indicadoresFalhasEquipamentoType = { mtbf: number; mttr: number }
+export type dadosIndicadoresManutencaoEquipamentoEmpresaType = {
+  nome: string
+  total_tempo_parado: number
+  qtd_manutencoes: number
+  total_tempo_operacao: number
+}
+
+export type indicadoresFalhasEquipamentoType = { 
+  mtbf: number
+  mttr: number 
+}
+
+export type indicadoresFalhasEquipamentosEmpresaType = { 
+  equipamento: string
+  mttr: number
+  mtbf: number 
+}

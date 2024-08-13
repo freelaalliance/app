@@ -1,6 +1,6 @@
 'use client'
 
-import { ChartConfig, ChartContainer } from "@/components/ui/chart"
+import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { DadosManutencaoEquipamentoType } from "../../schemas/ManutencaoSchema"
 import {
   Label,
@@ -10,6 +10,8 @@ import {
   RadialBarChart,
 } from "recharts"
 import { CardFooter } from "@/components/ui/card"
+import { formatDuration, minutesToHours } from "date-fns"
+import { ptBR } from "date-fns/locale"
 
 interface IndicadorMediaEquipamentoParadoProps {
   listaManutencoes: Array<DadosManutencaoEquipamentoType>
@@ -22,18 +24,21 @@ export default function IndicadoresMediaEquipamentoParado({ listaManutencoes }: 
     return duracaoTotal + Number(manutencoes.equipamentoParado)
   }, 0)
 
-  const mediaTempoParado = isNaN(duracoesTotalParadas) ? 0 : Number(duracoesTotalParadas / manutencoesFinalizadas.length)
+  const duracoesTotalOperando = manutencoesFinalizadas.reduce((duracaoTotal, manutencoes) => {
+    return duracaoTotal + Number(manutencoes.tempoMaquinaOperacao)
+  }, 0)
 
   const chartData = [
-    { type: 'parada', media: (mediaTempoParado > 0 ? mediaTempoParado.toFixed(2) : 0), fill: 'var(--color-media)' }
+    { parado: duracoesTotalParadas, operando: duracoesTotalOperando },
   ]
 
   const chartConfig = {
     parado: {
       label: "Parado",
+      color: "hsl(360, 92%, 35%)",
     },
-    media: {
-      label: "Média",
+    operando: {
+      label: "Operando",
       color: "hsl(0, 0%, 15%)",
     },
   } satisfies ChartConfig
@@ -55,47 +60,37 @@ export default function IndicadoresMediaEquipamentoParado({ listaManutencoes }: 
     <>
       <ChartContainer
         config={chartConfig}
-        className="mx-auto aspect-square max-h-[250px]"
+        className="mx-auto aspect-square w-full max-w-[250px]"
       >
         <RadialBarChart
           data={chartData}
-          startAngle={0}
-          endAngle={250}
-          innerRadius={80}
-          outerRadius={110}
+          endAngle={180}
+          innerRadius={85}
+          outerRadius={120}
         >
-          <PolarGrid
-            gridType="circle"
-            radialLines={false}
-            stroke="none"
-            className="first:fill-muted last:fill-background"
-            polarRadius={[86, 74]}
+          <ChartTooltip
+            cursor={false}
+            content={<ChartTooltipContent hideLabel />}
           />
-          <RadialBar dataKey="media" background cornerRadius={10} />
           <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
             <Label
               content={({ viewBox }) => {
                 if (viewBox && "cx" in viewBox && "cy" in viewBox) {
                   return (
-                    <text
-                      x={viewBox.cx}
-                      y={viewBox.cy}
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                    >
+                    <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle">
                       <tspan
                         x={viewBox.cx}
-                        y={viewBox.cy}
-                        className="fill-foreground text-4xl font-bold"
+                        y={(viewBox.cy || 0) + 25}
+                        className="fill-foreground text-2xl font-bold"
                       >
-                        {chartData[0].media.toLocaleString()}
+                        {formatDuration({ hours: minutesToHours(mediaTempoParadoMesAtual) }, { format: ['hours', 'minutes'], locale: ptBR })}
                       </tspan>
                       <tspan
                         x={viewBox.cx}
-                        y={(viewBox.cy || 0) + 24}
+                        y={(viewBox.cy || 0) + 45}
                         className="fill-muted-foreground"
                       >
-                        Minutos
+                        Média parado
                       </tspan>
                     </text>
                   )
@@ -103,13 +98,22 @@ export default function IndicadoresMediaEquipamentoParado({ listaManutencoes }: 
               }}
             />
           </PolarRadiusAxis>
+          <RadialBar
+            dataKey="parado"
+            stackId="a"
+            cornerRadius={5}
+            fill="var(--color-parado)"
+            className="stroke-transparent stroke-2"
+          />
+          <RadialBar
+            dataKey="operando"
+            fill="var(--color-operando)"
+            stackId="a"
+            cornerRadius={5}
+            className="stroke-transparent stroke-2"
+          />
         </RadialBarChart>
       </ChartContainer>
-      <CardFooter className="text-sm">
-        <div className="font-medium leading-none text-center">
-          {`O tempo médio de equipamento parado este mês é ${mediaTempoParadoMesAtual > 0 ? mediaTempoParado.toFixed(2) : 0} minutos`}
-        </div>
-      </CardFooter>
     </>
   )
 }

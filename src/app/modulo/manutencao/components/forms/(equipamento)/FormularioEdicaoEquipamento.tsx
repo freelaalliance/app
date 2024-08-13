@@ -25,6 +25,11 @@ const schemaEdicaoEquipamentoProps = z.object({
   }).min(1, {
     message: 'Necessário informar o nome do equipamento'
   }),
+  tempoOperacao: z.coerce.number({
+    required_error: 'Necessário informar o tempo de operação do equipamento'
+  }).min(1, {
+    message: 'Necessário informar o tempo mínimo de operação do equipamento'
+  }),
   especificacao: z.string().optional(),
   frequencia: z.coerce.number({
     required_error: 'Necessário informar a frequência de inspeção para o equipamento'
@@ -40,10 +45,11 @@ export interface FormEdicaoEquipamentoProps {
   codigo: string;
   nome: string;
   especificacao?: string;
+  tempoOperacao: number;
   frequencia: number;
 }
 
-export function EdicaoEquipamentoForm({ id, codigo, nome, especificacao, frequencia }: FormEdicaoEquipamentoProps) {
+export function EdicaoEquipamentoForm({ id, codigo, nome, especificacao, frequencia, tempoOperacao }: FormEdicaoEquipamentoProps) {
 
   const queryClient = useQueryClient()
   const formEdicaoEquipamento = useForm<FormEdicaoEquipamentoType>({
@@ -53,6 +59,7 @@ export function EdicaoEquipamentoForm({ id, codigo, nome, especificacao, frequen
       codigo: codigo,
       nome: nome,
       especificacao: especificacao,
+      tempoOperacao: tempoOperacao,
       frequencia: frequencia,
     },
     mode: 'onChange',
@@ -92,23 +99,7 @@ export function EdicaoEquipamentoForm({ id, codigo, nome, especificacao, frequen
     <Form {...formEdicaoEquipamento}>
       <form className="space-y-4" onSubmit={formEdicaoEquipamento.handleSubmit(processarFormulario)}>
         <div className="grid grid-cols-1 gap-2">
-          <div className="grid">
-            <FormField
-              control={formEdicaoEquipamento.control}
-              name="nome"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nome</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Equipamento A1" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
             <FormField
               control={formEdicaoEquipamento.control}
               name="codigo"
@@ -124,12 +115,40 @@ export function EdicaoEquipamentoForm({ id, codigo, nome, especificacao, frequen
             />
             <FormField
               control={formEdicaoEquipamento.control}
+              name="nome"
+              render={({ field }) => (
+                <FormItem className="md:col-span-2">
+                  <FormLabel>Nome</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Equipamento A1" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <FormField
+              control={formEdicaoEquipamento.control}
               name="frequencia"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Frequência inspeção (DIAS)</FormLabel>
                   <FormControl>
                     <Input placeholder="30 dias" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={formEdicaoEquipamento.control}
+              name="tempoOperacao"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tempo de operação (minutos)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="3600 minutos (1h)" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

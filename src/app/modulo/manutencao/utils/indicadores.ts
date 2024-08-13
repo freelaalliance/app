@@ -1,6 +1,7 @@
 interface DadosManutencoesProps {
   tempoTotalParada: number
   qtdParada: number
+  tempoTotalOperacao?: number
 }
 
 interface DadosDisponibilidadeProps{
@@ -8,17 +9,14 @@ interface DadosDisponibilidadeProps{
   mtbf: number
 }
 
-const HORA_OPERACAO = 8
-const TEMPO_DISPONIBILIDADE_EM_MINUTOS = (HORA_OPERACAO * 60)
-
 export function calculaMttr({tempoTotalParada, qtdParada}: DadosManutencoesProps):number{
-  return (tempoTotalParada / qtdParada)
+  return (Number(tempoTotalParada) / Number(qtdParada))
 }
 
-export function calculaMtbf({tempoTotalParada, qtdParada}: DadosManutencoesProps):number{
- return ((TEMPO_DISPONIBILIDADE_EM_MINUTOS - tempoTotalParada) / qtdParada)
+export function calculaMtbf({tempoTotalParada, qtdParada, tempoTotalOperacao}: DadosManutencoesProps):number{
+ return ((Number(tempoTotalOperacao) - Number(tempoTotalParada)) / Number(qtdParada))
 }
 
 export function calculaDisponibilidadeEquipamento({mttr, mtbf}: DadosDisponibilidadeProps):number{
-  return (mtbf / (mtbf - mttr))
+  return (mtbf / (mtbf + mttr)) * 100
 }
