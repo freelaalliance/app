@@ -130,3 +130,15 @@ export function formatarDataBrasil(data: Date): string {
     locale: ptBR,
   })
 }
+
+export function formatCamelCase(palavra: string) {
+  // Adiciona um espaço antes de cada letra maiúscula e transforma tudo em minúsculas
+  const formattedStr = palavra.replace(/([a-z])([A-Z])/g, '$1 $2')
+  const arrayPalavra = formattedStr.split(' ')
+
+  const formatacaoPrimeiraPalavra = String(arrayPalavra[0]).replace(/\b\w/g, function(char) {
+    return char.toUpperCase();
+  })
+  
+  return formatacaoPrimeiraPalavra + (arrayPalavra[1] ? ' ' + arrayPalavra[1].toLowerCase() : '')
+}
