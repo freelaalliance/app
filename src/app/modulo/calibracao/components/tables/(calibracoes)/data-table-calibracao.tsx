@@ -3,6 +3,7 @@
 import {
   flexRender,
   getCoreRowModel,
+  getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
   useReactTable,
@@ -27,31 +28,72 @@ import { NovaCalibracaoDialog } from '../../dialogs/(calibracoes)/NovaCalibracao
 import { Skeleton } from '@/components/ui/skeleton'
 import { toast } from 'sonner'
 import { gerarRelatorioCalibracoes } from '../../../utils/relatorios'
+import { ConfigColunas } from './config-colunas-calibracao'
+import { FiltroStatusCalibracao } from './filtro-status-calibracao'
 
 interface TabelaCalibracoesProps {
   data: Calibracao[]
   carregandoCalibracoes: boolean
 }
 
+export const optionsStatusCalibracao = [
+  {
+    label: 'Aprovado',
+    value: 'aprovado',
+  },
+  {
+    label: 'Reprovado',
+    value: 'reprovado',
+  },
+]
+
 export function TabelaCalibracoes({ data, carregandoCalibracoes }: TabelaCalibracoesProps) {
 
-  const table = useReactTable({
+  const tabela = useReactTable({
     data,
+    initialState: {
+      columnVisibility: {
+        nome: true,
+        codigo: true,
+        data: true,
+        localizacao: false,
+        resolucao: false,
+        marca: false,
+        status: true,
+        usuario: true,
+        observacao: false,
+        frequencia: true,
+        erroEncontrado: true,
+        incertezaTendenciaEncontrado: true,
+        toleranciaEstabelicida: true,
+        numeroCertificado: true,
+        realizadoEm: true,
+      }
+    },
     columns: colunasCalibracao,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues()
   })
 
   const baixarRelatorioInstrumentos = async () => {
     const arquivo = await gerarRelatorioCalibracoes({
-      dados: table.getRowModel().rows.map((row) => {
+      dados: tabela.getRowModel().rows.map((row) => {
         return {
           codigo: row.getValue('codigo'),
           nome: row.getValue('nome'),
-          data: row.getValue('data'),
-          localizacao: row.getValue('localizacao'),
           marca: row.getValue('marca'),
+          localizacao: row.getValue('localizacao'),
+          resolucao: row.getValue('resolucao'),
+          frequencia: row.getValue('frequencia'),
+          data: row.getValue('data'),
+          usuario: row.getValue('usuario'),
+          numeroCertificado: row.getValue('numeroCertificado'),
+          tolerancia: row.getValue('tolerancia'),
+          incertezaTendencia: row.getValue('incertezaTendencia'),
+          erroEncontrado: row.getValue('erroEncontrado'),
+          observacao: row.getValue('observacao'),
           status: row.getValue('status'),
         }
       })
@@ -73,7 +115,7 @@ export function TabelaCalibracoes({ data, carregandoCalibracoes }: TabelaCalibra
   }
 
   return (
-    <div className="w-full space-y-2">
+    <div className="w-full space-y-2 ">
       <div className="flex flex-col items-center gap-2 md:py-4 md:flex-row-reverse md:justify-between">
         <div className="flex flex-row gap-2">
           <Dialog>
@@ -95,23 +137,28 @@ export function TabelaCalibracoes({ data, carregandoCalibracoes }: TabelaCalibra
             {'Exportar'}
           </Button>
         </div>
-
         <div className='flex flex-row gap-2'>
+          <ConfigColunas table={tabela} />
           <Input
             placeholder="Filtrar pelo nome do instrumento..."
             className="w-full md:w-64"
             disabled={data?.length === 0}
-            value={(table.getColumn('nome')?.getFilterValue() as string) ?? ''}
+            value={(tabela.getColumn('nome')?.getFilterValue() as string) ?? ''}
             onChange={(event) =>
-              table.getColumn('nome')?.setFilterValue(event.target.value)
+              tabela.getColumn('nome')?.setFilterValue(event.target.value)
             }
+          />
+          <FiltroStatusCalibracao
+            options={optionsStatusCalibracao}
+            title='Filtrar status'
+            column={tabela.getColumn('status')}
           />
         </div>
       </div>
-      <div className="rounded-md border shadow-md bg-gray-50">
+      <div className="rounded-md border shadow-md bg-gray-50 ">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
+            {tabela.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
@@ -154,8 +201,8 @@ export function TabelaCalibracoes({ data, carregandoCalibracoes }: TabelaCalibra
                     </TableCell>
                   </TableRow>
                 </>
-              ) : table.getRowModel().rows?.length > 0 ? (
-                table.getRowModel().rows.map((row) => (
+              ) : tabela.getRowModel().rows?.length > 0 ? (
+                tabela.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && 'selected'}
@@ -183,13 +230,13 @@ export function TabelaCalibracoes({ data, carregandoCalibracoes }: TabelaCalibra
           </TableBody>
         </Table>
       </div>
-      <div className="grid grid-cols-2 gap-2 md:w-64 md:float-right">
+      <div className="flex items-center justify-end space-x-2 py-2">
         <Button
           className="enabled:shadow-md"
           variant="outline"
           size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
+          onClick={() => tabela.previousPage()}
+          disabled={!tabela.getCanPreviousPage()}
         >
           Voltar
         </Button>
@@ -197,8 +244,8 @@ export function TabelaCalibracoes({ data, carregandoCalibracoes }: TabelaCalibra
           className="enabled:shadow-md"
           variant="outline"
           size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
+          onClick={() => tabela.nextPage()}
+          disabled={!tabela.getCanNextPage()}
         >
           Próximo
         </Button>

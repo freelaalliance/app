@@ -132,10 +132,18 @@ export const calibracaoEsquema = z.object({
   nome: z.string().trim(),
   localizacao: z.string().trim(),
   marca: z.string().trim(),
+  resolucao: z.string().trim(),
+  numeroCertificado: z.string().trim(),
+  observacao: z.optional(z.string()),
+  frequencia: z.coerce.number(),
+  tolerancia: z.coerce.number(),
+  erroEncontrado: z.coerce.number(),
+  incertezaTendencia: z.coerce.number(),
   codigo: z.string().trim(),
   data: z.date(),
   status: z.string(),
   certificado: z.string().trim(),
+  usuario: z.string().trim(),
 })
 
 export type Calibracao = z.infer<typeof calibracaoEsquema>

@@ -5,9 +5,17 @@ interface RelatorioCalibracoesProps{
   dados: Array<{
     codigo: string;
     nome: string;
-    localizacao: string;
     marca: string;
+    localizacao: string;
+    resolucao: number;
+    frequencia: number;
     data: Date;
+    usuario: string;
+    numeroCertificado: string;
+    tolerancia: number;
+    incertezaTendencia: number;
+    erroEncontrado: number;
+    observacao: number;
     status: string;
   }>
 }
@@ -18,22 +26,38 @@ export async function gerarRelatorioCalibracoes({ dados }: RelatorioCalibracoesP
 
   excelLib.addTitleRow([`Gerado em ${formatarDataBrasil(new Date())}`])
   excelLib.addSubtitleRow([
-    'Cod.',
-    'Nome',
-    'Localização',
+    'Codigo',
+    'Nome do instrumento',
     'Marca',
+    'Maquina/Localização',
+    'Resolução',
+    'Frequencia de calibração (Mês)',
     'Calibrado em',
+    'Realizado por',
+    'Nº do certificado',
+    'Tolerancia de processo',
+    'Incerteza ou tendência encontrado',
+    'Erro encontrado',
+    'Observações',
     'Status'
   ])
 
-  const linhas = dados.map((equipamento) => {
+  const linhas = dados.map((calibracao) => {
     return [
-      equipamento.codigo,
-      equipamento.nome,
-      equipamento.localizacao,
-      equipamento.marca,
-      equipamento.data? formatarDataBrasil(new Date(equipamento.data)) : '--',
-      equipamento.status.toUpperCase(),
+      calibracao.codigo,
+      calibracao.nome,
+      calibracao.marca,
+      calibracao.localizacao,
+      calibracao.resolucao,
+      calibracao.frequencia,
+      calibracao.data? formatarDataBrasil(new Date(calibracao.data)) : '--',
+      calibracao.usuario,
+      calibracao.numeroCertificado,
+      calibracao.tolerancia,
+      calibracao.incertezaTendencia,
+      calibracao.erroEncontrado,
+      calibracao.observacao,
+      calibracao.status.toUpperCase(),
     ]
   })
 
