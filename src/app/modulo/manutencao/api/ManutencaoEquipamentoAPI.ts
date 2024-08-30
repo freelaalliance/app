@@ -1,10 +1,22 @@
 import { axiosInstance } from "@/lib/AxiosLib";
 import { EquipamentoApiProps } from "./EquipamentoAPi";
-import { DadosManutencaoEquipamentoType, DadosNovaOrdemManutencaoType, DuracaoManutencoesEquipamentoType } from "../schemas/ManutencaoSchema";
+import { 
+  dadosIndicadoresManutencaoEquipamentoEmpresaType,
+  dadosIndicadoresManutencaoEquipamentoType,
+  DadosManutencaoEquipamentoType, 
+  DadosNovaOrdemManutencaoType, 
+  DuracaoManutencoesEquipamentoType, 
+  estatisticasEquipamentoType, 
+  estatisticasManutencaoType 
+} from "../schemas/ManutencaoSchema";
 
 interface ManutencaoEquipamentoProps {
   idManutencao: string
   equipamentoId: string
+}
+
+interface EquipamentoProps {
+  equipamentoId?: string|null
 }
 
 interface FinalizacaoManutencaoEquipamentoProps {
@@ -45,7 +57,9 @@ export async function finalizarManutencao({idManutencao, equipamentoId, finaliza
 }
 
 export async function buscarDuracaoManutencoesEquipamento({equipamentoId}: EquipamentoApiProps){
-  const response = await axiosInstance.get<Array<DuracaoManutencoesEquipamentoType>>(`manutencao/equipamento/${equipamentoId}/duracao`)
+  const response = await axiosInstance.get<Array<DuracaoManutencoesEquipamentoType>>(
+    `manutencao/equipamento/${equipamentoId}/duracao`
+  )
 
   return response.data
 }
@@ -57,3 +71,33 @@ export async function criarNovaManutencaoEquipamento({observacao, equipamentoId}
 
   return response.data
 }
+
+export async function consultaEstatatisticaEquipamento(){
+  const response = await axiosInstance.get<estatisticasEquipamentoType>(`manutencao/equipamento/estatatisticas/status`)
+
+  return response.data
+}
+
+export async function consultaEstatatisticaManutencao(){
+  const response = await axiosInstance.get<estatisticasManutencaoType>(`manutencao/estatisticas`)
+
+  return response.data
+}
+
+export async function consultaIndicadoresManutencaoEquipamento({ equipamentoId }: EquipamentoProps){
+  const response = await axiosInstance.get<dadosIndicadoresManutencaoEquipamentoType>(`manutencao/indicadores/equipamento`, {
+    params: {
+      equipamentoId
+    }
+  })
+
+  return response.data
+}
+
+
+export async function consultaIndicadoresManutencaoEquipamentosEmpresa(){
+  const response = await axiosInstance.get<Array<dadosIndicadoresManutencaoEquipamentoEmpresaType>>(`manutencao/indicadores/equipamentos/empresa`)
+
+  return response.data
+}
+

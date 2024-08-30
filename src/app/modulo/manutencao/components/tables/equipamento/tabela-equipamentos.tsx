@@ -4,12 +4,14 @@ import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel
 import { DadosEquipamentoType } from "../../../schemas/EquipamentoSchema"
 import { colunasEquipamento } from "./colunas-tabela-equipamentos"
 import { Button } from "@/components/ui/button"
-import { Plus } from "lucide-react"
+import { ArrowBigDownDash, Plus } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Dialog, DialogTrigger } from "@/components/ui/dialog"
 import { NovoEquipamentoDialog } from "../../dialogs/(equipamento)/NovoEquipamentoDialog"
+import { gerarRelatorioEquipamentos } from "../../../utils/relatorio"
+import { toast } from "sonner"
 
 interface TabelaEquipamentosProps {
   data: Array<DadosEquipamentoType>
@@ -25,18 +27,56 @@ export function TabelaEquipamentos({ data, carregandoEquipamentos }: TabelaEquip
     getFilteredRowModel: getFilteredRowModel(),
   })
 
+  const baixarRelatorioEquipamentos = async () => {
+    const arquivo = await gerarRelatorioEquipamentos({
+      dados: tabela.getRowModel().rows.map((row) => {
+        return {
+          codigo: row.getValue('codigo'),
+          nome: row.getValue('nome'),
+          frequencia: row.getValue('frequencia'),
+          inspecionadoEm: row.getValue('inspecionadoEm') ?? null,
+          concertadoEm: row.getValue('concertadoEm') ?? null,
+          status: row.getValue('status'),
+        }
+      })
+    })
+
+    toast.success('Relatorio gerado com sucesso!', {
+      closeButton: true,
+      action: {
+        label: 'Clique para baixar',
+        onClick: () => {
+          const url = window.URL.createObjectURL(arquivo)
+          const a = document.createElement('a')
+          a.href = url
+          a.download = 'relatório-equipamentos.xlsx'
+          a.click()
+        },
+      },
+    })
+  }
+
   return (
     <div className="space-y-2 w-full">
-      <div className="flex flex-col items-center gap-2 py-4 md:flex-row-reverse md:justify-between">
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button className="shadow bg-sky-400 hover:bg-sky-500 flex md:justify-between justify-center md:gap-4 gap-2 w-full md:w-auto">
-              <Plus className="size-5" />
-              {'Novo'}
-            </Button>
-          </DialogTrigger>
-          <NovoEquipamentoDialog />
-        </Dialog>
+      <div className="flex flex-col items-center gap-2 py-2 md:flex-row-reverse md:justify-between">
+        <div className="flex flex-row gap-2">
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="shadow bg-padrao-red hover:bg-red-800 flex md:justify-between justify-center md:gap-4 gap-2 w-full md:w-auto">
+                <Plus className="size-5" />
+                {'Novo'}
+              </Button>
+            </DialogTrigger>
+            <NovoEquipamentoDialog />
+          </Dialog>
+          <Button
+            className="shadow bg-padrao-gray-250 hover:bg-gray-900 flex md:justify-between justify-center md:gap-4 gap-2 w-full md:w-auto"
+            onClick={baixarRelatorioEquipamentos}
+          >
+            <ArrowBigDownDash className="size-5" />
+            {'Exportar'}
+          </Button>
+        </div>
         <div className="flex gap-2">
           <Input
             placeholder="Filtrar pelo nome do equipamento..."

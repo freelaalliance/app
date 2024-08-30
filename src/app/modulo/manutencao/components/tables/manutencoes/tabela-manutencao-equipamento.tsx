@@ -28,16 +28,16 @@ export function TabelaManutencoesEquipamento({ idEquipamento, data, carregandoMa
   const manutencaoAberto = data.filter((manutencoes) => manutencoes.criadoEm && (!manutencoes.finalizadoEm && !manutencoes.canceladoEm))
 
   return (
-    <div className="space-y-2">
+    <div className="w-full space-y-2">
       <div className="flex-1">
         <Dialog>
           <DialogTrigger asChild>
             <Button
               disabled={manutencaoAberto.length > 0}
-              className="shadow bg-sky-500 hover:bg-sky-600 gap-2"
+              className="shadow bg-padrao-red hover:bg-red-800 gap-2"
             >
               <Plus className="size-5" />
-              Abrir ordem de manutenção
+              Nova ordem de serviço
             </Button>
           </DialogTrigger>
           <NovaOrdemManutencaoDialog equipamentoId={idEquipamento}/>

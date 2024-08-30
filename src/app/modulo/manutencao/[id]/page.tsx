@@ -13,10 +13,5 @@ const EquipamentoView = dynamic(() => import('../views/EquipamentosView'), {
 })
 
 export default function EquipamentoManutencao(){
-  
-  return (
-    <div className="flex flex-row justify-center">
-      <EquipamentoView/>
-    </div>
-  )
+  return <EquipamentoView/>
 }

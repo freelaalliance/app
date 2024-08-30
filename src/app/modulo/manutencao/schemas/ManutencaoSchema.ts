@@ -10,6 +10,7 @@ export type DadosManutencaoEquipamentoType = {
   observacoes: string;
   duracao: Number | null;
   equipamentoParado: Number | null;
+  tempoMaquinaOperacao: Number;
   usuario: {
     pessoa: {
       nome: string;
@@ -32,3 +33,37 @@ export const schemaFormNovaOrdemManutencao = z.object({
 })
 
 export type DadosNovaOrdemManutencaoType = z.infer<typeof schemaFormNovaOrdemManutencao>
+
+export type estatisticasEquipamentoType = {
+  qtd_equipamentos_parados: number
+  qtd_equipamentos_funcionando: number
+}
+
+export type estatisticasManutencaoType = {
+  qtd_equipamentos_manutencao_em_dia: number
+  qtd_manutencoes_em_andamento: number
+}
+
+export type dadosIndicadoresManutencaoEquipamentoType = {
+  total_tempo_parado: number
+  qtd_manutencoes: number
+  total_tempo_operacao: number
+}
+
+export type dadosIndicadoresManutencaoEquipamentoEmpresaType = {
+  nome: string
+  total_tempo_parado: number
+  qtd_manutencoes: number
+  total_tempo_operacao: number
+}
+
+export type indicadoresFalhasEquipamentoType = { 
+  mtbf: number
+  mttr: number 
+}
+
+export type indicadoresFalhasEquipamentosEmpresaType = { 
+  equipamento: string
+  mttr: number
+  mtbf: number 
+}

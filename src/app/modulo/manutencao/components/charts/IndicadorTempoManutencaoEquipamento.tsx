@@ -18,19 +18,6 @@ interface RankingDuracaoManutencaoProps {
 
 export default function RankingDurancaoManutencaoEquipamento({ dados }: RankingDuracaoManutencaoProps) {
 
-  // const chartData = dados.map((manutencao) => {
-
-  //   const mesAnoManutencao = manutencao.inicioManutencao.split('-')
-
-  //   return {
-  //     ano: mesAnoManutencao[0],
-  //     mes: format(new Date(Number(mesAnoManutencao[0]), Number(mesAnoManutencao[1])), 'MMMMMM', {
-  //       locale: ptBR
-  //     }),
-  //     duracao: manutencao.duracao,
-  //   }
-  // })
-
   const meses = [
     'Janeiro',
     'Fevereiro',
@@ -69,7 +56,7 @@ export default function RankingDurancaoManutencaoEquipamento({ dados }: RankingD
   const chartConfig = {
     duracao: {
       label: "Min",
-      color: "hsl(360, 92%, 35%)",
+      color: "hsl(0, 0%, 15%)",
     },
     label: {
       color: "hsl(var(--background))",

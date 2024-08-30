@@ -4,7 +4,7 @@ import { FormularioAutenticacao } from '@/components/auth/form/FormularioAutenti
 
 export default function Auth() {
   return (
-    <main className="flex h-screen ">
+    <main className="flex flex-row h-screen">
       <div className="hidden lg:flex items-center justify-center flex-1">
         <div className="max-w-md text-center">
           <Image
@@ -21,7 +21,7 @@ export default function Auth() {
           <div className="absolute inset-1 sm:inset-0 bg-gradient-to-r from-red-300 to-padrao-red shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl rounded"></div>
           <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20 rounded">
             <div className="max-w-md mx-auto">
-              <div className="">
+              <div>
                 <Image
                   loading="lazy"
                   src={'/logo_alliance_colorido.png'}

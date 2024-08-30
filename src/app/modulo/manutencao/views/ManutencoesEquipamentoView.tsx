@@ -1,9 +1,5 @@
 'use client'
 
-import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { buscarDuracaoManutencoesEquipamento, buscarManutencoesEquipamento } from "../api/ManutencaoEquipamentoAPI"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
 import { differenceInMinutes, formatDistance } from "date-fns"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Check, MailWarning, Play } from "lucide-react"
@@ -13,29 +9,17 @@ import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { TabelaManutencoesEquipamento } from "../components/tables/manutencoes/tabela-manutencao-equipamento"
 import { AlertIniciarManutencaoEquipamento } from "../components/dialogs/(manutencao)/AlertDialogIniciarManutencao"
 import { AlertEncerrarManutencaoEquipamento } from "../components/dialogs/(manutencao)/AlertDialogEncerrarManutencao"
-import RankingDurancaoManutencaoEquipamento from "../components/charts/IndicadorTempoManutencaoEquipamento"
-import IndicadoresMediaDuracaoManutencoesEquipamento from "../components/charts/IndicadorMediaDuracaoEquipamento"
-import IndicadoresMediaEquipamentoParado from "../components/charts/IndicadorMediaEquipamentoParado"
+import { DadosManutencaoEquipamentoType } from "../schemas/ManutencaoSchema"
 
 interface ManutencaoEquipamentoProps {
-  idEquipamento?: string
+  idEquipamento: string
+  listaManutencoes: Array<DadosManutencaoEquipamentoType>
+  carregandoManutencoes: boolean
 }
 
-export default function ManutencoesEquipamentoView({ idEquipamento }: ManutencaoEquipamentoProps) {
+export default function ManutencoesEquipamentoView({ idEquipamento, carregandoManutencoes, listaManutencoes }: ManutencaoEquipamentoProps) {
 
-  const { data: estatisticasDuracaoManutencoesEquipamento, isLoading: carregandoEstatisticaDuracao } = useQuery({
-    queryKey: ['estatisticaDuracaoManutencoesEquipamento', idEquipamento],
-    queryFn: () => buscarDuracaoManutencoesEquipamento({ equipamentoId: idEquipamento ?? '' }),
-    staleTime: Infinity
-  })
-
-  const { data: manutencoesEquipamento, isLoading: carregandoManutencoes } = useQuery({
-    queryKey: ['manutencoesEquipamento', idEquipamento],
-    queryFn: () => buscarManutencoesEquipamento({ equipamentoId: idEquipamento ?? '' }),
-    staleTime: Infinity
-  })
-
-  const manutencaoAndamento = manutencoesEquipamento?.find((manutencoes) => manutencoes.criadoEm && (!manutencoes.finalizadoEm && !manutencoes.canceladoEm))
+  const manutencaoAndamento = listaManutencoes.find((manutencoes) => manutencoes.criadoEm && (!manutencoes.finalizadoEm && !manutencoes.canceladoEm))
   const tempoEquipamentoParado = manutencaoAndamento ? differenceInMinutes(new Date(), new Date(manutencaoAndamento?.criadoEm)) : 0
 
   return (
@@ -72,72 +56,8 @@ export default function ManutencoesEquipamentoView({ idEquipamento }: Manutencao
           }
         </Alert>
       )}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-        <Card className="grid">
-          <CardHeader>
-            <CardTitle>Ranking manutenções</CardTitle>
-            <CardDescription>
-              {
-                'Ranking de durações de manutenções no equipamento'
-              }
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="px-0 mx-4">
-            {
-              carregandoEstatisticaDuracao ? (
-                <div className="flex-1 justify-center gap-2">
-                  <Skeleton className="h-52 w-52 rounded-full my-6" />
-                </div>
-              ) : (
-                <div className="flex-1">
-                  <RankingDurancaoManutencaoEquipamento dados={estatisticasDuracaoManutencoesEquipamento ?? []} />
-                </div>
-              )
-            }
-          </CardContent>
-        </Card>
-        <Card className="grid">
-          <CardHeader className="items-center pb-0">
-            <CardTitle>Equipamento parado</CardTitle>
-            <CardDescription>
-              Duração média total do equipamento parado
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex-1 pb-0">
-            {
-              carregandoManutencoes ? (
-                <div className="flex flex-col md:flex-row justify-center items-center gap-2">
-                  <Skeleton className="h-52 w-52 rounded-full my-6" />
-                </div>
-              ) : (
-                <div className="flex-1 justify-center">
-                  <IndicadoresMediaEquipamentoParado listaManutencoes={manutencoesEquipamento ?? []} />
-                </div>
-              )
-            }
-          </CardContent>
-        </Card>
-        <Card className="flex flex-col">
-          <CardHeader className="items-center pb-0">
-            <CardTitle>Duração da manutenções</CardTitle>
-            <CardDescription>
-              Média de duração das manutenções realizadas
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex-1 pb-0">
-            {
-              carregandoManutencoes ? (
-                <div className="flex flex-col md:flex-row justify-center items-center gap-2">
-                  <Skeleton className="h-52 w-52 rounded-full my-6" />
-                </div>
-              ) : (
-                <IndicadoresMediaDuracaoManutencoesEquipamento listaManutencoes={manutencoesEquipamento ?? []} />
-              )
-            }
-          </CardContent>
-        </Card>
-      </div>
-      <TabelaManutencoesEquipamento carregandoManutencoes={carregandoManutencoes} data={manutencoesEquipamento ?? []} idEquipamento={idEquipamento ?? ''} />
+      
+      <TabelaManutencoesEquipamento carregandoManutencoes={carregandoManutencoes} data={listaManutencoes} idEquipamento={idEquipamento} />
     </section>
   )
 }

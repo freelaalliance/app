@@ -3,7 +3,6 @@ import { DadosAgendaEquipamentoType, DadosEquipamentoType, DadosPecasEquipamento
 import { TabelaPecasEquipamentoProps } from "../components/tables/pecas_equipamento/tabela-pecas-equipamento"
 import { ExcluirEquipamentoDialogProps } from "../components/dialogs/(equipamento)/ExclusaoEquipamentoDialog"
 import { ExclusaoPecaEquipamentoProps } from "../components/dialogs/(equipamento)/ExclusaoPecaEquipamentoDialog"
-import { NovaInspecaoEquipamentoProps } from "../components/dialogs/(inspecao)/NovaInspecaoEquipamentoDialog"
 import { FormEdicaoEquipamentoType } from "../components/forms/(equipamento)/FormularioEdicaoEquipamento"
 
 export interface EquipamentoApiProps {
@@ -67,8 +66,8 @@ export async function atualizarPecaEquipamento({ id, equipamentoId, nome, descri
   return response.data
 }
 
-export async function atualizarEquipamento({ id, codigo, nome, especificacao, frequencia }: FormEdicaoEquipamentoType) {
-  const response = await axiosInstance.put<DadosEquipamentoType>(`equipamento/${id}`, { codigo, nome, especificacao, frequencia })
+export async function atualizarEquipamento({ id, codigo, nome, especificacao, frequencia, tempoOperacao }: FormEdicaoEquipamentoType) {
+  const response = await axiosInstance.put<DadosEquipamentoType>(`equipamento/${id}`, { codigo, nome, especificacao, frequencia, tempoOperacao })
 
   return response.data
 }

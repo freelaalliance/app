@@ -26,6 +26,7 @@ export function NovoEquipamentoForm() {
       codigo: '',
       especificacao: '',
       frequencia: 0,
+      tempoOperacao: 0,
       pecas: []
     },
     mode: 'onChange',
@@ -80,20 +81,7 @@ export function NovoEquipamentoForm() {
       <form className="space-y-4" onSubmit={formNovoEquipamento.handleSubmit(processarFormulario)}>
         <div className="grid grid-cols-1 md:grid-cols-5 space-y-2 md:space-x-4">
           <div className="md:col-span-2 space-y-2">
-            <FormField
-              control={formNovoEquipamento.control}
-              name="nome"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nome</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Equipamento A1" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
               <FormField
                 control={formNovoEquipamento.control}
                 name="codigo"
@@ -109,12 +97,40 @@ export function NovoEquipamentoForm() {
               />
               <FormField
                 control={formNovoEquipamento.control}
+                name="nome"
+                render={({ field }) => (
+                  <FormItem className="md:col-span-2">
+                    <FormLabel>Nome</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Equipamento A1" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <FormField
+                control={formNovoEquipamento.control}
                 name="frequencia"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Frequência inspeção (DIAS)</FormLabel>
                     <FormControl>
                       <Input placeholder="30 dias" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={formNovoEquipamento.control}
+                name="tempoOperacao"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Tempo de operação (minutos)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="3600 minutos (1h)" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

@@ -1,6 +1,6 @@
 import { axiosInstance } from "@/lib/AxiosLib"
 import { DadosInspecoesEquipamentoType } from "../schemas/EquipamentoSchema"
-import { DadosFinalizacaoInspecaoType, DadosInspecaoType, PontosInspecaoType } from "../schemas/InspecaoSchema"
+import { AgendaInspecoesEmpresa, DadosFinalizacaoInspecaoType, DadosInspecaoType, PontosInspecaoType } from "../schemas/InspecaoSchema"
 import { EquipamentoApiProps } from "./EquipamentoAPi"
 
 export async function buscarInspecoesEquipamento({equipamentoId}: EquipamentoApiProps){
@@ -37,3 +37,10 @@ export async function salvarFinalizacaoInspecaoEquipamento({id, iniciadoEm, fina
 
   return response.data
 }
+
+export async function buscarAgendaInspecoesEmpresa(){
+  const response = await axiosInstance.get<Array<AgendaInspecoesEmpresa>>(`inspecao/agenda`)
+
+  return response.data
+}
+
