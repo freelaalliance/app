@@ -27,8 +27,15 @@ export default function App() {
 
   function acessarModulo(id: string, url: string) {
     localStorage.setItem('modulo', id)
+    const regexIdModulo = /\[id\]/g
 
-    router.push(`${url}/${id}`)
+    let novaUrl = `${url}/${id}`
+
+    if (regexIdModulo.test(url)) {
+      novaUrl = url.replace(regexIdModulo, id)
+    }
+
+    router.push(novaUrl)
   }
 
   return (

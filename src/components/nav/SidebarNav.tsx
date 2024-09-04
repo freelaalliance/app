@@ -15,6 +15,7 @@ export function SidebarNav({
   ...props
 }: React.HTMLAttributes<HTMLElement>) {
   const pathname = usePathname()
+  const regexIdModulo = /\[id\]/g
   let idModulo = null
 
   if (typeof window !== 'undefined') {
@@ -30,9 +31,23 @@ export function SidebarNav({
 
   const sidebarNavItems = listaPermissoesPerfil
     ? listaPermissoesPerfil?.map((funcao) => {
+        if (idModulo) {
+          if (regexIdModulo.test(funcao.url)) {
+            return {
+              href: funcao.url.replace(regexIdModulo, idModulo),
+              title: funcao.nome,
+            }
+          } else {
+            return {
+              href: funcao.url + '/' + idModulo,
+              title: funcao.nome,
+            }
+          }
+        }
+
         return {
-          href: funcao.url + '/' + idModulo,
-          title: funcao.nome,
+          href: '',
+          title: '',
         }
       })
     : []
