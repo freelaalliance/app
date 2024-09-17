@@ -9,13 +9,10 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function validaCNPJ(cnpj: string) {
-  cnpj = cnpj.replace(/[^\d]+/g, '')
-
   if (cnpj === '') return false
 
   if (cnpj.length !== 14) return false
 
-  // Elimina CNPJs invalidos conhecidos
   if (
     cnpj === '00000000000000' ||
     cnpj === '11111111111111' ||
@@ -30,16 +27,17 @@ export function validaCNPJ(cnpj: string) {
   )
     return false
 
-  // Valida DVs
   let tamanho = cnpj.length - 2
   let numeros = cnpj.substring(0, tamanho)
   const digitos = cnpj.substring(tamanho)
   let soma = 0
   let pos = tamanho - 7
+
   for (let i = tamanho; i >= 1; i--) {
     soma += Number(numeros.charAt(tamanho - i)) * pos--
     if (pos < 2) pos = 9
   }
+
   let resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11)
   if (resultado !== Number(digitos.charAt(0))) return false
 
@@ -47,14 +45,61 @@ export function validaCNPJ(cnpj: string) {
   numeros = cnpj.substring(0, tamanho)
   soma = 0
   pos = tamanho - 7
+
   for (let i = tamanho; i >= 1; i--) {
     soma += Number(numeros.charAt(tamanho - i)) * pos--
     if (pos < 2) pos = 9
   }
+
   resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11)
   if (resultado !== Number(digitos.charAt(1))) return false
 
   return true
+}
+
+export function validarCPF(cpf: string) {
+  if (cpf.length !== 11) return false
+
+  if (
+    cpf === '00000000000' ||
+    cpf === '11111111111' ||
+    cpf === '22222222222' ||
+    cpf === '33333333333' ||
+    cpf === '44444444444' ||
+    cpf === '55555555555' ||
+    cpf === '66666666666' ||
+    cpf === '77777777777' ||
+    cpf === '88888888888' ||
+    cpf === '99999999999'
+  )
+    return false
+
+  let sum, rest
+  sum = 0
+  for (let i = 1; i <= 9; i++) {
+    sum = sum + parseInt(cpf.substring(i - 1, i)) * (11 - i)
+  }
+
+  rest = (sum * 10) % 11
+  if (rest === 10 || rest === 11) rest = 0
+  if (rest !== parseInt(cpf.substring(9, 10))) return false
+
+  sum = 0
+  for (let i = 1; i <= 10; i++) {
+    sum = sum + parseInt(cpf.substring(i - 1, i)) * (12 - i)
+  }
+
+  rest = (sum * 10) % 11
+  if (rest === 10 || rest === 11) rest = 0
+  if (rest !== parseInt(cpf.substring(10, 11))) return false
+
+  return true
+}
+
+export function validarDocumento(documento: string) {
+  documento = documento.replace(/[^\d]+/g, '')
+
+  return documento.length === 11 ? validarCPF(documento) : validaCNPJ(documento)
 }
 
 export function encodeFileToBase64(file: File | string): Promise<string> {
@@ -110,10 +155,10 @@ export const downloadFileFromBase64 = (
 }
 
 export async function handleDownloadFile(
-  certificado: string,
+  anexo: string,
   id: string,
 ): Promise<void> {
-  const tipoArquivo: string | null = identifyFileTypeFromBase64(certificado)
+  const tipoArquivo: string | null = identifyFileTypeFromBase64(anexo)
 
   if (!tipoArquivo) {
     toast.error('Falha ao identificar o tipo de arquivo, tente novamente!')
@@ -122,7 +167,7 @@ export async function handleDownloadFile(
 
   const extensao = tipoArquivo.split('/')[1]
 
-  await downloadFileFromBase64(certificado, `certificado_${id}.${extensao}`)
+  await downloadFileFromBase64(anexo, `anexo_${id}.${extensao}`)
 }
 
 export function formatarDataBrasil(data: Date): string {
@@ -136,9 +181,59 @@ export function formatCamelCase(palavra: string) {
   const formattedStr = palavra.replace(/([a-z])([A-Z])/g, '$1 $2')
   const arrayPalavra = formattedStr.split(' ')
 
-  const formatacaoPrimeiraPalavra = String(arrayPalavra[0]).replace(/\b\w/g, function(char) {
-    return char.toUpperCase();
-  })
-  
-  return formatacaoPrimeiraPalavra + (arrayPalavra[1] ? ' ' + arrayPalavra[1].toLowerCase() : '')
+  const formatacaoPrimeiraPalavra = String(arrayPalavra[0]).replace(
+    /\b\w/g,
+    (char) => {
+      return char.toUpperCase()
+    },
+  )
+
+  return (
+    formatacaoPrimeiraPalavra +
+    (arrayPalavra[1] ? ' ' + arrayPalavra[1].toLowerCase() : '')
+  )
+}
+
+export function formatarDocumento(valor: string): string {
+  const valorNumeros = valor.replace(/\D/g, '')
+
+  if (valorNumeros.length === 11) {
+    return valorNumeros.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
+  }
+
+  return valorNumeros.replace(
+    /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
+    '$1.$2.$3/$4-$5',
+  )
+}
+
+export function aplicarMascaraDocumento(valor: string): string {
+  const valorNumeros = String(valor).replace(/\D/g, '')
+
+  if (valorNumeros.length === 11) {
+    return valorNumeros.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.***.***-$4')
+  }
+  return valorNumeros.replace(
+    /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
+    '$1.***.***/$4-$5',
+  )
+}
+
+export function formatarValorMoeda(valor: number): string {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  }).format(valor)
+}
+
+export function formatarNumeroTelefone(telefone: string): string {
+  if (telefone.length === 9) {
+    return telefone.replace(/(\d{1})(\d{4})(\d{4})/, '$1 $2-$3')
+  }
+
+  return telefone.replace(/(\d{4})(\d{4})/, '$1-$2')
+}
+
+export function removerCaracteresEspecial(informacao: string) {
+  return informacao.replace(/[^a-zA-Z0-9 ]/g, '')
 }

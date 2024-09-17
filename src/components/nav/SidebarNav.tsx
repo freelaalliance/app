@@ -1,7 +1,7 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { v4 as uuidv4 } from 'uuid'
@@ -9,6 +9,8 @@ import { v4 as uuidv4 } from 'uuid'
 import { listarPermissoesModuloPerfil } from '@/app/modulo/administrativo/empresa/api/Permissao'
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+
+import { Skeleton } from '../ui/skeleton'
 
 export function SidebarNav({
   className,
@@ -76,7 +78,12 @@ export function SidebarNav({
       </Link>
 
       {carregandoPermissoes ? (
-        <Loader2 className="animate-spin" />
+        <>
+          <Skeleton className="w-auto h-10 rounded shadow" />
+          <Skeleton className="w-auto h-10 rounded shadow" />
+          <Skeleton className="w-auto h-10 rounded shadow" />
+          <Skeleton className="w-auto h-10 rounded shadow" />
+        </>
       ) : (
         sidebarNavItems.map((item) => {
           return (

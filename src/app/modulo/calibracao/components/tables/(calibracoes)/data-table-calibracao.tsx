@@ -8,9 +8,13 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { ArrowBigDownDash, Plus } from 'lucide-react'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
+import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Table,
   TableBody,
@@ -20,14 +24,11 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-import { colunasCalibracao } from './colunas-lista-calibracao'
 import { Calibracao } from '../../../schemas/(calibracoes)/SchemaNovaCalibracao'
-import { Dialog, DialogTrigger } from '@/components/ui/dialog'
-import { ArrowBigDownDash, Plus } from 'lucide-react'
-import { NovaCalibracaoDialog } from '../../dialogs/(calibracoes)/NovaCalibracaoDialog'
-import { Skeleton } from '@/components/ui/skeleton'
-import { toast } from 'sonner'
 import { gerarRelatorioCalibracoes } from '../../../utils/relatorios'
+import { NovaCalibracaoDialog } from '../../dialogs/(calibracoes)/NovaCalibracaoDialog'
+
+import { colunasCalibracao } from './colunas-lista-calibracao'
 import { ConfigColunas } from './config-colunas-calibracao'
 import { FiltroStatusCalibracao } from './filtro-status-calibracao'
 
@@ -47,8 +48,10 @@ export const optionsStatusCalibracao = [
   },
 ]
 
-export function TabelaCalibracoes({ data, carregandoCalibracoes }: TabelaCalibracoesProps) {
-
+export function TabelaCalibracoes({
+  data,
+  carregandoCalibracoes,
+}: TabelaCalibracoesProps) {
   const tabela = useReactTable({
     data,
     initialState: {
@@ -68,13 +71,13 @@ export function TabelaCalibracoes({ data, carregandoCalibracoes }: TabelaCalibra
         toleranciaEstabelicida: true,
         numeroCertificado: true,
         realizadoEm: true,
-      }
+      },
     },
     columns: colunasCalibracao,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues()
+    getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
   const baixarRelatorioInstrumentos = async () => {
@@ -96,7 +99,7 @@ export function TabelaCalibracoes({ data, carregandoCalibracoes }: TabelaCalibra
           observacao: row.getValue('observacao'),
           status: row.getValue('status'),
         }
-      })
+      }),
     })
 
     toast.success('Relatorio gerado com sucesso!', {
@@ -120,9 +123,7 @@ export function TabelaCalibracoes({ data, carregandoCalibracoes }: TabelaCalibra
         <div className="flex flex-row gap-2">
           <Dialog>
             <DialogTrigger asChild>
-              <Button
-                className="shadow bg-padrao-red hover:bg-red-800 flex md:justify-between justify-center md:gap-4 gap-2 w-full md:w-auto"
-              >
+              <Button className="shadow bg-padrao-red hover:bg-red-800 flex md:justify-between justify-center md:gap-4 gap-2 w-full md:w-auto">
                 <Plus />
                 {'Novo'}
               </Button>
@@ -137,7 +138,7 @@ export function TabelaCalibracoes({ data, carregandoCalibracoes }: TabelaCalibra
             {'Exportar'}
           </Button>
         </div>
-        <div className='flex flex-row gap-2'>
+        <div className="flex flex-row gap-2">
           <ConfigColunas table={tabela} />
           <Input
             placeholder="Filtrar pelo nome do instrumento..."
@@ -150,12 +151,12 @@ export function TabelaCalibracoes({ data, carregandoCalibracoes }: TabelaCalibra
           />
           <FiltroStatusCalibracao
             options={optionsStatusCalibracao}
-            title='Filtrar status'
+            title="Filtrar status"
             column={tabela.getColumn('status')}
           />
         </div>
       </div>
-      <div className="rounded-md border shadow-md bg-gray-50 ">
+      <div className="rounded-md border shadow-md bg-gray-50 overflow-auto">
         <Table>
           <TableHeader>
             {tabela.getHeaderGroups().map((headerGroup) => (
@@ -166,9 +167,9 @@ export function TabelaCalibracoes({ data, carregandoCalibracoes }: TabelaCalibra
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
                     </TableHead>
                   )
                 })}
@@ -176,57 +177,50 @@ export function TabelaCalibracoes({ data, carregandoCalibracoes }: TabelaCalibra
             ))}
           </TableHeader>
           <TableBody>
-            {
-              carregandoCalibracoes ? (
-                <>
-                  <TableRow>
-                    <TableCell
-                      colSpan={colunasCalibracao.length}
-                    >
-                      <Skeleton className="h-4 w-full rounded" />
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell
-                      colSpan={colunasCalibracao.length}
-                    >
-                      <Skeleton className="h-4 w-full rounded" />
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell
-                      colSpan={colunasCalibracao.length}
-                    >
-                      <Skeleton className="h-4 w-full rounded" />
-                    </TableCell>
-                  </TableRow>
-                </>
-              ) : tabela.getRowModel().rows?.length > 0 ? (
-                tabela.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && 'selected'}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
+            {carregandoCalibracoes ? (
+              <>
                 <TableRow>
-                  <TableCell
-                    colSpan={colunasCalibracao.length}
-                    className="h-16 text-center text-padrao-gray-200 text-sm font-medium mt-5 md:text-base lg:text-lg"
-                  >
-                    Nenhuma calibração encontrada!
+                  <TableCell colSpan={colunasCalibracao.length}>
+                    <Skeleton className="h-4 w-full rounded" />
                   </TableCell>
                 </TableRow>
-              )}
+                <TableRow>
+                  <TableCell colSpan={colunasCalibracao.length}>
+                    <Skeleton className="h-4 w-full rounded" />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell colSpan={colunasCalibracao.length}>
+                    <Skeleton className="h-4 w-full rounded" />
+                  </TableCell>
+                </TableRow>
+              </>
+            ) : tabela.getRowModel().rows?.length > 0 ? (
+              tabela.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={colunasCalibracao.length}
+                  className="h-16 text-center text-padrao-gray-200 text-sm font-medium mt-5 md:text-base lg:text-lg"
+                >
+                  Nenhuma calibração encontrada!
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </div>

@@ -1,48 +1,66 @@
 'use client'
 
-import { Button } from "@/components/ui/button"
-import { DialogClose, DialogFooter } from "@/components/ui/dialog"
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { useMutation, useQuery } from "@tanstack/react-query"
-import { Loader2, Trash } from "lucide-react"
-import { useLayoutEffect } from "react"
-import { useFieldArray, useForm } from "react-hook-form"
-import { z } from "zod"
-import { listarPecasEquipamento, salvarNovasPecas } from "@/app/modulo/manutencao/api/EquipamentoAPi"
-import { toast } from "sonner"
-import { MAX_PECAS_EQUIPAMENTO } from "./utils-equipamento"
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { Loader2, Trash } from 'lucide-react'
+import { useLayoutEffect } from 'react'
+import { useFieldArray, useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import { z } from 'zod'
+
+import {
+  listarPecasEquipamento,
+  salvarNovasPecas,
+} from '@/app/modulo/manutencao/api/EquipamentoAPi'
+import { Button } from '@/components/ui/button'
+import { DialogClose, DialogFooter } from '@/components/ui/dialog'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Textarea } from '@/components/ui/textarea'
+
+import { MAX_PECAS_EQUIPAMENTO } from './utils-equipamento'
 
 export interface NovaPecaEquipamentoProps {
   idEquipamento: string
 }
 
 const schemaNovaPecaEquipamento = z.object({
-  pecas: z.array(z.object({
-    nome: z.string({
-      required_error: 'Necessário informar o nome do item'
-    }).min(1, {
-      message: 'Necessário informar o nome do item'
+  pecas: z.array(
+    z.object({
+      nome: z
+        .string({
+          required_error: 'Necessário informar o nome do item',
+        })
+        .min(1, {
+          message: 'Necessário informar o nome do item',
+        }),
+      descricao: z.string().optional(),
+      equipamentoId: z.string(),
     }),
-    descricao: z.string().optional(),
-    equipamentoId: z.string()
-  }))
+  ),
 })
 
-export function FormularioNovaPeca({ idEquipamento }: NovaPecaEquipamentoProps) {
-
+export function FormularioNovaPeca({
+  idEquipamento,
+}: NovaPecaEquipamentoProps) {
   const { data: listaPecas, isLoading: carregandoPecas } = useQuery({
     queryKey: ['pecasEquipamento', idEquipamento],
-    queryFn: () => listarPecasEquipamento({ idEquipamento })
+    queryFn: () => listarPecasEquipamento({ idEquipamento }),
   })
 
-  const formNovaPecaEquipamento = useForm<z.infer<typeof schemaNovaPecaEquipamento>>({
+  const formNovaPecaEquipamento = useForm<
+    z.infer<typeof schemaNovaPecaEquipamento>
+  >({
     resolver: zodResolver(schemaNovaPecaEquipamento),
     defaultValues: {
-      pecas: []
+      pecas: [],
     },
     mode: 'onChange',
   })
@@ -66,7 +84,7 @@ export function FormularioNovaPeca({ idEquipamento }: NovaPecaEquipamentoProps) 
     onSuccess: () => {
       toast.success('Itens do equipamento salvas com sucesso!')
       formNovaPecaEquipamento.reset()
-    }
+    },
   })
 
   useLayoutEffect(() => {
@@ -76,7 +94,7 @@ export function FormularioNovaPeca({ idEquipamento }: NovaPecaEquipamentoProps) 
       adicionarPeca({
         nome: '',
         descricao: '',
-        equipamentoId: idEquipamento
+        equipamentoId: idEquipamento,
       })
     }
   })
@@ -87,17 +105,29 @@ export function FormularioNovaPeca({ idEquipamento }: NovaPecaEquipamentoProps) 
     </div>
   ) : (
     <Form {...formNovaPecaEquipamento}>
-      <form className="space-y-4" onSubmit={formNovaPecaEquipamento.handleSubmit(async (data: z.infer<typeof schemaNovaPecaEquipamento>) => {
-        await salvarPecasEquipamento(data)
-      })}>
+      <form
+        className="space-y-4"
+        onSubmit={formNovaPecaEquipamento.handleSubmit(
+          async (data: z.infer<typeof schemaNovaPecaEquipamento>) => {
+            await salvarPecasEquipamento(data)
+          },
+        )}
+      >
         <div className="grid">
           <div className="flex flex-col gap-2">
             <Button
               className="shadow-md text-sm uppercase leading-none rounded text-white bg-green-600  hover:bg-green-700"
               type="button"
-              disabled={(pecas.length + (listaPecas?.length ?? 0)) >= MAX_PECAS_EQUIPAMENTO}
+              disabled={
+                pecas.length + (listaPecas?.length ?? 0) >=
+                MAX_PECAS_EQUIPAMENTO
+              }
               onClick={() =>
-                adicionarPeca({ nome: '', descricao: '', equipamentoId: idEquipamento })
+                adicionarPeca({
+                  nome: '',
+                  descricao: '',
+                  equipamentoId: idEquipamento,
+                })
               }
             >
               Adicionar peça
@@ -163,7 +193,6 @@ export function FormularioNovaPeca({ idEquipamento }: NovaPecaEquipamentoProps) 
             >
               Cancelar
             </Button>
-
           </DialogClose>
           <DialogClose asChild>
             <Button

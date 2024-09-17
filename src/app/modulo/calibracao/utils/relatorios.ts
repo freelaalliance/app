@@ -1,27 +1,28 @@
-import { ExcelLib } from "@/lib/ExcelLib";
-import { formatarDataBrasil } from "@/lib/utils";
+import { ExcelLib } from '@/lib/ExcelLib'
+import { formatarDataBrasil } from '@/lib/utils'
 
-interface RelatorioCalibracoesProps{
+interface RelatorioCalibracoesProps {
   dados: Array<{
-    codigo: string;
-    nome: string;
-    marca: string;
-    localizacao: string;
-    resolucao: number;
-    frequencia: number;
-    data: Date;
-    usuario: string;
-    numeroCertificado: string;
-    tolerancia: number;
-    incertezaTendencia: number;
-    erroEncontrado: number;
-    observacao: number;
-    status: string;
+    codigo: string
+    nome: string
+    marca: string
+    localizacao: string
+    resolucao: number
+    frequencia: number
+    data: Date
+    usuario: string
+    numeroCertificado: string
+    tolerancia: number
+    incertezaTendencia: number
+    erroEncontrado: number
+    observacao: number
+    status: string
   }>
 }
 
-export async function gerarRelatorioCalibracoes({ dados }: RelatorioCalibracoesProps) {
-
+export async function gerarRelatorioCalibracoes({
+  dados,
+}: RelatorioCalibracoesProps) {
   const excelLib = new ExcelLib('Relatório de calibrações')
 
   excelLib.addTitleRow([`Gerado em ${formatarDataBrasil(new Date())}`])
@@ -39,7 +40,7 @@ export async function gerarRelatorioCalibracoes({ dados }: RelatorioCalibracoesP
     'Incerteza ou tendência encontrado',
     'Erro encontrado',
     'Observações',
-    'Status'
+    'Status',
   ])
 
   const linhas = dados.map((calibracao) => {
@@ -50,7 +51,7 @@ export async function gerarRelatorioCalibracoes({ dados }: RelatorioCalibracoesP
       calibracao.localizacao,
       calibracao.resolucao,
       calibracao.frequencia,
-      calibracao.data? formatarDataBrasil(new Date(calibracao.data)) : '--',
+      calibracao.data ? formatarDataBrasil(new Date(calibracao.data)) : '--',
       calibracao.usuario,
       calibracao.numeroCertificado,
       calibracao.tolerancia,
@@ -64,7 +65,8 @@ export async function gerarRelatorioCalibracoes({ dados }: RelatorioCalibracoesP
   excelLib.addRows(linhas)
 
   const buffer = await excelLib.finishSheet()
-  const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'
+  const fileType =
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'
 
   return new Blob([buffer], { type: fileType })
 }

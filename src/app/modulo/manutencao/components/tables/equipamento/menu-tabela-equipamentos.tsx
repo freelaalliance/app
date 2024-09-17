@@ -1,16 +1,24 @@
 'use client'
 
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { DadosEquipamentoType } from "../../../schemas/EquipamentoSchema";
-import { Button } from "@/components/ui/button";
-import { MoreVertical } from "lucide-react";
-import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import Link from "next/link";
-import { EdicaoEquipamentoDialog } from "../../dialogs/(equipamento)/EdicaoEquipamentoDialog";
-import { ExclusaoEquipamentoDialog } from "../../dialogs/(equipamento)/ExclusaoEquipamentoDialog";
-import { NovaPecaEquipamentoDialog } from "../../dialogs/(equipamento)/NovaPecaEquipamentoDialog";
-import { PecasEquipamentoDialog } from "../../dialogs/(equipamento)/PecasEquipamentoDialog";
+import { MoreVertical } from 'lucide-react'
+import Link from 'next/link'
+
+import { AlertDialog, AlertDialogTrigger } from '@/components/ui/alert-dialog'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogTrigger } from '@/components/ui/dialog'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+
+import { DadosEquipamentoType } from '../../../schemas/EquipamentoSchema'
+import { EdicaoEquipamentoDialog } from '../../dialogs/(equipamento)/EdicaoEquipamentoDialog'
+import { ExclusaoEquipamentoDialog } from '../../dialogs/(equipamento)/ExclusaoEquipamentoDialog'
+import { NovaPecaEquipamentoDialog } from '../../dialogs/(equipamento)/NovaPecaEquipamentoDialog'
+import { PecasEquipamentoDialog } from '../../dialogs/(equipamento)/PecasEquipamentoDialog'
 
 interface MenuTabelaEquipamentoProps {
   row: DadosEquipamentoType
@@ -66,7 +74,7 @@ export function MenuTabelaEquipamento({ row }: MenuTabelaEquipamentoProps) {
           </AlertDialogTrigger>
           <ExclusaoEquipamentoDialog id={row.id} />
         </AlertDialog>
-        
+
         <DropdownMenuSeparator />
         <Dialog>
           <DialogTrigger asChild>
@@ -94,7 +102,9 @@ export function MenuTabelaEquipamento({ row }: MenuTabelaEquipamentoProps) {
         </Dialog>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href={`${idModulo}/equipamento?id=${row.id}&nome=${row.nome}`}>Preventivas e corretivas</Link>
+          <Link href={`${idModulo}/equipamento?id=${row.id}&nome=${row.nome}`}>
+            Preventivas e corretivas
+          </Link>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

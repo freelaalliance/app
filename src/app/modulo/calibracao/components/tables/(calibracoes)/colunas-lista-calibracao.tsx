@@ -1,11 +1,15 @@
 import { ColumnDef } from '@tanstack/react-table'
-import { CheckCircle, CircleOff } from 'lucide-react'
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { formatarDataBrasil } from '@/lib/utils'
 
-import { DataTableRowActions } from './acoes-lista-calibracao'
 import { Calibracao } from '../../../schemas/(calibracoes)/SchemaNovaCalibracao'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+
+import { DataTableRowActions } from './acoes-lista-calibracao'
 import { optionsStatusCalibracao } from './data-table-calibracao'
 
 export const colunasCalibracao: ColumnDef<Calibracao>[] = [
@@ -46,19 +50,17 @@ export const colunasCalibracao: ColumnDef<Calibracao>[] = [
   {
     accessorKey: 'resolucao',
     header: 'Resolução',
-    cell: ({ row }) => (
-      <div>{`${row.getValue('resolucao')}`}</div>
-    ),
+    cell: ({ row }) => <div>{`${row.getValue('resolucao')}`}</div>,
   },
   {
     accessorKey: 'frequencia',
     header: 'Freq. Calibração',
     cell: ({ row }) => {
-      if (row.getValue('frequencia') === 1){
-        return (<div>{`${row.getValue('frequencia')} Mês`}</div>)
+      if (row.getValue('frequencia') === 1) {
+        return <div>{`${row.getValue('frequencia')} Mês`}</div>
       }
 
-      return (<div>{`${row.getValue('frequencia')} Mêses`}</div>)
+      return <div>{`${row.getValue('frequencia')} Mêses`}</div>
     },
   },
   {
@@ -95,7 +97,7 @@ export const colunasCalibracao: ColumnDef<Calibracao>[] = [
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue('incertezaTendencia')}</div>
     ),
-  },  
+  },
   {
     accessorKey: 'erroEncontrado',
     header: 'Erro Encontrado',
@@ -109,7 +111,7 @@ export const colunasCalibracao: ColumnDef<Calibracao>[] = [
     cell: ({ row }) => (
       <Tooltip>
         <TooltipTrigger asChild>
-          <span className='line-clamp-4'>{row.getValue('observacao')}</span>
+          <span className="line-clamp-4">{row.getValue('observacao')}</span>
         </TooltipTrigger>
         <TooltipContent>
           <p>{row.getValue('observacao')}</p>
@@ -121,10 +123,12 @@ export const colunasCalibracao: ColumnDef<Calibracao>[] = [
     accessorKey: 'status',
     header: 'Sts. calibração',
     cell: ({ row }) => {
-      const statusCalibracao = optionsStatusCalibracao.find(status => status.value === row.getValue('status'));
+      const statusCalibracao = optionsStatusCalibracao.find(
+        (status) => status.value === row.getValue('status'),
+      )
 
       if (!statusCalibracao) {
-        return null;
+        return null
       }
 
       switch (row.getValue('status')) {

@@ -1,30 +1,46 @@
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts";
-import { indicadoresFalhasEquipamentoType } from "../../schemas/ManutencaoSchema";
-import { calculaDisponibilidadeEquipamento } from "../../utils/indicadores";
+import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from 'recharts'
+
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '@/components/ui/chart'
+
+import { indicadoresFalhasEquipamentoType } from '../../schemas/ManutencaoSchema'
+import { calculaDisponibilidadeEquipamento } from '../../utils/indicadores'
 
 interface IndicadorFalhasChartProps {
   data: indicadoresFalhasEquipamentoType
 }
 
-export function IndicadorFalhasEquipamento({ data: chartData }: IndicadorFalhasChartProps) {
-
+export function IndicadorFalhasEquipamento({
+  data: chartData,
+}: IndicadorFalhasChartProps) {
   const chartConfig = {
     mtbf: {
-      label: "MTBF",
-      color: "hsl(210, 2%, 21%)",
+      label: 'MTBF',
+      color: 'hsl(210, 2%, 21%)',
     },
     mttr: {
-      label: "MTTR",
-      color: "hsl(360, 92%, 35%)",
+      label: 'MTTR',
+      color: 'hsl(360, 92%, 35%)',
     },
   } satisfies ChartConfig
 
-  const disponibilidade = (chartData.mtbf && chartData.mttr) ? calculaDisponibilidadeEquipamento({ mttr: chartData.mttr, mtbf: chartData.mtbf }) : 100
+  const disponibilidade =
+    chartData.mtbf && chartData.mttr
+      ? calculaDisponibilidadeEquipamento({
+          mttr: chartData.mttr,
+          mtbf: chartData.mtbf,
+        })
+      : 100
 
   return (
-
-    <ChartContainer config={chartConfig} className="mx-auto aspect-square h-full max-w-[400px]">
+    <ChartContainer
+      config={chartConfig}
+      className="mx-auto aspect-square h-full max-w-[400px]"
+    >
       <RadialBarChart
         data={[chartData]}
         endAngle={180}
@@ -38,7 +54,7 @@ export function IndicadorFalhasEquipamento({ data: chartData }: IndicadorFalhasC
         <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
           <Label
             content={({ viewBox }) => {
-              if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+              if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
                 return (
                   <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle">
                     <tspan
@@ -46,9 +62,11 @@ export function IndicadorFalhasEquipamento({ data: chartData }: IndicadorFalhasC
                       y={(viewBox.cy || 0) + 25}
                       className="fill-foreground text-2xl font-bold"
                     >
-                      {`${Number.isNaN(disponibilidade) ?
-                          0 : Number(disponibilidade.toFixed(2))
-                        } %
+                      {`${
+                        Number.isNaN(disponibilidade)
+                          ? 0
+                          : Number(disponibilidade.toFixed(2))
+                      } %
                       `}
                     </tspan>
                     <tspan

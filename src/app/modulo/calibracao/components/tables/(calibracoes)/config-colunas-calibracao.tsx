@@ -10,7 +10,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { formatCamelCase } from '@/lib/utils'
 
 interface DataTableViewOptionsProps<TData> {
@@ -25,11 +29,8 @@ export function ConfigColunas<TData>({
       <Tooltip>
         <TooltipTrigger asChild>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              className="w-auto shadow-md ml-auto"
-            >
-              <span className='flex md:hidden'>Colunas</span>
+            <Button variant="outline" className="w-auto shadow-md ml-auto">
+              <span className="flex md:hidden">Colunas</span>
               <SlidersVertical className="h-4 w-4 hidden md:flex" />
             </Button>
           </DropdownMenuTrigger>
