@@ -1,22 +1,17 @@
 'use client'
 
-import { useQuery } from "@tanstack/react-query";
-import { TabelaEquipamentos } from "../components/tables/equipamento/tabela-equipamentos";
-import { listarEquipamentos } from "../api/EquipamentoAPi";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CalendarDays, List, Loader2 } from "lucide-react";
-import CalendarioEventos, { eventoCalendario } from "@/components/calendario/CalendarioEventos";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState } from "react";
-import { buscarAgendaInspecoesEmpresa } from "../api/InspecaoEquipamentoAPI";
-import { Skeleton } from "@/components/ui/skeleton";
-import { differenceInDays } from "date-fns";
-import { ListaEventoInspecoesEmpresa } from "../components/lists/ListaEventoInspecoesEmpresa";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { consultaEstatatisticaEquipamento, consultaEstatatisticaManutencao, consultaIndicadoresManutencaoEquipamento, consultaIndicadoresManutencaoEquipamentosEmpresa } from "../api/ManutencaoEquipamentoAPI";
+import { useQuery } from '@tanstack/react-query'
+import { Loader2 } from 'lucide-react'
+import dynamic from 'next/dynamic'
 
-import dynamic from "next/dynamic";
+import { listarEquipamentos } from '../api/EquipamentoAPi'
+import { buscarAgendaInspecoesEmpresa } from '../api/InspecaoEquipamentoAPI'
+import {
+  consultaEstatatisticaEquipamento,
+  consultaEstatatisticaManutencao,
+  consultaIndicadoresManutencaoEquipamentosEmpresa,
+} from '../api/ManutencaoEquipamentoAPI'
+import { TabelaEquipamentos } from '../components/tables/equipamento/tabela-equipamentos'
 
 const MetricasManutencaoView = dynamic(() => import('./MetricasEmpresaView'), {
   loading: () => {
@@ -30,12 +25,12 @@ const MetricasManutencaoView = dynamic(() => import('./MetricasEmpresaView'), {
 })
 
 export default function Equipamentos() {
-
-  const { data: listaEquipamentos, isLoading: carregandoEquipamentos } = useQuery({
-    queryKey: ['listaEquipamentosEmpresa'],
-    queryFn: listarEquipamentos,
-    staleTime: Infinity,
-  })
+  const { data: listaEquipamentos, isLoading: carregandoEquipamentos } =
+    useQuery({
+      queryKey: ['listaEquipamentosEmpresa'],
+      queryFn: listarEquipamentos,
+      staleTime: Infinity,
+    })
 
   const agendaInspecoes = useQuery({
     queryKey: ['agendaInspecoesEmpresa'],
@@ -46,19 +41,19 @@ export default function Equipamentos() {
   const estatisticasEquipamento = useQuery({
     queryKey: ['estatisticasEquipamentos'],
     queryFn: consultaEstatatisticaEquipamento,
-    staleTime: Infinity
+    staleTime: Infinity,
   })
 
   const estatisticasManutencao = useQuery({
     queryKey: ['estatisticasManutencao'],
     queryFn: consultaEstatatisticaManutencao,
-    staleTime: Infinity
+    staleTime: Infinity,
   })
 
   const estatisticasManutencaoMTTReMTBF = useQuery({
     queryKey: ['estatisticasManutencaoMTTRMTBFEmpresa'],
     queryFn: consultaIndicadoresManutencaoEquipamentosEmpresa,
-    staleTime: Infinity
+    staleTime: Infinity,
   })
 
   return (
@@ -66,26 +61,35 @@ export default function Equipamentos() {
       <MetricasManutencaoView
         listaEquipamentos={{
           dados: listaEquipamentos ?? [],
-          carregandoEquipamentos: carregandoEquipamentos
+          carregandoEquipamentos,
         }}
         indicadores={{
           dados: estatisticasManutencaoMTTReMTBF.data ?? [],
-          carregandoIndicadores: estatisticasManutencaoMTTReMTBF.isLoading
+          carregandoIndicadores: estatisticasManutencaoMTTReMTBF.isLoading,
         }}
         metricasManutencoes={{
-          dados: estatisticasManutencao?.data ?? { qtd_equipamentos_manutencao_em_dia: 0, qtd_manutencoes_em_andamento: 0 },
-          carregandoMetricasManutencao: estatisticasManutencao.isLoading
+          dados: estatisticasManutencao?.data ?? {
+            qtd_equipamentos_manutencao_em_dia: 0,
+            qtd_manutencoes_em_andamento: 0,
+          },
+          carregandoMetricasManutencao: estatisticasManutencao.isLoading,
         }}
         metricasEquipamentos={{
-          dados: estatisticasEquipamento?.data ?? { qtd_equipamentos_parados: 0, qtd_equipamentos_funcionando: 0 },
-          carregandoMetricasEquipamentos: estatisticasEquipamento.isLoading
+          dados: estatisticasEquipamento?.data ?? {
+            qtd_equipamentos_parados: 0,
+            qtd_equipamentos_funcionando: 0,
+          },
+          carregandoMetricasEquipamentos: estatisticasEquipamento.isLoading,
         }}
         agendaEquipamento={{
           eventos: agendaInspecoes.data ?? [],
-          carregandoAgenda: agendaInspecoes.isLoading
+          carregandoAgenda: agendaInspecoes.isLoading,
         }}
       />
-      <TabelaEquipamentos data={listaEquipamentos ?? []} carregandoEquipamentos={carregandoEquipamentos} />
+      <TabelaEquipamentos
+        data={listaEquipamentos ?? []}
+        carregandoEquipamentos={carregandoEquipamentos}
+      />
     </section>
   )
 }

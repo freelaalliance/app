@@ -1,0 +1,259 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation } from '@tanstack/react-query'
+import { useMemo } from 'react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+
+import { Button } from '@/components/ui/button'
+import { DialogClose, DialogFooter } from '@/components/ui/dialog'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { queryClient } from '@/lib/react-query'
+import { consultarCep } from '@/lib/ViacepLib'
+
+import {
+  ResponseFornecedorType,
+  salvarModificacaoEndereco,
+} from '../(api)/FornecedorApi'
+import {
+  EnderecoFornecedorType,
+  schemaEnderecoForm,
+} from '../../../(schemas)/fornecedores/schema-fornecedor'
+import { EdicaoEnderecoFornecedorProps } from '../components/dialogs/EdicaoEnderecoFornecedorDialog'
+
+export default function EdicaoEnderecoFornecedorView({
+  idFornecedor,
+  endereco,
+}: EdicaoEnderecoFornecedorProps) {
+  const formEdicaoEndereco = useForm<EnderecoFornecedorType>({
+    resolver: zodResolver(schemaEnderecoForm),
+    defaultValues: {
+      id: endereco.id,
+      cep: endereco.cep,
+      logradouro: endereco.logradouro,
+      numero: endereco.numero,
+      bairro: endereco.bairro,
+      cidade: endereco.cidade,
+      estado: endereco.estado,
+      complemento: endereco.complemento,
+    },
+    mode: 'onChange',
+  })
+
+  async function buscarEnderecoCep(cep: string) {
+    const dadosCep = await consultarCep({ cep })
+
+    if (dadosCep) {
+      formEdicaoEndereco.setValue('logradouro', dadosCep.data.logradouro)
+      formEdicaoEndereco.setValue('bairro', dadosCep.data.bairro)
+      formEdicaoEndereco.setValue('cidade', dadosCep.data.localidade)
+      formEdicaoEndereco.setValue('estado', dadosCep.data.uf)
+      formEdicaoEndereco.setValue('cep', dadosCep.data.cep)
+      formEdicaoEndereco.setValue('complemento', dadosCep.data.complemento)
+    }
+  }
+
+  const { mutateAsync: salvarEndereco } = useMutation({
+    mutationFn: salvarModificacaoEndereco,
+    onError: (error) => {
+      toast.error('Erro ao salvar a endereço, tente novamente!', {
+        description: error.message,
+      })
+    },
+    onSuccess: (resp) => {
+      if (resp.status) {
+        const dadosFornecedor: ResponseFornecedorType | undefined =
+          queryClient.getQueryData(['dadosFornecedor', idFornecedor])
+
+        queryClient.setQueryData(
+          ['dadosFornecedor', idFornecedor],
+          dadosFornecedor &&
+            resp.dados && {
+              ...dadosFornecedor,
+              dados: {
+                ...dadosFornecedor?.dados,
+                endereco: {
+                  cep: resp.dados.cep,
+                  logradouro: resp.dados.logradouro,
+                  numero: resp.dados.numero,
+                  bairro: resp.dados.bairro,
+                  cidade: resp.dados.cidade,
+                  estado: resp.dados.estado,
+                  complemento: resp.dados.complemento,
+                  id: resp.dados.id,
+                },
+              },
+            },
+        )
+
+        formEdicaoEndereco.reset()
+        toast.success(resp.msg)
+      } else {
+        toast.warning(resp.msg)
+      }
+    },
+  })
+
+  async function onSubmitEdicaoEndereco(data: EnderecoFornecedorType) {
+    await salvarEndereco({ idFornecedor, endereco: data })
+  }
+
+  useMemo(() => {
+    const cep = formEdicaoEndereco.getValues('cep')
+
+    if (cep) {
+      buscarEnderecoCep(cep)
+    }
+  }, [formEdicaoEndereco.watch('cep')])
+
+  return (
+    <section>
+      <Form {...formEdicaoEndereco}>
+        <form
+          className="space-y-4"
+          onSubmit={formEdicaoEndereco.handleSubmit(onSubmitEdicaoEndereco)}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+            <FormField
+              control={formEdicaoEndereco.control}
+              name="cep"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>CEP</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="CEP do endereço"
+                      {...field}
+                      maxLength={9}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="md:col-span-2">
+              <FormField
+                control={formEdicaoEndereco.control}
+                name="logradouro"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Logradouro</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Logradouro da empresa" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <FormField
+              control={formEdicaoEndereco.control}
+              name="cidade"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Cidade</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Cidade da empresa" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={formEdicaoEndereco.control}
+              name="estado"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>UF</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Estado da cidade" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <FormField
+              control={formEdicaoEndereco.control}
+              name="bairro"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Bairro</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Bairro da empresa" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={formEdicaoEndereco.control}
+              name="numero"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Número</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Num. da empresa" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="grid grid-cols-1">
+            <FormField
+              control={formEdicaoEndereco.control}
+              name="complemento"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Complemento</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Complemento do endereço da empresa"
+                      className="resize-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button
+                type="button"
+                onClick={() => {
+                  formEdicaoEndereco.reset()
+                }}
+                className="shadow-md text-sm uppercase leading-none bg-padrao-red rounded text-white hover:bg-red-800"
+              >
+                Cancelar
+              </Button>
+            </DialogClose>
+            <Button
+              type="submit"
+              className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600 hover:bg-sky-700"
+              disabled={formEdicaoEndereco.formState.isSubmitting}
+            >
+              {formEdicaoEndereco.formState.isSubmitting
+                ? 'Salvando...'
+                : 'Salvar'}
+            </Button>
+          </DialogFooter>
+        </form>
+      </Form>
+    </section>
+  )
+}

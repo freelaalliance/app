@@ -2,17 +2,15 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
-
 import { ptBR } from 'date-fns/locale'
 import { CalendarIcon, Loader2 } from 'lucide-react'
-import { Upload } from '@/components/upload/upload'
-
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
+import { DialogClose, DialogFooter } from '@/components/ui/dialog'
 import {
   Form,
   FormControl,
@@ -30,11 +28,19 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { ListaArquivo } from '@/components/upload/lista-arquivo'
+import { Upload } from '@/components/upload/upload'
 import { cn } from '@/lib/utils'
 
-import { DialogClose, DialogFooter } from '@/components/ui/dialog'
-import { CalibracaoInstrumentoValores, calibracaoFormSchema, valoresPadroes } from '../../../schemas/(calibracoes)/SchemaNovaCalibracao'
-import { salvarCalibracao, DadosInstrumentoType, consultarCodigoInstrumento } from '../../../api/CalibracaoInstrumento'
+import {
+  consultarCodigoInstrumento,
+  DadosInstrumentoType,
+  salvarCalibracao,
+} from '../../../api/CalibracaoInstrumento'
+import {
+  calibracaoFormSchema,
+  CalibracaoInstrumentoValores,
+  valoresPadroes,
+} from '../../../schemas/(calibracoes)/SchemaNovaCalibracao'
 
 export function NovaCalibracaoForm() {
   const [idInstrumento, setarIdInstrumento] = useState<string | null>(null)
@@ -384,7 +390,6 @@ export function NovaCalibracaoForm() {
             >
               Cancelar
             </Button>
-
           </DialogClose>
           {form.formState.isSubmitting ? (
             <Button

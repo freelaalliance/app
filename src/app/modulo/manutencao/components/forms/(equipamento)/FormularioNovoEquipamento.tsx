@@ -1,23 +1,36 @@
 'use client'
 
-import { useFieldArray, useForm } from "react-hook-form"
-import { DadosEquipamentoType, FormularioNovoEquipamentoType, schemaFormularioNovoEquipamento } from "../../../schemas/EquipamentoSchema"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { DialogClose, DialogFooter } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Loader2, Trash } from "lucide-react"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { useLayoutEffect } from "react"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { toast } from "sonner"
-import { criarEquipamento } from "@/app/modulo/manutencao/api/EquipamentoAPi"
-import { MAX_PECAS_EQUIPAMENTO } from "./utils-equipamento"
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Loader2, Trash } from 'lucide-react'
+import { useLayoutEffect } from 'react'
+import { useFieldArray, useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+
+import { criarEquipamento } from '@/app/modulo/manutencao/api/EquipamentoAPi'
+import { Button } from '@/components/ui/button'
+import { DialogClose, DialogFooter } from '@/components/ui/dialog'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Textarea } from '@/components/ui/textarea'
+
+import {
+  DadosEquipamentoType,
+  FormularioNovoEquipamentoType,
+  schemaFormularioNovoEquipamento,
+} from '../../../schemas/EquipamentoSchema'
+
+import { MAX_PECAS_EQUIPAMENTO } from './utils-equipamento'
 
 export function NovoEquipamentoForm() {
-
   const queryClient = useQueryClient()
   const formNovoEquipamento = useForm<FormularioNovoEquipamentoType>({
     resolver: zodResolver(schemaFormularioNovoEquipamento),
@@ -27,7 +40,7 @@ export function NovoEquipamentoForm() {
       especificacao: '',
       frequencia: 0,
       tempoOperacao: 0,
-      pecas: []
+      pecas: [],
     },
     mode: 'onChange',
   })
@@ -49,7 +62,8 @@ export function NovoEquipamentoForm() {
       })
     },
     onSuccess: (dados) => {
-      const listaEquipamentos: Array<DadosEquipamentoType> | undefined = queryClient.getQueryData(['listaEquipamentosEmpresa'])
+      const listaEquipamentos: Array<DadosEquipamentoType> | undefined =
+        queryClient.getQueryData(['listaEquipamentosEmpresa'])
 
       queryClient.setQueryData(
         ['listaEquipamentosEmpresa'],
@@ -58,7 +72,7 @@ export function NovoEquipamentoForm() {
 
       toast.success('Equipamento salvo com sucesso!')
       formNovoEquipamento.reset()
-    }
+    },
   })
 
   const processarFormulario = async (data: FormularioNovoEquipamentoType) => {
@@ -71,14 +85,17 @@ export function NovoEquipamentoForm() {
     if (pecasEquipamento.length === 0) {
       adicionarPeca({
         nome: '',
-        descricao: ''
+        descricao: '',
       })
     }
   })
 
   return (
     <Form {...formNovoEquipamento}>
-      <form className="space-y-4" onSubmit={formNovoEquipamento.handleSubmit(processarFormulario)}>
+      <form
+        className="space-y-4"
+        onSubmit={formNovoEquipamento.handleSubmit(processarFormulario)}
+      >
         <div className="grid grid-cols-1 md:grid-cols-5 space-y-2 md:space-x-4">
           <div className="md:col-span-2 space-y-2">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
@@ -160,9 +177,7 @@ export function NovoEquipamentoForm() {
               className="shadow-md text-sm uppercase leading-none rounded text-white bg-green-600  hover:bg-green-700"
               type="button"
               disabled={pecas.length >= MAX_PECAS_EQUIPAMENTO}
-              onClick={() =>
-                adicionarPeca({ nome: '', descricao: '' })
-              }
+              onClick={() => adicionarPeca({ nome: '', descricao: '' })}
             >
               Adicionar item
             </Button>
@@ -229,26 +244,23 @@ export function NovoEquipamentoForm() {
             >
               Cancelar
             </Button>
-
           </DialogClose>
-          {
-            formNovoEquipamento.formState.isSubmitting ? (
-              <Button
-                className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600  hover:bg-sky-700 gap-2"
-                disabled
-              >
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Salvando...
-              </Button>
-            ) : (
-              <Button
-                className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600  hover:bg-sky-700"
-                type="submit"
-              >
-                Salvar equipamento
-              </Button>
-            )
-          }
+          {formNovoEquipamento.formState.isSubmitting ? (
+            <Button
+              className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600  hover:bg-sky-700 gap-2"
+              disabled
+            >
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Salvando...
+            </Button>
+          ) : (
+            <Button
+              className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600  hover:bg-sky-700"
+              type="submit"
+            >
+              Salvar equipamento
+            </Button>
+          )}
         </DialogFooter>
       </form>
     </Form>

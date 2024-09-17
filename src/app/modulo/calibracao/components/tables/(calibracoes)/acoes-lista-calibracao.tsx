@@ -11,10 +11,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { handleDownloadFile } from '@/lib/utils'
+
+import { Calibracao } from '../../../schemas/(calibracoes)/SchemaNovaCalibracao'
 import { EdicaoCalibracaoDialog } from '../../dialogs/(calibracoes)/EdicaoCalibracaoDialog'
 import { ExclusaoCalibracaoDialog } from '../../dialogs/(calibracoes)/ExclusaoCalibracaoDialog'
 import { ExclusaoInstrumentoDialog } from '../../dialogs/(calibracoes)/ExclusaoInstrumentoDialog'
-import { Calibracao } from '../../../schemas/(calibracoes)/SchemaNovaCalibracao'
 
 interface DataTableRowActionsProps {
   row: Calibracao

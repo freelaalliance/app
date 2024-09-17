@@ -4,10 +4,16 @@ import { toast } from 'sonner'
 import { Label } from '../ui/label'
 
 interface uploadProps {
+  multiplo?: boolean
+  qtdArquivos?: number
   selecionaArquivo: (arquivo: Array<File>) => void
 }
 
-export function Upload({ selecionaArquivo }: uploadProps) {
+export function Upload({
+  selecionaArquivo,
+  multiplo,
+  qtdArquivos,
+}: uploadProps) {
   const arquivoSuportado = {
     'application/pdf': ['.pdf'],
     'image/*': ['.png', '.jpg', '.gif', '.jpeg', '.webp'],
@@ -32,7 +38,7 @@ export function Upload({ selecionaArquivo }: uploadProps) {
         <div className="flex flex-col items-center justify-center pt-5 pb-6">
           <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
             <span className="font-semibold">Clique aqui para escolher</span> ou
-            arrasta o certificado até aqui e solte
+            arrasta o arquivo até aqui e solte
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-400">
             {'PDF, JPG, JPEG, GIF ou PNG'}
@@ -44,9 +50,7 @@ export function Upload({ selecionaArquivo }: uploadProps) {
     return (
       <div className="flex flex-col items-center justify-center pt-5 pb-6">
         <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-          <span className="font-semibold">
-            Clique para escolher o certificado
-          </span>
+          <span className="font-semibold">Clique para escolher o arquivo</span>
         </p>
         <p className="text-xs text-gray-500 dark:text-gray-400">
           {'PDF, JPG, JPEG, GIF ou PNG'}
@@ -58,8 +62,8 @@ export function Upload({ selecionaArquivo }: uploadProps) {
   return (
     <>
       <Dropzone
-        multiple={false}
-        maxFiles={1}
+        multiple={multiplo ?? false}
+        maxFiles={qtdArquivos ?? 1}
         accept={arquivoSuportado}
         onDropAccepted={selecionaArquivo}
         onDropRejected={() => {
@@ -74,7 +78,7 @@ export function Upload({ selecionaArquivo }: uploadProps) {
       >
         {({ getRootProps, getInputProps, isDragActive, isDragReject }) => (
           <>
-            <Label>Certificado</Label>
+            <Label>Anexos</Label>
             <div
               className="p-10 flex items-center h-28 md:h-64 justify-center w-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
               {...getRootProps()}
