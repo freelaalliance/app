@@ -3,10 +3,10 @@ import { Inter as FontSans } from 'next/font/google'
 
 import '@/styles/globals.css'
 import { Toaster } from '@/components/ui/sonner'
+import { TooltipProvider } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 
 import Providers from './provider'
-import { TooltipProvider } from '@/components/ui/tooltip'
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -32,9 +32,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         )}
       >
         <Providers>
-          <TooltipProvider>
-            {children}
-          </TooltipProvider>
+          <TooltipProvider>{children}</TooltipProvider>
         </Providers>
         <Toaster richColors />
       </body>

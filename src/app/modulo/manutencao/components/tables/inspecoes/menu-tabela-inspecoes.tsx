@@ -1,15 +1,24 @@
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { DadosInspecoesEquipamentoType } from "../../../schemas/EquipamentoSchema"
-import { Button } from "@/components/ui/button"
-import { Dialog, DialogTrigger } from "@/components/ui/dialog"
-import { MoreVertical } from "lucide-react"
-import { VisualizarInspecaoDialog } from "../../dialogs/(inspecao)/VisualizarInspecaoEquipamento"
+import { MoreVertical } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogTrigger } from '@/components/ui/dialog'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+
+import { DadosInspecoesEquipamentoType } from '../../../schemas/EquipamentoSchema'
+import { VisualizarInspecaoDialog } from '../../dialogs/(inspecao)/VisualizarInspecaoEquipamento'
 
 interface MenuTabelaInspecoesEquipamentoProps {
   row: DadosInspecoesEquipamentoType
 }
 
-export function MenuTabelaInspecoesEquipamento({ row }: MenuTabelaInspecoesEquipamentoProps) {
+export function MenuTabelaInspecoesEquipamento({
+  row,
+}: MenuTabelaInspecoesEquipamentoProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -22,22 +31,20 @@ export function MenuTabelaInspecoesEquipamento({ row }: MenuTabelaInspecoesEquip
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        {
-          row.finalizadoEm && (
-            <Dialog>
-              <DialogTrigger asChild>
-                <DropdownMenuItem
-                  onSelect={(e) => {
-                    e.preventDefault()
-                  }}
-                >
-                  Visualizar inspeção
-                </DropdownMenuItem>
-              </DialogTrigger>
-              <VisualizarInspecaoDialog dados={row}/>
-            </Dialog>
-          )
-        }
+        {row.finalizadoEm && (
+          <Dialog>
+            <DialogTrigger asChild>
+              <DropdownMenuItem
+                onSelect={(e) => {
+                  e.preventDefault()
+                }}
+              >
+                Visualizar inspeção
+              </DropdownMenuItem>
+            </DialogTrigger>
+            <VisualizarInspecaoDialog dados={row} />
+          </Dialog>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   )

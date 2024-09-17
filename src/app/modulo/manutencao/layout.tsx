@@ -1,12 +1,11 @@
-import { HeaderApp } from "@/components/header/header";
-import { SidebarNav } from "@/components/nav/SidebarNav";
-import { Separator } from "@/components/ui/separator";
+import { ModuloLayoutProps } from '@/app/provider'
+import { HeaderApp } from '@/components/header/header'
+import { SidebarNav } from '@/components/nav/SidebarNav'
+import { Separator } from '@/components/ui/separator'
 
-interface CalibracaoLayoutProps {
-  children: React.ReactNode
-}
-
-export default function LayoutModuloManutencao({ children }: CalibracaoLayoutProps) {
+export default function LayoutModuloManutencao({
+  children,
+}: ModuloLayoutProps) {
   return (
     <>
       <HeaderApp />
@@ -16,7 +15,8 @@ export default function LayoutModuloManutencao({ children }: CalibracaoLayoutPro
             Módulo de manutenção
           </h2>
           <p className="text-muted-foreground">
-            Gestão de infraestrutura, equipamentos, periféricos e itens críticos à organização
+            Gestão de infraestrutura, equipamentos, periféricos e itens críticos
+            à organização
           </p>
         </section>
         <Separator className="my-6" />

@@ -1,16 +1,33 @@
 'use client'
 
-import { Button } from "@/components/ui/button";
-import { DadosInspecoesEquipamentoType } from "../../../schemas/EquipamentoSchema";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { flexRender, getCoreRowModel, getFacetedUniqueValues, getFilteredRowModel, getPaginationRowModel, useReactTable } from "@tanstack/react-table";
-import { colunasInspecoesEquipamento } from "./colunas-tabela-inspecoes";
-import { Skeleton } from "@/components/ui/skeleton";
-import { FiltroStatusInspecao } from "./filtro-status-tabela-inspecoes";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { NovaInspecaoEquipamentoDialog } from "../../dialogs/(inspecao)/NovaInspecaoEquipamentoDialog";
-import { useState } from "react";
-import { Stethoscope } from "lucide-react";
+import {
+  flexRender,
+  getCoreRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
+import { Stethoscope } from 'lucide-react'
+import { useState } from 'react'
+
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogTrigger } from '@/components/ui/dialog'
+import { Skeleton } from '@/components/ui/skeleton'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+
+import { DadosInspecoesEquipamentoType } from '../../../schemas/EquipamentoSchema'
+import { NovaInspecaoEquipamentoDialog } from '../../dialogs/(inspecao)/NovaInspecaoEquipamentoDialog'
+
+import { colunasInspecoesEquipamento } from './colunas-tabela-inspecoes'
+import { FiltroStatusInspecao } from './filtro-status-tabela-inspecoes'
 
 interface TabelaInspecoesEquipamentoProps {
   idEquipamento: string
@@ -29,7 +46,11 @@ export const optionsStatusInspecao = [
   },
 ]
 
-export function TabelaInspecoesEquipamento({ idEquipamento, data, carregandoInspecoes }: TabelaInspecoesEquipamentoProps) {
+export function TabelaInspecoesEquipamento({
+  idEquipamento,
+  data,
+  carregandoInspecoes,
+}: TabelaInspecoesEquipamentoProps) {
   const [modalInspecaoAberto, abrirModalInspecao] = useState(false)
   const tabela = useReactTable({
     data,
@@ -37,7 +58,7 @@ export function TabelaInspecoesEquipamento({ idEquipamento, data, carregandoInsp
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues()
+    getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
   return (
@@ -50,9 +71,12 @@ export function TabelaInspecoesEquipamento({ idEquipamento, data, carregandoInsp
               Nova manutenção
             </Button>
           </DialogTrigger>
-          <NovaInspecaoEquipamentoDialog idEquipamento={idEquipamento ?? ''} fecharModalInspecao={() => {
-            abrirModalInspecao(false)
-          }} />
+          <NovaInspecaoEquipamentoDialog
+            idEquipamento={idEquipamento ?? ''}
+            fecharModalInspecao={() => {
+              abrirModalInspecao(false)
+            }}
+          />
         </Dialog>
         <FiltroStatusInspecao
           options={optionsStatusInspecao}
@@ -71,9 +95,9 @@ export function TabelaInspecoesEquipamento({ idEquipamento, data, carregandoInsp
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
                     </TableHead>
                   )
                 })}
@@ -81,58 +105,50 @@ export function TabelaInspecoesEquipamento({ idEquipamento, data, carregandoInsp
             ))}
           </TableHeader>
           <TableBody>
-            {
-              carregandoInspecoes ? (
-                <>
-                  <TableRow>
-                    <TableCell
-                      colSpan={colunasInspecoesEquipamento.length}
-                    >
-                      <Skeleton className="h-4 w-full rounded" />
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell
-                      colSpan={colunasInspecoesEquipamento.length}
-                    >
-                      <Skeleton className="h-4 w-full rounded" />
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell
-                      colSpan={colunasInspecoesEquipamento.length}
-                    >
-                      <Skeleton className="h-4 w-full rounded" />
-                    </TableCell>
-                  </TableRow>
-                </>
-              ) : tabela.getRowModel().rows?.length > 0 ? (
-                tabela.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && 'selected'}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
+            {carregandoInspecoes ? (
+              <>
                 <TableRow>
-                  <TableCell
-                    colSpan={colunasInspecoesEquipamento.length}
-                    className="h-16 text-center text-padrao-gray-200 text-sm font-medium mt-5 md:text-base lg:text-lg"
-                  >
-                    Nenhuma inspeção encontrada!
+                  <TableCell colSpan={colunasInspecoesEquipamento.length}>
+                    <Skeleton className="h-4 w-full rounded" />
                   </TableCell>
                 </TableRow>
-              )
-            }
+                <TableRow>
+                  <TableCell colSpan={colunasInspecoesEquipamento.length}>
+                    <Skeleton className="h-4 w-full rounded" />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell colSpan={colunasInspecoesEquipamento.length}>
+                    <Skeleton className="h-4 w-full rounded" />
+                  </TableCell>
+                </TableRow>
+              </>
+            ) : tabela.getRowModel().rows?.length > 0 ? (
+              tabela.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={colunasInspecoesEquipamento.length}
+                  className="h-16 text-center text-padrao-gray-200 text-sm font-medium mt-5 md:text-base lg:text-lg"
+                >
+                  Nenhuma inspeção encontrada!
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </div>

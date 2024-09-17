@@ -1,24 +1,43 @@
 'use client'
 
-import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, useReactTable } from "@tanstack/react-table"
-import { DadosEquipamentoType } from "../../../schemas/EquipamentoSchema"
-import { colunasEquipamento } from "./colunas-tabela-equipamentos"
-import { Button } from "@/components/ui/button"
-import { ArrowBigDownDash, Plus } from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Dialog, DialogTrigger } from "@/components/ui/dialog"
-import { NovoEquipamentoDialog } from "../../dialogs/(equipamento)/NovoEquipamentoDialog"
-import { gerarRelatorioEquipamentos } from "../../../utils/relatorio"
-import { toast } from "sonner"
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
+import { ArrowBigDownDash, Plus } from 'lucide-react'
+import { toast } from 'sonner'
+
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogTrigger } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Skeleton } from '@/components/ui/skeleton'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+
+import { DadosEquipamentoType } from '../../../schemas/EquipamentoSchema'
+import { gerarRelatorioEquipamentos } from '../../../utils/relatorio'
+import { NovoEquipamentoDialog } from '../../dialogs/(equipamento)/NovoEquipamentoDialog'
+
+import { colunasEquipamento } from './colunas-tabela-equipamentos'
 
 interface TabelaEquipamentosProps {
   data: Array<DadosEquipamentoType>
   carregandoEquipamentos: boolean
 }
 
-export function TabelaEquipamentos({ data, carregandoEquipamentos }: TabelaEquipamentosProps) {
+export function TabelaEquipamentos({
+  data,
+  carregandoEquipamentos,
+}: TabelaEquipamentosProps) {
   const tabela = useReactTable({
     data,
     columns: colunasEquipamento,
@@ -38,7 +57,7 @@ export function TabelaEquipamentos({ data, carregandoEquipamentos }: TabelaEquip
           concertadoEm: row.getValue('concertadoEm') ?? null,
           status: row.getValue('status'),
         }
-      })
+      }),
     })
 
     toast.success('Relatorio gerado com sucesso!', {
@@ -91,7 +110,9 @@ export function TabelaEquipamentos({ data, carregandoEquipamentos }: TabelaEquip
             placeholder="Filtrar por codigo..."
             className="w-full md:w-64"
             disabled={data?.length === 0}
-            value={(tabela.getColumn('codigo')?.getFilterValue() as string) ?? ''}
+            value={
+              (tabela.getColumn('codigo')?.getFilterValue() as string) ?? ''
+            }
             onChange={(event) =>
               tabela.getColumn('codigo')?.setFilterValue(event.target.value)
             }
@@ -109,9 +130,9 @@ export function TabelaEquipamentos({ data, carregandoEquipamentos }: TabelaEquip
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
                     </TableHead>
                   )
                 })}
@@ -119,58 +140,50 @@ export function TabelaEquipamentos({ data, carregandoEquipamentos }: TabelaEquip
             ))}
           </TableHeader>
           <TableBody>
-            {
-              carregandoEquipamentos ? (
-                <>
-                  <TableRow>
-                    <TableCell
-                      colSpan={colunasEquipamento.length}
-                    >
-                      <Skeleton className="h-4 w-full rounded" />
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell
-                      colSpan={colunasEquipamento.length}
-                    >
-                      <Skeleton className="h-4 w-full rounded" />
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell
-                      colSpan={colunasEquipamento.length}
-                    >
-                      <Skeleton className="h-4 w-full rounded" />
-                    </TableCell>
-                  </TableRow>
-                </>
-              ) : tabela.getRowModel().rows?.length > 0 ? (
-                tabela.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && 'selected'}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
+            {carregandoEquipamentos ? (
+              <>
                 <TableRow>
-                  <TableCell
-                    colSpan={colunasEquipamento.length}
-                    className="h-16 text-center text-padrao-gray-200 text-sm font-medium mt-5 md:text-base lg:text-lg"
-                  >
-                    Nenhum equipamento encontrado!
+                  <TableCell colSpan={colunasEquipamento.length}>
+                    <Skeleton className="h-4 w-full rounded" />
                   </TableCell>
                 </TableRow>
-              )
-            }
+                <TableRow>
+                  <TableCell colSpan={colunasEquipamento.length}>
+                    <Skeleton className="h-4 w-full rounded" />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell colSpan={colunasEquipamento.length}>
+                    <Skeleton className="h-4 w-full rounded" />
+                  </TableCell>
+                </TableRow>
+              </>
+            ) : tabela.getRowModel().rows?.length > 0 ? (
+              tabela.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={colunasEquipamento.length}
+                  className="h-16 text-center text-padrao-gray-200 text-sm font-medium mt-5 md:text-base lg:text-lg"
+                >
+                  Nenhum equipamento encontrado!
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </div>

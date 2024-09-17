@@ -19,6 +19,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { queryClient } from '@/lib/react-query'
+import { formatarDocumento } from '@/lib/utils'
 import { consultarCep } from '@/lib/ViacepLib'
 
 import { cadastrarEmpresa } from '../../api/Empresa'
@@ -84,7 +85,16 @@ export function FormularioNovaEmpresa() {
               <FormItem>
                 <FormLabel>CNPJ</FormLabel>
                 <FormControl>
-                  <Input placeholder="Documento da empresa" {...field} />
+                  <Input
+                    placeholder="Documento da empresa"
+                    {...field}
+                    onChange={(event) => {
+                      formEmpresa.setValue(
+                        'cnpj',
+                        formatarDocumento(event.target.value),
+                      )
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
