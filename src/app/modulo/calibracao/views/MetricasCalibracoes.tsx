@@ -1,26 +1,49 @@
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { ArrowBigDownDash, ClipboardCheck, Clock11, DownloadCloud, SmartphoneNfc } from "lucide-react";
-import generatePDF, { Margin, Options, Resolution } from "react-to-pdf";
-import { IndicadorInformativo } from "@/components/IndicadorInfo";
-import { EstatisticasCalibracaoInstrumentoGeral } from "../api/EstatisticasCalibracao";
-import { AgendaCalibracaoEmpresaType, recuperaCorVencimentoCalibracoesAgenda } from "../api/AgendaCalibracoes";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import CalendarioEventos, { eventoCalendario } from "@/components/calendario/CalendarioEventos";
-import { Skeleton } from "@/components/ui/skeleton";
+import {
+  ArrowBigDownDash,
+  ClipboardCheck,
+  Clock11,
+  DownloadCloud,
+  SmartphoneNfc,
+} from 'lucide-react'
+import generatePDF, { Margin, Options, Resolution } from 'react-to-pdf'
+import { toast } from 'sonner'
+
+import CalendarioEventos, {
+  eventoCalendario,
+} from '@/components/calendario/CalendarioEventos'
+import { IndicadorInformativo } from '@/components/IndicadorInfo'
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion"
-import { CalibracoesInstrumentosEmpresaType } from "../api/Calibracao";
-import { formatarDataBrasil, handleDownloadFile } from "@/lib/utils";
-import { toast } from "sonner";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from '@/components/ui/accordion'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Skeleton } from '@/components/ui/skeleton'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { formatarDataBrasil, handleDownloadFile } from '@/lib/utils'
 
-const getMetricaCalibracaoRelatorio = () => document.getElementById('metricasCalibracao');
+import {
+  AgendaCalibracaoEmpresaType,
+  recuperaCorVencimentoCalibracoesAgenda,
+} from '../api/AgendaCalibracoes'
+import { CalibracoesInstrumentosEmpresaType } from '../api/Calibracao'
+import { EstatisticasCalibracaoInstrumentoGeral } from '../api/EstatisticasCalibracao'
+
+const getMetricaCalibracaoRelatorio = () =>
+  document.getElementById('metricasCalibracao')
 
 const options: Options = {
   method: 'open',
@@ -38,8 +61,8 @@ interface MetricasCalibracaoProps {
     carregandoIndicadores: boolean
   }
   agenda: {
-    eventos: AgendaCalibracaoEmpresaType[],
-    carregandoAgenda: boolean,
+    eventos: AgendaCalibracaoEmpresaType[]
+    carregandoAgenda: boolean
   }
   historicoCalibracoes: {
     dados: CalibracoesInstrumentosEmpresaType
@@ -47,8 +70,11 @@ interface MetricasCalibracaoProps {
   }
 }
 
-export default function MetricasCalibracaoView({ indicadores, agenda, historicoCalibracoes }: MetricasCalibracaoProps) {
-
+export default function MetricasCalibracaoView({
+  indicadores,
+  agenda,
+  historicoCalibracoes,
+}: MetricasCalibracaoProps) {
   const agendaCalibracoes: eventoCalendario = agenda.eventos.map((dados) => {
     return {
       id: dados.id,
@@ -75,7 +101,9 @@ export default function MetricasCalibracaoView({ indicadores, agenda, historicoC
             <Button
               size={'sm'}
               className="shadow bg-padrao-gray-250 hover:bg-gray-900 gap-2"
-              onClick={() => generatePDF(getMetricaCalibracaoRelatorio, options)}
+              onClick={() =>
+                generatePDF(getMetricaCalibracaoRelatorio, options)
+              }
             >
               <ArrowBigDownDash className="size-5" />
               {'Exportar'}
@@ -120,33 +148,49 @@ export default function MetricasCalibracaoView({ indicadores, agenda, historicoC
                 <CardHeader>
                   <CardTitle>Históricos de calibrações</CardTitle>
                   <CardDescription>
-                    {
-                      `Calibrações realizadas recentemente`
-                    }
+                    {`Calibrações realizadas recentemente`}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Accordion type="single" collapsible className="w-full md:h-[400px]">
+                  <Accordion
+                    type="single"
+                    collapsible
+                    className="w-full md:h-[400px]"
+                  >
                     <ScrollArea className="max-h-[350px] overflow-auto">
                       {historicoCalibracoes.dados.map((historico) => {
                         return (
-                          <AccordionItem key={historico.calibracao.id} value={historico.calibracao.id}>
+                          <AccordionItem
+                            key={historico.calibracao.id}
+                            value={historico.calibracao.id}
+                          >
                             <AccordionTrigger>
                               {`${formatarDataBrasil(new Date(historico.calibracao.realizadoEm))} - ${historico.instrumento.nome}`}
                             </AccordionTrigger>
                             <AccordionContent>
                               <div className="grid space-y-4">
-                                <span className="capitalize"><b>Realizado por: </b>{historico.calibracao.usuarioNome}</span>
-                                <span className="capitalize"><b>Situação: </b>{historico.calibracao.status}</span>
-                                
+                                <span className="capitalize">
+                                  <b>Realizado por: </b>
+                                  {historico.calibracao.usuarioNome}
+                                </span>
+                                <span className="capitalize">
+                                  <b>Situação: </b>
+                                  {historico.calibracao.status}
+                                </span>
+
                                 <Button
                                   className="mt-2 gap-2 shadow-md text-sm uppercase leading-none text-white bg-sky-600  hover:bg-sky-700 "
                                   disabled={!historico.calibracao.certificado}
                                   onClick={async () => {
                                     if (historico.calibracao.certificado) {
-                                      await handleDownloadFile(historico.calibracao.certificado, historico.calibracao.id)
+                                      await handleDownloadFile(
+                                        historico.calibracao.certificado,
+                                        historico.calibracao.id,
+                                      )
                                     } else {
-                                      toast.warning('Certificado não encontrado!')
+                                      toast.warning(
+                                        'Certificado não encontrado!',
+                                      )
                                     }
                                   }}
                                 >
@@ -168,21 +212,17 @@ export default function MetricasCalibracaoView({ indicadores, agenda, historicoC
             <CardHeader>
               <CardTitle>Agenda de calibrações</CardTitle>
               <CardDescription>
-                {
-                  'Agenda de calibrações dos instrumentos da empresa'
-                }
+                {'Agenda de calibrações dos instrumentos da empresa'}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {
-                agenda.carregandoAgenda ? (
-                  <div className="grid">
-                    <Skeleton className="h-[550px] w-full" />
-                  </div>
-                ) : (
-                  <CalendarioEventos eventos={agendaCalibracoes} />
-                )
-              }
+              {agenda.carregandoAgenda ? (
+                <div className="grid">
+                  <Skeleton className="h-[550px] w-full" />
+                </div>
+              ) : (
+                <CalendarioEventos eventos={agendaCalibracoes} />
+              )}
             </CardContent>
           </Card>
         </div>

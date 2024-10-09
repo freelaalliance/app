@@ -1,21 +1,39 @@
+import { ArrowBigDownDash } from 'lucide-react'
+import generatePDF, { Margin, Options, Resolution } from 'react-to-pdf'
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowBigDownDash } from "lucide-react"
-import { IndicadorFalhasEquipamento } from "../components/charts/IndicadorFalhasEquipamento"
-import { dadosIndicadoresManutencaoEquipamentoType, DadosManutencaoEquipamentoType, DuracaoManutencoesEquipamentoType, estatisticasEquipamentoType, estatisticasManutencaoType, indicadoresFalhasEquipamentoType } from "../schemas/ManutencaoSchema"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { calculaMtbf, calculaMttr } from "../utils/indicadores"
-import generatePDF, { Resolution, Margin, Options } from 'react-to-pdf'
-import { DadosInspecoesEquipamentoType } from "../schemas/EquipamentoSchema"
-import { ListaInspecoesAberto } from "../components/lists/ListaInspecoesAberto"
-import { Skeleton } from "@/components/ui/skeleton"
-import IndicadoresInspecaoEquipamento from "../components/charts/IndicadorInspecaoEquipamento"
-import RankingDurancaoManutencaoEquipamento from "../components/charts/IndicadorTempoManutencaoEquipamento"
-import IndicadoresMediaEquipamentoParado from "../components/charts/IndicadorMediaEquipamentoParado"
-import IndicadoresMediaDuracaoManutencoesEquipamento from "../components/charts/IndicadorMediaDuracaoEquipamento"
-import CalendarioEventos, { eventoCalendario } from "@/components/calendario/CalendarioEventos"
-import { cn } from "@/lib/utils"
+import CalendarioEventos, {
+  eventoCalendario,
+} from '@/components/calendario/CalendarioEventos'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { cn } from '@/lib/utils'
+
+import { IndicadorFalhasEquipamento } from '../components/charts/IndicadorFalhasEquipamento'
+import IndicadoresInspecaoEquipamento from '../components/charts/IndicadorInspecaoEquipamento'
+import IndicadoresMediaDuracaoManutencoesEquipamento from '../components/charts/IndicadorMediaDuracaoEquipamento'
+import IndicadoresMediaEquipamentoParado from '../components/charts/IndicadorMediaEquipamentoParado'
+import RankingDurancaoManutencaoEquipamento from '../components/charts/IndicadorTempoManutencaoEquipamento'
+import { ListaInspecoesAberto } from '../components/lists/ListaInspecoesAberto'
+import { DadosInspecoesEquipamentoType } from '../schemas/EquipamentoSchema'
+import {
+  dadosIndicadoresManutencaoEquipamentoType,
+  DadosManutencaoEquipamentoType,
+  DuracaoManutencoesEquipamentoType,
+  indicadoresFalhasEquipamentoType,
+} from '../schemas/ManutencaoSchema'
+import { calculaMtbf, calculaMttr } from '../utils/indicadores'
 
 interface MetricasManutencaoEquipamentoProps {
   indicadores: {
@@ -33,14 +51,19 @@ interface MetricasManutencaoEquipamentoProps {
     carregandoManutencoes: boolean
   }
   agendaEquipamento?: {
-    eventos: eventoCalendario,
-    carregandoAgenda: boolean,
+    eventos: eventoCalendario
+    carregandoAgenda: boolean
   }
 }
 
-export default function MetricasEquipamentoView({ agendaEquipamento, indicadores, inspecoes, manutencoes }: MetricasManutencaoEquipamentoProps) {
-
-  const getMetricaManutencaoRelatorio = () => document.getElementById('metricasManutencao');
+export default function MetricasEquipamentoView({
+  agendaEquipamento,
+  indicadores,
+  inspecoes,
+  manutencoes,
+}: MetricasManutencaoEquipamentoProps) {
+  const getMetricaManutencaoRelatorio = () =>
+    document.getElementById('metricasManutencao')
 
   const options: Options = {
     method: 'open',
@@ -53,8 +76,15 @@ export default function MetricasEquipamentoView({ agendaEquipamento, indicadores
   }
 
   const dadosMtbfEMttr: indicadoresFalhasEquipamentoType = {
-    mtbf: calculaMtbf({ tempoTotalParada: indicadores.dados.total_tempo_parado, qtdParada: indicadores.dados.qtd_manutencoes, tempoTotalOperacao: indicadores.dados.total_tempo_operacao }),
-    mttr: calculaMttr({ tempoTotalParada: indicadores.dados.total_tempo_parado, qtdParada: indicadores.dados.qtd_manutencoes })
+    mtbf: calculaMtbf({
+      tempoTotalParada: indicadores.dados.total_tempo_parado,
+      qtdParada: indicadores.dados.qtd_manutencoes,
+      tempoTotalOperacao: indicadores.dados.total_tempo_operacao,
+    }),
+    mttr: calculaMttr({
+      tempoTotalParada: indicadores.dados.total_tempo_parado,
+      qtdParada: indicadores.dados.qtd_manutencoes,
+    }),
   }
 
   return (
@@ -65,7 +95,9 @@ export default function MetricasEquipamentoView({ agendaEquipamento, indicadores
             <Button
               size={'sm'}
               className="shadow bg-padrao-gray-250 hover:bg-gray-900 gap-2"
-              onClick={() => generatePDF(getMetricaManutencaoRelatorio, options)}
+              onClick={() =>
+                generatePDF(getMetricaManutencaoRelatorio, options)
+              }
             >
               <ArrowBigDownDash className="size-5" />
               {'Exportar'}
@@ -77,18 +109,19 @@ export default function MetricasEquipamentoView({ agendaEquipamento, indicadores
         </Tooltip>
       </div>
       <div className="flex-1 space-y-2" id="metricasManutencao">
-        <div className={cn('grid grid-cols-1', agendaEquipamento && 'md:grid-cols-3 gap-y-2 md:gap-2')}>
+        <div
+          className={cn(
+            'grid grid-cols-1',
+            agendaEquipamento && 'md:grid-cols-3 gap-y-2 md:gap-2',
+          )}
+        >
           <div className="col-span-2">
             <div className="grid space-y-2 ">
               <Card className="shadow rounded border-0 max-h-[376px]">
                 <CardHeader>
-                  <CardTitle>
-                    MTTR e MTBF
-                  </CardTitle>
+                  <CardTitle>MTTR e MTBF</CardTitle>
                   <CardDescription>
-                    {
-                      'Indicadores dos equipamentos da empresa'
-                    }
+                    {'Indicadores dos equipamentos da empresa'}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -109,7 +142,11 @@ export default function MetricasEquipamentoView({ agendaEquipamento, indicadores
                     <CardContent>
                       <ListaInspecoesAberto
                         carregandoInspecoes={inspecoes.carregandoInspecoes}
-                        listaInspecoes={inspecoes.dados.filter((inspecoes) => !inspecoes.finalizadoEm) ?? []}
+                        listaInspecoes={
+                          inspecoes.dados.filter(
+                            (inspecoes) => !inspecoes.finalizadoEm,
+                          ) ?? []
+                        }
                       />
                     </CardContent>
                   </Card>
@@ -117,26 +154,35 @@ export default function MetricasEquipamentoView({ agendaEquipamento, indicadores
                     <CardHeader>
                       <CardTitle>{`Indicadores`}</CardTitle>
                       <CardDescription>
-                        Resumo de indicadores de manutenções preventivas do equipamento
+                        Resumo de indicadores de manutenções preventivas do
+                        equipamento
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      {
-                        inspecoes.carregandoInspecoes ? (
-                          <div className="flex flex-col md:flex-row justify-center gap-2">
-                            <Skeleton className="h-52 w-52 rounded-full my-6" />
-                          </div>
-                        ) : (
-                          <IndicadoresInspecaoEquipamento inspecoes={
-                            {
-                              aberta: inspecoes.dados.filter((inspecoes) => !inspecoes.finalizadoEm).length,
-                              aprovada: inspecoes.dados.filter((inspecoes) => inspecoes.statusInspecao === 'aprovado' && inspecoes.finalizadoEm).length,
-                              reprovada: inspecoes.dados.filter((inspecoes) => inspecoes.statusInspecao === 'reprovado' && inspecoes.finalizadoEm).length,
-                              total: inspecoes.dados.length,
-                            }}
-                          />
-                        )
-                      }
+                      {inspecoes.carregandoInspecoes ? (
+                        <div className="flex flex-col md:flex-row justify-center gap-2">
+                          <Skeleton className="h-52 w-52 rounded-full my-6" />
+                        </div>
+                      ) : (
+                        <IndicadoresInspecaoEquipamento
+                          inspecoes={{
+                            aberta: inspecoes.dados.filter(
+                              (inspecoes) => !inspecoes.finalizadoEm,
+                            ).length,
+                            aprovada: inspecoes.dados.filter(
+                              (inspecoes) =>
+                                inspecoes.statusInspecao === 'aprovado' &&
+                                inspecoes.finalizadoEm,
+                            ).length,
+                            reprovada: inspecoes.dados.filter(
+                              (inspecoes) =>
+                                inspecoes.statusInspecao === 'reprovado' &&
+                                inspecoes.finalizadoEm,
+                            ).length,
+                            total: inspecoes.dados.length,
+                          }}
+                        />
+                      )}
                     </CardContent>
                   </Card>
                 </div>
@@ -148,24 +194,22 @@ export default function MetricasEquipamentoView({ agendaEquipamento, indicadores
               <CardHeader>
                 <CardTitle>Agenda de preventivas</CardTitle>
                 <CardDescription>
-                  {
-                    'Agenda de manutenções preventivas do equipamento'
-                  }
+                  {'Agenda de manutenções preventivas do equipamento'}
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                {
-                  agendaEquipamento.carregandoAgenda ? (
-                    <div className="grid">
-                      <Skeleton className="h-[550px] w-full" />
-                    </div>
-                  ) : (
-                    <CalendarioEventos eventos={agendaEquipamento.eventos} />
-                  )
-                }
+                {agendaEquipamento.carregandoAgenda ? (
+                  <div className="grid">
+                    <Skeleton className="h-[550px] w-full" />
+                  </div>
+                ) : (
+                  <CalendarioEventos eventos={agendaEquipamento.eventos} />
+                )}
               </CardContent>
             </Card>
-          ) : <></>}
+          ) : (
+            <></>
+          )}
         </div>
         {manutencoes && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
@@ -177,17 +221,17 @@ export default function MetricasEquipamentoView({ agendaEquipamento, indicadores
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex-1 pb-0">
-                {
-                  manutencoes.carregandoManutencoes ? (
-                    <div className="flex flex-col md:flex-row justify-center items-center gap-2">
-                      <Skeleton className="h-52 w-52 rounded-full my-6" />
-                    </div>
-                  ) : (
-                    <div className="flex-1 justify-center">
-                      <IndicadoresMediaEquipamentoParado listaManutencoes={manutencoes.listaManutencoes} />
-                    </div>
-                  )
-                }
+                {manutencoes.carregandoManutencoes ? (
+                  <div className="flex flex-col md:flex-row justify-center items-center gap-2">
+                    <Skeleton className="h-52 w-52 rounded-full my-6" />
+                  </div>
+                ) : (
+                  <div className="flex-1 justify-center">
+                    <IndicadoresMediaEquipamentoParado
+                      listaManutencoes={manutencoes.listaManutencoes}
+                    />
+                  </div>
+                )}
               </CardContent>
             </Card>
             <Card className="grid shadow rounded border-0">
@@ -200,17 +244,17 @@ export default function MetricasEquipamentoView({ agendaEquipamento, indicadores
                 </CardDescription>
               </CardHeader>
               <CardContent className="px-0 mx-4">
-                {
-                  manutencoes.carregandoMetricas ? (
-                    <div className="flex flex-col md:flex-row justify-center items-center gap-2">
-                      <Skeleton className="h-52 w-52 rounded-full my-6" />
-                    </div>
-                  ) : (
-                    <div className="flex-1">
-                      <RankingDurancaoManutencaoEquipamento dados={manutencoes.metricas} />
-                    </div>
-                  )
-                }
+                {manutencoes.carregandoMetricas ? (
+                  <div className="flex flex-col md:flex-row justify-center items-center gap-2">
+                    <Skeleton className="h-52 w-52 rounded-full my-6" />
+                  </div>
+                ) : (
+                  <div className="flex-1">
+                    <RankingDurancaoManutencaoEquipamento
+                      dados={manutencoes.metricas}
+                    />
+                  </div>
+                )}
               </CardContent>
             </Card>
             <Card className="grid shadow rounded border-0">
@@ -221,15 +265,15 @@ export default function MetricasEquipamentoView({ agendaEquipamento, indicadores
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex-1 pb-0">
-                {
-                  manutencoes.carregandoManutencoes ? (
-                    <div className="flex flex-col md:flex-row justify-center items-center gap-2">
-                      <Skeleton className="h-52 w-52 rounded-full my-6" />
-                    </div>
-                  ) : (
-                    <IndicadoresMediaDuracaoManutencoesEquipamento listaManutencoes={manutencoes.listaManutencoes} />
-                  )
-                }
+                {manutencoes.carregandoManutencoes ? (
+                  <div className="flex flex-col md:flex-row justify-center items-center gap-2">
+                    <Skeleton className="h-52 w-52 rounded-full my-6" />
+                  </div>
+                ) : (
+                  <IndicadoresMediaDuracaoManutencoesEquipamento
+                    listaManutencoes={manutencoes.listaManutencoes}
+                  />
+                )}
               </CardContent>
             </Card>
           </div>
