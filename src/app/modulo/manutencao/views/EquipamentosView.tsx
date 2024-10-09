@@ -70,7 +70,9 @@ export default function Equipamentos() {
         metricasManutencoes={{
           dados: estatisticasManutencao?.data ?? {
             qtd_equipamentos_manutencao_em_dia: 0,
-            qtd_manutencoes_em_andamento: 0,
+            media_duracao: 0,
+            qtd_manutencoes_realizadas: 0,
+            total_duracao_manutencoes: 0,
           },
           carregandoMetricasManutencao: estatisticasManutencao.isLoading,
         }}
