@@ -1,14 +1,12 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import {
-  Loader2,
-} from 'lucide-react'
+import { Loader2 } from 'lucide-react'
+import dynamic from 'next/dynamic'
 
-import dynamic from "next/dynamic";
 import { recuperaAgendaCalibracoesEmpresa } from '../../api/AgendaCalibracoes'
-import { buscarEstatisticasCalibracoesEmpresa } from '../../api/EstatisticasCalibracao'
 import { recuperarCalibracoesInstrumentosEmpresa } from '../../api/Calibracao'
+import { buscarEstatisticasCalibracoesEmpresa } from '../../api/EstatisticasCalibracao'
 
 const CalibracoesView = dynamic(() => import('../../views/CalibracoesView'), {
   loading: () => {
@@ -21,16 +19,19 @@ const CalibracoesView = dynamic(() => import('../../views/CalibracoesView'), {
   ssr: true,
 })
 
-const MetricasCalibracoesView = dynamic(() => import('../../views/MetricasCalibracoes'), {
-  loading: () => {
-    return (
-      <div className="flex justify-center">
-        <Loader2 className="size-10 animate-spin" />
-      </div>
-    )
+const MetricasCalibracoesView = dynamic(
+  () => import('../../views/MetricasCalibracoes'),
+  {
+    loading: () => {
+      return (
+        <div className="flex justify-center">
+          <Loader2 className="size-10 animate-spin" />
+        </div>
+      )
+    },
+    ssr: true,
   },
-  ssr: true,
-})
+)
 
 export default function Painel() {
   const indicadoresCalibracoes = useQuery({
@@ -49,7 +50,7 @@ export default function Painel() {
   })
 
   return (
-    <section className='grid '>
+    <section className="grid">
       <MetricasCalibracoesView
         indicadores={{
           dados: indicadoresCalibracoes.data ?? {
@@ -61,15 +62,15 @@ export default function Painel() {
             quantidadeCalibracoesAprovadas: 0,
             quantidadeCalibracoesReprovadas: 0,
           },
-          carregandoIndicadores: indicadoresCalibracoes.isLoading
+          carregandoIndicadores: indicadoresCalibracoes.isLoading,
         }}
         agenda={{
           carregandoAgenda: agendaCalibracoes.isLoading,
-          eventos: agendaCalibracoes.data ?? []
+          eventos: agendaCalibracoes.data ?? [],
         }}
         historicoCalibracoes={{
           dados: historicoCalibracoes.data ?? [],
-          carregandoCalibracoes: historicoCalibracoes.isLoading
+          carregandoCalibracoes: historicoCalibracoes.isLoading,
         }}
       />
 

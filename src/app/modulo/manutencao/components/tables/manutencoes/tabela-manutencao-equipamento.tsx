@@ -1,22 +1,42 @@
 'use client'
 
-import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, useReactTable } from "@tanstack/react-table";
-import { DadosManutencaoEquipamentoType } from "../../../schemas/ManutencaoSchema";
-import { colunasManutencaoEquipamento } from "./colunas-tabela-manutencao";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
-import { Plus } from "lucide-react";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { NovaOrdemManutencaoDialog } from "../../dialogs/(manutencao)/DialogNovaOrdemManutencao";
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
+import { Plus } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogTrigger } from '@/components/ui/dialog'
+import { Skeleton } from '@/components/ui/skeleton'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+
+import { DadosManutencaoEquipamentoType } from '../../../schemas/ManutencaoSchema'
+import { NovaOrdemManutencaoDialog } from '../../dialogs/(manutencao)/DialogNovaOrdemManutencao'
+
+import { colunasManutencaoEquipamento } from './colunas-tabela-manutencao'
 
 interface TabelaManutencaoProps {
-  idEquipamento: string;
-  data: Array<DadosManutencaoEquipamentoType>;
-  carregandoManutencoes: boolean;
+  idEquipamento: string
+  data: Array<DadosManutencaoEquipamentoType>
+  carregandoManutencoes: boolean
 }
 
-export function TabelaManutencoesEquipamento({ idEquipamento, data, carregandoManutencoes }: TabelaManutencaoProps) {
+export function TabelaManutencoesEquipamento({
+  idEquipamento,
+  data,
+  carregandoManutencoes,
+}: TabelaManutencaoProps) {
   const tabela = useReactTable({
     data,
     columns: colunasManutencaoEquipamento,
@@ -25,7 +45,12 @@ export function TabelaManutencoesEquipamento({ idEquipamento, data, carregandoMa
     getFilteredRowModel: getFilteredRowModel(),
   })
 
-  const manutencaoAberto = data.filter((manutencoes) => manutencoes.criadoEm && (!manutencoes.finalizadoEm && !manutencoes.canceladoEm))
+  const manutencaoAberto = data.filter(
+    (manutencoes) =>
+      manutencoes.criadoEm &&
+      !manutencoes.finalizadoEm &&
+      !manutencoes.canceladoEm,
+  )
 
   return (
     <div className="w-full space-y-2">
@@ -40,7 +65,7 @@ export function TabelaManutencoesEquipamento({ idEquipamento, data, carregandoMa
               Nova ordem de serviço
             </Button>
           </DialogTrigger>
-          <NovaOrdemManutencaoDialog equipamentoId={idEquipamento}/>
+          <NovaOrdemManutencaoDialog equipamentoId={idEquipamento} />
         </Dialog>
       </div>
       <div className="rounded-md border shadow-md bg-gray-50">
@@ -54,9 +79,9 @@ export function TabelaManutencoesEquipamento({ idEquipamento, data, carregandoMa
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
                     </TableHead>
                   )
                 })}
@@ -64,58 +89,50 @@ export function TabelaManutencoesEquipamento({ idEquipamento, data, carregandoMa
             ))}
           </TableHeader>
           <TableBody>
-            {
-              carregandoManutencoes ? (
-                <>
-                  <TableRow>
-                    <TableCell
-                      colSpan={colunasManutencaoEquipamento.length}
-                    >
-                      <Skeleton className="h-4 w-full rounded" />
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell
-                      colSpan={colunasManutencaoEquipamento.length}
-                    >
-                      <Skeleton className="h-4 w-full rounded" />
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell
-                      colSpan={colunasManutencaoEquipamento.length}
-                    >
-                      <Skeleton className="h-4 w-full rounded" />
-                    </TableCell>
-                  </TableRow>
-                </>
-              ) : tabela.getRowModel().rows?.length > 0 ? (
-                tabela.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && 'selected'}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext(),
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
+            {carregandoManutencoes ? (
+              <>
                 <TableRow>
-                  <TableCell
-                    colSpan={colunasManutencaoEquipamento.length}
-                    className="h-16 text-center text-padrao-gray-200 text-sm font-medium mt-5 md:text-base lg:text-lg"
-                  >
-                    Nenhuma manutenção encontrada!
+                  <TableCell colSpan={colunasManutencaoEquipamento.length}>
+                    <Skeleton className="h-4 w-full rounded" />
                   </TableCell>
                 </TableRow>
-              )
-            }
+                <TableRow>
+                  <TableCell colSpan={colunasManutencaoEquipamento.length}>
+                    <Skeleton className="h-4 w-full rounded" />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell colSpan={colunasManutencaoEquipamento.length}>
+                    <Skeleton className="h-4 w-full rounded" />
+                  </TableCell>
+                </TableRow>
+              </>
+            ) : tabela.getRowModel().rows?.length > 0 ? (
+              tabela.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={colunasManutencaoEquipamento.length}
+                  className="h-16 text-center text-padrao-gray-200 text-sm font-medium mt-5 md:text-base lg:text-lg"
+                >
+                  Nenhuma manutenção encontrada!
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </div>

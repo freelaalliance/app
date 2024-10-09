@@ -1,14 +1,27 @@
-import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { TabelaPecasEquipamento, TabelaPecasEquipamentoProps } from "../../tables/pecas_equipamento/tabela-pecas-equipamento";
+import {
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
-export function PecasEquipamentoDialog({ idEquipamento }: TabelaPecasEquipamentoProps) {
+import {
+  TabelaPecasEquipamento,
+  TabelaPecasEquipamentoProps,
+} from '../../tables/pecas_equipamento/tabela-pecas-equipamento'
+
+export function PecasEquipamentoDialog({
+  idEquipamento,
+}: TabelaPecasEquipamentoProps) {
   return (
     <DialogContent className="md:max-w-4xl">
       <DialogHeader>
-        <DialogTitle>Peças do equipamento</DialogTitle>
-        <DialogDescription>Visualizar todas as peças do equipamento</DialogDescription>
+        <DialogTitle>Itens para manutenção</DialogTitle>
+        <DialogDescription>
+          Visualizar todas as peças do equipamento
+        </DialogDescription>
       </DialogHeader>
-        <TabelaPecasEquipamento idEquipamento={idEquipamento} />
+      <TabelaPecasEquipamento idEquipamento={idEquipamento} />
     </DialogContent>
   )
 }

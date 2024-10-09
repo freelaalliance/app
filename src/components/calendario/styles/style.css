@@ -2,7 +2,6 @@
     font-size: 1.25rem !important;
     margin: 0;
     font-weight: 500;
-    padding: 20px 0 0px 20px;
 }
 
 .fc .fc-button {    
@@ -19,7 +18,6 @@
 .fc-day-today {
     background-color: #9e9ea0 !important;
     color: hsl(0, 0%, 99%) !important;
-    
 }
 
 .fc-theme-standard td {

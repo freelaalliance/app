@@ -6,7 +6,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@radix-ui/react-select'
-import { differenceInDays } from 'date-fns'
+import { differenceInDays, formatDuration } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 import {
   Activity,
   ArrowBigDownDash,
@@ -15,6 +16,7 @@ import {
   Hammer,
   List,
   ShieldAlert,
+  Timer,
 } from 'lucide-react'
 import { useState } from 'react'
 import generatePDF, { Margin, Options, Resolution } from 'react-to-pdf'
@@ -226,11 +228,47 @@ export default function MetricasEquipamentosEmpresaView({
                     carregandoInformacao={
                       metricasManutencoes.carregandoMetricasManutencao
                     }
+                    info={formatDuration(
+                      {
+                        minutes:
+                          metricasManutencoes.dados.total_duracao_manutencoes ??
+                          0,
+                      },
+                      {
+                        zero: true,
+                        locale: ptBR,
+                        format: ['hours', 'minutes'],
+                      },
+                    )}
+                    titulo="Duração total das corretivas"
+                    icon={Timer}
+                  />
+                  <IndicadorInformativo
+                    carregandoInformacao={
+                      metricasManutencoes.carregandoMetricasManutencao
+                    }
+                    info={formatDuration(
+                      {
+                        minutes: metricasManutencoes.dados.media_duracao ?? 0,
+                      },
+                      {
+                        zero: true,
+                        locale: ptBR,
+                        format: ['hours', 'minutes'],
+                      },
+                    )}
+                    titulo={`Média de duração das corretivas`}
+                    icon={Timer}
+                  />
+                  <IndicadorInformativo
+                    carregandoInformacao={
+                      metricasManutencoes.carregandoMetricasManutencao
+                    }
                     info={
                       metricasManutencoes.dados
                         .qtd_equipamentos_manutencao_em_dia
                     }
-                    titulo="Manutenções em dia"
+                    titulo="Manutenções corretivas em dia"
                     icon={CalendarCheck}
                   />
                   <IndicadorInformativo
@@ -238,9 +276,9 @@ export default function MetricasEquipamentosEmpresaView({
                       metricasManutencoes.carregandoMetricasManutencao
                     }
                     info={
-                      metricasManutencoes.dados.qtd_manutencoes_em_andamento
+                      metricasManutencoes.dados.qtd_manutencoes_realizadas ?? 0
                     }
-                    titulo="Manutenções corretivas"
+                    titulo={`Manutenções corretivas realizada(s)`}
                     icon={Hammer}
                   />
                   <IndicadorInformativo
