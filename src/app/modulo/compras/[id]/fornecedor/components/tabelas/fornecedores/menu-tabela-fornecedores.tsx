@@ -3,6 +3,7 @@ import Link from 'next/link'
 
 import { AlertDialog, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
+import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 import { FornecedoresEmpresaType } from '../../../(api)/FornecedorApi'
+import { NovoPedidoDialog } from '../../dialogs/NovoPedidoDialog'
 import { ExclusaoFornecedor } from '../../dialogs/RemoverFornecedorDialog'
 
 interface MenuTabelaFornecedoresProps {
@@ -37,6 +39,20 @@ export function MenuTabelaFornecedores({
             Visualizar
           </Link>
         </DropdownMenuItem>
+        {fornecedor.aprovado && (
+          <Dialog>
+            <DialogTrigger asChild>
+              <DropdownMenuItem
+                onSelect={(e) => {
+                  e.preventDefault()
+                }}
+              >
+                Novo pedido
+              </DropdownMenuItem>
+            </DialogTrigger>
+            <NovoPedidoDialog fornecedorId={fornecedor.id} />
+          </Dialog>
+        )}
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <DropdownMenuItem

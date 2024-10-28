@@ -170,8 +170,27 @@ export async function handleDownloadFile(
   await downloadFileFromBase64(anexo, `anexo_${id}.${extensao}`)
 }
 
-export function formatarDataBrasil(data: Date): string {
-  return format(data, 'dd/MM/yyyy HH:mm', {
+export function formatarDataBrasil(
+  data: Date,
+  horas: boolean = false,
+  formato: string = 'PPPP',
+): string {
+  if (horas) {
+    data = new Date(
+      data.getFullYear(),
+      data.getMonth(),
+      data.getDate(),
+      data.getHours(),
+      data.getMinutes(),
+    )
+    return format(data, 'dd/MM/yyyy HH:mm', {
+      locale: ptBR,
+    })
+  }
+
+  data = new Date(data.getFullYear(), data.getMonth(), data.getDate() + 1)
+
+  return format(data, formato, {
     locale: ptBR,
   })
 }

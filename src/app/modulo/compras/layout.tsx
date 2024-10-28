@@ -14,7 +14,9 @@ export default function LayoutModuloManutencao({
           <h2 className="text-2xl font-bold tracking-tight">
             Módulo de compras
           </h2>
-          <p className="text-muted-foreground">...</p>
+          <p className="text-muted-foreground">
+            Gestão de fornecedores e processo de compras
+          </p>
         </section>
         <Separator className="my-6" />
         <section className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
