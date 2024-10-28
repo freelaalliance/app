@@ -105,7 +105,7 @@ export default function CadastroFornecedorView() {
       cidade: '',
       estado: '',
       complemento: '',
-      aprovado: false,
+      aprovado: true,
       nota: 0,
       validade: new Date(),
       telefones: [],
@@ -306,7 +306,16 @@ export default function CadastroFornecedorView() {
                 <FormControl>
                   <Checkbox
                     checked={field.value}
-                    onCheckedChange={field.onChange}
+                    onCheckedChange={(value) => {
+                      if (value) {
+                        formNovoFornecedor.setValue('aprovado', false)
+                        formNovoFornecedor.trigger('aprovado')
+                      } else {
+                        formNovoFornecedor.setValue('aprovado', true)
+                        formNovoFornecedor.trigger('aprovado')
+                      }
+                      field.onChange(value)
+                    }}
                   />
                 </FormControl>
                 <div className="space-y-1 leading-none">

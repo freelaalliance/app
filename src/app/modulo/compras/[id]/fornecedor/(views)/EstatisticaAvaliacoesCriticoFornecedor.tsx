@@ -173,8 +173,8 @@ export default function ViewEstatisticaAvaliacoesCritico({
                     <Label
                       position="insideBottomLeft"
                       value="Média avaliações"
-                      offset={10}
-                      className="font-bold"
+                      offset={7}
+                      className="font-bold "
                       fill="hsl(var(--muted-foreground))"
                     />
                     <Label

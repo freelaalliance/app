@@ -6,13 +6,17 @@ import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import {
   ArrowLeft,
+  Clock,
   Download,
   File,
   Loader2,
   MessageSquareWarning,
   Pen,
   Plus,
+  ShoppingCart,
+  TicketX,
   Trash2,
+  Truck,
 } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { useMemo, useRef } from 'react'
@@ -26,6 +30,7 @@ import {
 import { toast } from 'sonner'
 import { z } from 'zod'
 
+import { IndicadorInformativo } from '@/components/IndicadorInfo'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { AlertDialog, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
@@ -53,6 +58,7 @@ import {
   handleDownloadFile,
 } from '@/lib/utils'
 
+import { buscarPedidosFornecedor } from '../(api)/ComprasApi'
 import {
   AvaliacaoFornecedorType,
   consultarAnexosFornecedor,
@@ -63,9 +69,12 @@ import {
 } from '../(api)/FornecedorApi'
 import { schemaDocumentoForm } from '../../../(schemas)/fornecedores/schema-fornecedor'
 import { EdicaoEnderecoFornecedorDialog } from '../components/dialogs/EdicaoEnderecoFornecedorDialog'
+import { NovoEmailFornecedorDialog } from '../components/dialogs/NovoEmailFornecedorDialog'
 import { NovoTelefoneFornecedorDialog } from '../components/dialogs/NovoTelefoneFornecedorDialog'
 import { ExclusaoAnexoFornecedor } from '../components/dialogs/RemoverAnexoDialog'
 import { TabelaEmailsFornecedor } from '../components/tabelas/emails/tabela-email-fornecedores'
+import { ColunasPedidosFornecedor } from '../components/tabelas/pedidos/colunas-tabela-pedidos-fornecedor'
+import { TabelaPedidos } from '../components/tabelas/pedidos/tabela-pedidos'
 import { TabelaTelefonesFornecedor } from '../components/tabelas/telefones/tabela-telefones-fornecedores'
 
 interface DadosFornecedorProps {
@@ -114,6 +123,12 @@ export default function ViewDadosFornecedores({
   const consultarAnexosFornecedores = useQuery({
     queryKey: ['anexosFornecedor', idFornecedor],
     queryFn: () => consultarAnexosFornecedor({ id: idFornecedor }),
+    staleTime: Infinity,
+  })
+
+  const listaPedidosFornecedor = useQuery({
+    queryKey: ['pedidosFornecedor', idFornecedor],
+    queryFn: () => buscarPedidosFornecedor({ fornecedorId: idFornecedor }),
     staleTime: Infinity,
   })
 
@@ -213,39 +228,10 @@ export default function ViewDadosFornecedores({
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Voltar para lista de equipamentos</p>
+            <p>Voltar para lista de fornecedores</p>
           </TooltipContent>
         </Tooltip>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Avaliações</CardTitle>
-          <CardDescription>
-            Lista das avaliações realizadas no fornecedor
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          {alertaVencimentoAvaliacao && (
-            <Alert className="bg-yellow-300">
-              <MessageSquareWarning className="size-4" />
-              <AlertTitle>{alertaVencimentoAvaliacao.titulo}</AlertTitle>
-              <AlertDescription>
-                {alertaVencimentoAvaliacao.mensagem}
-              </AlertDescription>
-            </Alert>
-          )}
-          <EstatisticaAvalicoesFornecedorCritico
-            idFornecedor={idFornecedor}
-            avaliacoes={estatisticasAvaliacaoCritico.data?.dados ?? []}
-            carregandoAvaliacoes={estatisticasAvaliacaoCritico.isLoading}
-            fornecedorCritico={
-              consultaDadosFornecedor.data?.dados?.critico ?? true
-            }
-          />
-        </CardContent>
-      </Card>
-
       <Card>
         <CardHeader>
           <CardTitle className="capitalize">
@@ -314,7 +300,11 @@ export default function ViewDadosFornecedores({
                 <RadialBarChart
                   data={chartData}
                   startAngle={0}
-                  endAngle={250}
+                  endAngle={
+                    ((consultaDadosFornecedor.data?.dados?.desempenho ?? 0) *
+                      360) /
+                    100
+                  }
                   innerRadius={80}
                   outerRadius={110}
                 >
@@ -367,14 +357,101 @@ export default function ViewDadosFornecedores({
           </div>
         </CardContent>
       </Card>
-
-      <Tabs defaultValue="endereco">
+      <Card>
+        <CardHeader>
+          <CardTitle>Avaliações</CardTitle>
+          <CardDescription>
+            Lista das avaliações realizadas no fornecedor
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {alertaVencimentoAvaliacao && (
+            <Alert className="bg-yellow-300">
+              <MessageSquareWarning className="size-4" />
+              <AlertTitle>{alertaVencimentoAvaliacao.titulo}</AlertTitle>
+              <AlertDescription>
+                {alertaVencimentoAvaliacao.mensagem}
+              </AlertDescription>
+            </Alert>
+          )}
+          <EstatisticaAvalicoesFornecedorCritico
+            idFornecedor={idFornecedor}
+            avaliacoes={estatisticasAvaliacaoCritico.data?.dados ?? []}
+            carregandoAvaliacoes={estatisticasAvaliacaoCritico.isLoading}
+            fornecedorCritico={
+              consultaDadosFornecedor.data?.dados?.critico ?? true
+            }
+          />
+        </CardContent>
+      </Card>
+      <Tabs defaultValue="pedidos">
         <TabsList className="w-full">
+          <TabsTrigger value="pedidos">Pedidos</TabsTrigger>
           <TabsTrigger value="endereco">Endereço</TabsTrigger>
           <TabsTrigger value="telefone">Telefones</TabsTrigger>
           <TabsTrigger value="email">Emails</TabsTrigger>
-          <TabsTrigger value="documento">Anexos</TabsTrigger>
+          <TabsTrigger value="documento">Documentos</TabsTrigger>
         </TabsList>
+        <TabsContent value="pedidos">
+          <Card>
+            <CardContent className="space-y-2 pt-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2">
+                <IndicadorInformativo
+                  carregandoInformacao={listaPedidosFornecedor.isLoading}
+                  titulo={'Pedidos realizados'}
+                  info={String(
+                    listaPedidosFornecedor.data?.dados?.filter(
+                      (pedido) =>
+                        new Date(
+                          pedido.cadastro.dataCadastro,
+                        ).toLocaleDateString() ===
+                          new Date().toLocaleDateString() && !pedido.cancelado,
+                    ).length,
+                  )}
+                  icon={ShoppingCart}
+                />
+                <IndicadorInformativo
+                  carregandoInformacao={listaPedidosFornecedor.isLoading}
+                  titulo={'Pedidos cancelados'}
+                  info={String(
+                    listaPedidosFornecedor.data?.dados?.filter(
+                      (pedido) => pedido.cancelado === true,
+                    ).length ?? 0,
+                  )}
+                  icon={TicketX}
+                />
+                <IndicadorInformativo
+                  carregandoInformacao={listaPedidosFornecedor.isLoading}
+                  titulo={'Pedidos não recebido'}
+                  info={String(
+                    listaPedidosFornecedor.data?.dados?.filter(
+                      (pedido) =>
+                        pedido.recebido === false && !pedido.cancelado,
+                    ).length ?? 0,
+                  )}
+                  icon={Clock}
+                />
+                <IndicadorInformativo
+                  carregandoInformacao={listaPedidosFornecedor.isLoading}
+                  titulo={'Pedidos recebidos'}
+                  info={String(
+                    listaPedidosFornecedor.data?.dados?.filter(
+                      (pedido) => pedido.recebido === true,
+                    ).length ?? 0,
+                  )}
+                  icon={Truck}
+                />
+              </div>
+              <TabelaPedidos
+                novoPedido={consultaDadosFornecedor.data?.dados?.aprovado}
+                fornecedorId={idFornecedor}
+                carregandoPedidos={listaPedidosFornecedor.isLoading}
+                listaPedidos={listaPedidosFornecedor.data?.dados ?? []}
+                colunasTabela={ColunasPedidosFornecedor}
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
         <TabsContent value="endereco">
           <Card>
             <CardHeader className="flex flex-row justify-between items-center">
@@ -518,12 +595,17 @@ export default function ViewDadosFornecedores({
               </div>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button
-                    size={'icon'}
-                    className="shadow bg-padrao-red hover:bg-red-800"
-                  >
-                    <Plus className="size-4" />
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger>
+                      <Button
+                        size={'icon'}
+                        className="shadow bg-padrao-red hover:bg-red-800"
+                      >
+                        <Plus className="size-4" />
+                      </Button>
+                    </DialogTrigger>
+                    <NovoEmailFornecedorDialog idFornecedor={idFornecedor} />
+                  </Dialog>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Adicionar novo email</p>
