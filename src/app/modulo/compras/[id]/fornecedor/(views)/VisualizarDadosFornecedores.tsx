@@ -385,7 +385,7 @@ export default function ViewDadosFornecedores({
         </CardContent>
       </Card>
       <Tabs defaultValue="pedidos">
-        <TabsList className="w-full">
+        <TabsList className="flex flex-row justify-start overflow-auto md:justify-center">
           <TabsTrigger value="pedidos">Pedidos</TabsTrigger>
           <TabsTrigger value="endereco">Endereço</TabsTrigger>
           <TabsTrigger value="telefone">Telefones</TabsTrigger>
