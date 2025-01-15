@@ -272,16 +272,20 @@ export async function consultarAnexosFornecedor({ id }: FornecedorProps) {
     })
 }
 
-export async function salvarNovaAvaliacao(data: FormularioNovaAvaliacao) {
+export async function salvarNovaAvaliacao({
+  aprovado,
+  nota,
+  validade,
+  critico,
+  idFornecedor,
+}: FormularioNovaAvaliacao) {
   return await axiosInstance
-    .post<ResponseNovaAvaliacaoType>(
-      `fornecedor/${data.idFornecedor}/avaliacao`,
-      {
-        aprovado: data.aprovado,
-        nota: data.nota,
-        validade: data.validade,
-      },
-    )
+    .post<ResponseNovaAvaliacaoType>(`fornecedor/${idFornecedor}/avaliacao`, {
+      aprovado,
+      nota,
+      validade,
+      critico,
+    })
     .then((response) => {
       return {
         status: response.data.status,

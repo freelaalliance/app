@@ -180,6 +180,7 @@ export const schemaDocumentoForm = z.object({
 
 export const schemaAvaliacaoFornecedor = z.object({
   idFornecedor: z.string().uuid(),
+  critico: z.boolean().default(false),
   aprovado: z.boolean(),
   nota: z.coerce
     .number()

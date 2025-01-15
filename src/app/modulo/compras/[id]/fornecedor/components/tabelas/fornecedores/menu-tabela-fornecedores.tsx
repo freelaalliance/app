@@ -10,8 +10,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { Separator } from '@/components/ui/separator'
 
 import { FornecedoresEmpresaType } from '../../../(api)/FornecedorApi'
+import { NovaAvaliacaoCriticoDialog } from '../../dialogs/NovaAvaliacaoCriticoDialog'
 import { NovoPedidoDialog } from '../../dialogs/NovoPedidoDialog'
 import { ExclusaoFornecedor } from '../../dialogs/RemoverFornecedorDialog'
 
@@ -65,6 +67,19 @@ export function MenuTabelaFornecedores({
           </AlertDialogTrigger>
           <ExclusaoFornecedor idFornecedor={fornecedor.id} />
         </AlertDialog>
+        <Separator />
+        <Dialog>
+          <DialogTrigger asChild>
+            <DropdownMenuItem
+              onSelect={(e) => {
+                e.preventDefault()
+              }}
+            >
+              Reavaliar
+            </DropdownMenuItem>
+          </DialogTrigger>
+          <NovaAvaliacaoCriticoDialog idFornecedor={fornecedor.id} />
+        </Dialog>
       </DropdownMenuContent>
     </DropdownMenu>
   )

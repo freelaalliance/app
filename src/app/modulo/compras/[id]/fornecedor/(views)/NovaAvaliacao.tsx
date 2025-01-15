@@ -29,7 +29,10 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 
-import { salvarNovaAvaliacao } from '../(api)/FornecedorApi'
+import {
+  FornecedoresEmpresaType,
+  salvarNovaAvaliacao,
+} from '../(api)/FornecedorApi'
 import { schemaAvaliacaoFornecedor } from '../../../(schemas)/fornecedores/schema-fornecedor'
 import { NovaAvaliacaoCriticoProps } from '../components/dialogs/NovaAvaliacaoCriticoDialog'
 
@@ -45,6 +48,7 @@ export default function NovaAvaliacaoCriticoView({
     defaultValues: {
       idFornecedor,
       aprovado: false,
+      critico: false,
       nota: 0,
       validade: addDays(new Date(), 1),
     },
@@ -58,11 +62,29 @@ export default function NovaAvaliacaoCriticoView({
         description: error.message,
       })
     },
-    onSuccess: (data) => {
+    onSuccess: (data, dados) => {
       if (data.status) {
         queryClient.refetchQueries({
           queryKey: ['estatisticasAvaliacoesCritico', idFornecedor],
+          exact: true,
         })
+
+        const listaFornecedores: undefined | FornecedoresEmpresaType[] =
+          queryClient.getQueryData(['fornecedoresEmpresa'])
+
+        queryClient.setQueryData(
+          ['fornecedoresEmpresa'],
+          listaFornecedores?.map((fornecedor) => {
+            if (fornecedor.id === idFornecedor) {
+              return {
+                ...fornecedor,
+                aprovado: dados.aprovado,
+                critico: dados.critico,
+              }
+            }
+            return fornecedor
+          }),
+        )
 
         formNovaAvaliacao.reset()
 
@@ -84,6 +106,37 @@ export default function NovaAvaliacaoCriticoView({
           onSubmit={formNovaAvaliacao.handleSubmit(onSubmitAvaliacao)}
           className="space-y-4"
         >
+          <FormField
+            control={formNovaAvaliacao.control}
+            name="critico"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={(value) => {
+                      if (value) {
+                        formNovaAvaliacao.setValue('aprovado', false)
+                        formNovaAvaliacao.trigger('aprovado')
+                      } else {
+                        formNovaAvaliacao.setValue('aprovado', true)
+                        formNovaAvaliacao.trigger('aprovado')
+                      }
+                      field.onChange(value)
+                    }}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>Fornecedor crítico</FormLabel>
+                  <FormDescription>
+                    {
+                      'Selecione essa opção se o fornecedor necessita passar por uma avaliação'
+                    }
+                  </FormDescription>
+                </div>
+              </FormItem>
+            )}
+          />
           <FormField
             control={formNovaAvaliacao.control}
             name="aprovado"
