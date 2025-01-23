@@ -111,7 +111,7 @@ export const ColunasPedidosEmpresaRecebimento: Array<
               .dataRecebimento
           : null
         : row.original.recebimento
-          ? row.original.recebimento[0].dataRecebimento
+          ? row.original.recebimento[0]?.dataRecebimento
           : null
 
       return (

@@ -8,11 +8,19 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { Plus } from 'lucide-react'
+import { Plus, QrCode } from 'lucide-react'
+import { useState } from 'react'
 
 import { PedidosFornecedorType } from '@/app/modulo/compras/(schemas)/compras/schema-compras'
+import { LeitorQrCode } from '@/components/qr-code'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogTrigger } from '@/components/ui/dialog'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -23,6 +31,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 import { NovoPedidoDialog } from '../../dialogs/NovoPedidoDialog'
 
@@ -32,6 +45,7 @@ interface TabelaPedidosProps {
   novoPedido?: boolean
   fornecedorId?: string
   filtrarFornecedor?: boolean
+  lerQrCode?: boolean
   colunasTabela: Array<ColumnDef<PedidosFornecedorType>>
 }
 
@@ -51,6 +65,10 @@ export function TabelaPedidos({
     getFilteredRowModel: getFilteredRowModel(),
   })
 
+  const [estadoDialogLeitor, setEstadoDialogLeitor] = useState<
+    boolean | undefined
+  >()
+
   return (
     <section className="space-y-2">
       <div className="flex flex-col items-center gap-2 py-4 md:flex-row-reverse md:justify-between">
@@ -67,21 +85,53 @@ export function TabelaPedidos({
         )}
 
         <div className="flex flex-row gap-2">
-          <Input
-            disabled={listaPedidos.length === 0 || carregandoPedidos}
-            placeholder="Filtrar por número do pedido"
-            className="w-full md:w-64"
-            value={
-              (tabelaPedidosFornecedor
-                .getColumn('numPedido')
-                ?.getFilterValue() as number) ?? ''
-            }
-            onChange={(event) =>
-              tabelaPedidosFornecedor
-                .getColumn('numPedido')
-                ?.setFilterValue(event.target.value)
-            }
-          />
+          <div className="flex flex-row gap-2">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Dialog open={estadoDialogLeitor}>
+                  <DialogTrigger asChild>
+                    <Button className="shadow bg-padrao-gray-250 hover:bg-gray-900">
+                      <QrCode />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>QRCode Pedido</DialogTitle>
+                    </DialogHeader>
+                    <LeitorQrCode
+                      setDadosQrCode={(codigo: string) => {
+                        codigo = codigo.split('-')[0]
+
+                        tabelaPedidosFornecedor
+                          .getColumn('numPedido')
+                          ?.setFilterValue(codigo)
+
+                        setEstadoDialogLeitor(false)
+                      }}
+                    />
+                  </DialogContent>
+                </Dialog>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Ler QRCode do pedido</p>
+              </TooltipContent>
+            </Tooltip>
+            <Input
+              disabled={listaPedidos.length === 0 || carregandoPedidos}
+              placeholder="Filtrar por número do pedido"
+              className="w-full md:w-64"
+              value={
+                (tabelaPedidosFornecedor
+                  .getColumn('numPedido')
+                  ?.getFilterValue() as number) ?? ''
+              }
+              onChange={(event) =>
+                tabelaPedidosFornecedor
+                  .getColumn('numPedido')
+                  ?.setFilterValue(event.target.value)
+              }
+            />
+          </div>
           {filtrarFornecedor && (
             <Input
               disabled={listaPedidos.length === 0 || carregandoPedidos}
