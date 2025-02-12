@@ -39,8 +39,6 @@ export type PedidosFornecedorType = {
     usuario: string
     dataRecebimento: string
     avaliacaoEntrega: number
-    quantidadeIncorreta: number
-    avaria: boolean
     numeroNota?: string
     numeroCertificado?: string
   }>

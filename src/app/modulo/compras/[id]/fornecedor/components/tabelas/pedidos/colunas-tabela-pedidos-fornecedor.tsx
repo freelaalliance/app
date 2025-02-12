@@ -1,6 +1,6 @@
-import { ColumnDef } from '@tanstack/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
 
-import { PedidosFornecedorType } from '@/app/modulo/compras/(schemas)/compras/schema-compras'
+import type { PedidosFornecedorType } from '@/app/modulo/compras/(schemas)/compras/schema-compras'
 import { formatarDataBrasil } from '@/lib/utils'
 
 import { MenuTabelaPedidosFornecedor } from './menu-tabela-pedidos-fornecedor'
@@ -69,9 +69,8 @@ export const ColunasPedidosFornecedor: Array<ColumnDef<PedidosFornecedorType>> =
                 : '--'}
             </div>
           )
-        } else {
-          return <div>--</div>
         }
+        return <div>--</div>
       },
     },
     {

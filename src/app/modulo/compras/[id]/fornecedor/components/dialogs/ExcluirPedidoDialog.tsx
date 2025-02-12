@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 
-import { PedidosFornecedorType } from '@/app/modulo/compras/(schemas)/compras/schema-compras'
+import type { PedidosFornecedorType } from '@/app/modulo/compras/(schemas)/compras/schema-compras'
 import {
   AlertDialogAction,
   AlertDialogCancel,
@@ -14,14 +14,14 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 
-import { AlteraPedidoProps, excluirPedido } from '../../(api)/ComprasApi'
+import { type AlteraPedidoProps, excluirPedido } from '../../(api)/ComprasApi'
 
 export function ExcluirPedido({ idPedido, idFornecedor }: AlteraPedidoProps) {
   const queryClient = useQueryClient()
 
   const { mutateAsync: excluirPedidoFornecedor, isPending } = useMutation({
     mutationFn: excluirPedido,
-    onSuccess: (data) => {
+    onSuccess: data => {
       if (data.status) {
         const listaPedidosFornecedor:
           | {
@@ -41,9 +41,9 @@ export function ExcluirPedido({ idPedido, idFornecedor }: AlteraPedidoProps) {
             data.dados && {
               ...listaPedidosFornecedor,
               dados: listaPedidosFornecedor.dados.filter(
-                (pedido) => pedido.id !== data.dados?.id,
+                pedido => pedido.id !== data.dados?.id
               ),
-            },
+            }
         )
 
         toast.success(data.msg)
@@ -51,7 +51,7 @@ export function ExcluirPedido({ idPedido, idFornecedor }: AlteraPedidoProps) {
         toast.warning(data.msg)
       }
     },
-    onError: (error) => {
+    onError: error => {
       toast.error('Erro ao excluir o pedido', {
         description: error.message,
       })

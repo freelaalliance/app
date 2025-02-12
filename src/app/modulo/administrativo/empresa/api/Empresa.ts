@@ -1,8 +1,8 @@
-import { axiosInstance, RespostaType } from '@/lib/AxiosLib'
+import { type RespostaType, axiosInstance } from '@/lib/AxiosLib'
 
-import { ModuloType } from '../schemas/SchemaModulo'
-import { EmpresaFormType, empresaType } from '../schemas/SchemaNovaEmpresa'
-import { UsuarioType } from '../schemas/SchemaUsuarios'
+import type { ModuloType } from '../schemas/SchemaModulo'
+import type { EmpresaFormType, empresaType } from '../schemas/SchemaNovaEmpresa'
+import type { UsuarioType } from '../schemas/SchemaUsuarios'
 
 export interface VinculoModuloEmpresaProps {
   idEmpresa: string
@@ -58,7 +58,7 @@ export async function removerModulosEmpresa({
     `admin/empresa/${idEmpresa}/desvincular/modulo`,
     {
       data: modulos,
-    },
+    }
   )
 
   return removeModulos.data
@@ -66,13 +66,13 @@ export async function removerModulosEmpresa({
 
 export async function adicionarModulosEmpresa(
   idEmpresa: string,
-  idModulo: string,
+  idModulo: string
 ) {
   const vincula = await axiosInstance.post<RespostaType>(
     `admin/empresa/${idEmpresa}/vincular/modulo`,
     {
       idModulo,
-    },
+    }
   )
 
   return vincula.data
@@ -80,7 +80,7 @@ export async function adicionarModulosEmpresa(
 
 export async function buscarUsuariosEmpresa(idEmpresa: string) {
   const usuarios = await axiosInstance.get<Array<UsuarioType>>(
-    `admin/empresa/${idEmpresa}/usuarios`,
+    `admin/empresa/${idEmpresa}/usuarios`
   )
 
   return usuarios.data

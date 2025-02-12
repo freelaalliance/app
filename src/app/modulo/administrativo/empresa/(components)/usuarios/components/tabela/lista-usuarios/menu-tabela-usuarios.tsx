@@ -1,6 +1,6 @@
 import { MoreVertical } from 'lucide-react'
 
-import { UsuarioType } from '@/app/modulo/administrativo/empresa/schemas/SchemaUsuarios'
+import type { UsuarioType } from '@/app/modulo/administrativo/empresa/schemas/SchemaUsuarios'
 import { AlertDialog, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
@@ -34,7 +34,7 @@ export function MenuTabelaUsuario({ row }: MenuTabelaUsuarioProps) {
         <Dialog>
           <DialogTrigger asChild>
             <DropdownMenuItem
-              onSelect={(e) => {
+              onSelect={e => {
                 e.preventDefault()
               }}
             >
@@ -46,7 +46,7 @@ export function MenuTabelaUsuario({ row }: MenuTabelaUsuarioProps) {
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <DropdownMenuItem
-              onSelect={(e) => {
+              onSelect={e => {
                 e.preventDefault()
               }}
             >

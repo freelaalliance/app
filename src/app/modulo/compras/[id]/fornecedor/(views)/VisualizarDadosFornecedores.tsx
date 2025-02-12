@@ -28,7 +28,7 @@ import {
   RadialBarChart,
 } from 'recharts'
 import { toast } from 'sonner'
-import { z } from 'zod'
+import type { z } from 'zod'
 
 import { IndicadorInformativo } from '@/components/IndicadorInfo'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -41,7 +41,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { ChartConfig, ChartContainer } from '@/components/ui/chart'
+import { type ChartConfig, ChartContainer } from '@/components/ui/chart'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -60,14 +60,14 @@ import {
 
 import { buscarPedidosFornecedor } from '../(api)/ComprasApi'
 import {
-  AvaliacaoFornecedorType,
+  type AvaliacaoFornecedorType,
+  type ResponseAnexosFornecedorType,
   consultarAnexosFornecedor,
   consultarAvaliacoesFornecedor,
   consultarDadosFornecedor,
-  ResponseAnexosFornecedorType,
   salvarAnexoFornecedor,
 } from '../(api)/FornecedorApi'
-import { schemaDocumentoForm } from '../../../(schemas)/fornecedores/schema-fornecedor'
+import type { schemaDocumentoForm } from '../../../(schemas)/fornecedores/schema-fornecedor'
 import { EdicaoEnderecoFornecedorDialog } from '../components/dialogs/EdicaoEnderecoFornecedorDialog'
 import { NovoEmailFornecedorDialog } from '../components/dialogs/NovoEmailFornecedorDialog'
 import { NovoTelefoneFornecedorDialog } from '../components/dialogs/NovoTelefoneFornecedorDialog'
@@ -99,7 +99,7 @@ const EstatisticaAvalicoesFornecedorCritico = dynamic(
       )
     },
     ssr: true,
-  },
+  }
 )
 
 export default function ViewDadosFornecedores({
@@ -111,31 +111,30 @@ export default function ViewDadosFornecedores({
   const consultaDadosFornecedor = useQuery({
     queryKey: ['dadosFornecedor', idFornecedor],
     queryFn: () => consultarDadosFornecedor({ id: idFornecedor }),
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   const estatisticasAvaliacaoCritico = useQuery({
     queryKey: ['estatisticasAvaliacoesCritico', idFornecedor],
     queryFn: () => consultarAvaliacoesFornecedor({ id: idFornecedor }),
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   const consultarAnexosFornecedores = useQuery({
     queryKey: ['anexosFornecedor', idFornecedor],
     queryFn: () => consultarAnexosFornecedor({ id: idFornecedor }),
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   const listaPedidosFornecedor = useQuery({
     queryKey: ['pedidosFornecedor', idFornecedor],
     queryFn: () => buscarPedidosFornecedor({ fornecedorId: idFornecedor }),
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   const alertaVencimentoAvaliacao = useMemo(() => {
     if (
-      estatisticasAvaliacaoCritico.data &&
-      estatisticasAvaliacaoCritico.data.dados &&
+      estatisticasAvaliacaoCritico.data?.dados &&
       estatisticasAvaliacaoCritico.data.dados.length > 0
     ) {
       const ultimaAvaliacaoRealizada: AvaliacaoFornecedorType =
@@ -174,12 +173,12 @@ export default function ViewDadosFornecedores({
 
   const { mutateAsync: novoAnexo, isPending } = useMutation({
     mutationFn: salvarAnexoFornecedor,
-    onError: (error) => {
+    onError: error => {
       toast.error('Erro ao salvar o anexo, tente novamente!', {
         description: error.message,
       })
     },
-    onSuccess: (data) => {
+    onSuccess: data => {
       if (data.status) {
         const anexosFornecedor: ResponseAnexosFornecedorType | undefined =
           queryClient.getQueryData(['anexosFornecedor', idFornecedor])
@@ -401,12 +400,8 @@ export default function ViewDadosFornecedores({
                   titulo={'Pedidos realizados'}
                   info={String(
                     listaPedidosFornecedor.data?.dados?.filter(
-                      (pedido) =>
-                        new Date(
-                          pedido.cadastro.dataCadastro,
-                        ).toLocaleDateString() ===
-                          new Date().toLocaleDateString() && !pedido.cancelado,
-                    ).length,
+                      pedido => !pedido.cancelado
+                    ).length
                   )}
                   icon={ShoppingCart}
                 />
@@ -415,8 +410,8 @@ export default function ViewDadosFornecedores({
                   titulo={'Pedidos cancelados'}
                   info={String(
                     listaPedidosFornecedor.data?.dados?.filter(
-                      (pedido) => pedido.cancelado === true,
-                    ).length ?? 0,
+                      pedido => pedido.cancelado === true
+                    ).length ?? 0
                   )}
                   icon={TicketX}
                 />
@@ -425,9 +420,8 @@ export default function ViewDadosFornecedores({
                   titulo={'Pedidos não recebido'}
                   info={String(
                     listaPedidosFornecedor.data?.dados?.filter(
-                      (pedido) =>
-                        pedido.recebido === false && !pedido.cancelado,
-                    ).length ?? 0,
+                      pedido => pedido.recebido === false && !pedido.cancelado
+                    ).length ?? 0
                   )}
                   icon={Clock}
                 />
@@ -436,8 +430,8 @@ export default function ViewDadosFornecedores({
                   titulo={'Pedidos recebidos'}
                   info={String(
                     listaPedidosFornecedor.data?.dados?.filter(
-                      (pedido) => pedido.recebido === true,
-                    ).length ?? 0,
+                      pedido => pedido.recebido === true
+                    ).length ?? 0
                   )}
                   icon={Truck}
                 />
@@ -641,7 +635,7 @@ export default function ViewDadosFornecedores({
                       <Input
                         type="file"
                         ref={fileInputRef}
-                        onChange={async (event) => {
+                        onChange={async event => {
                           if (event.target.files) {
                             const arquivo = event.target.files[0]
 
@@ -686,7 +680,7 @@ export default function ViewDadosFornecedores({
                   </div>
                 ) : (
                   <div className="flex flex-col md:flex-row justify-center gap-4 overflow-auto">
-                    {consultarAnexosFornecedores.data?.dados?.map((anexo) => (
+                    {consultarAnexosFornecedores.data?.dados?.map(anexo => (
                       <div
                         key={anexo.id}
                         className="flex flex-col items-center space-y-2 w-32"

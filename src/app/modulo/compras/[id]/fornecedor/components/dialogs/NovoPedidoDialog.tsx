@@ -5,7 +5,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 
-import NovoPedidoView, { NovoPedidoProps } from '../../(views)/NovoPedido'
+import NovoPedidoView, { type NovoPedidoProps } from '../../(views)/NovoPedido'
 
 export function NovoPedidoDialog({ fornecedorId }: NovoPedidoProps) {
   return (

@@ -9,7 +9,7 @@ import {
 } from '@tanstack/react-table'
 import { Plus } from 'lucide-react'
 
-import { UsuarioType } from '@/app/modulo/administrativo/empresa/schemas/SchemaUsuarios'
+import type { UsuarioType } from '@/app/modulo/administrativo/empresa/schemas/SchemaUsuarios'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
@@ -65,7 +65,7 @@ export function DataTableUsuarios({ data, empresa }: DataTableUsuarioProps) {
             className="w-full md:w-64 "
             disabled={data?.length === 0}
             value={(table.getColumn('nome')?.getFilterValue() as string) ?? ''}
-            onChange={(event) =>
+            onChange={event =>
               table.getColumn('nome')?.setFilterValue(event.target.value)
             }
           />
@@ -79,16 +79,16 @@ export function DataTableUsuarios({ data, empresa }: DataTableUsuarioProps) {
       <div className="rounded-md border shadow-md bg-gray-50">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
+            {table.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
+                {headerGroup.headers.map(header => {
                   return (
                     <TableHead key={header.id} colSpan={header.colSpan}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext(),
+                            header.getContext()
                           )}
                     </TableHead>
                   )
@@ -98,16 +98,16 @@ export function DataTableUsuarios({ data, empresa }: DataTableUsuarioProps) {
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length > 0 ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows.map(row => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                 >
-                  {row.getVisibleCells().map((cell) => (
+                  {row.getVisibleCells().map(cell => (
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}

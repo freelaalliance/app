@@ -1,4 +1,4 @@
-import { ColumnDef } from '@tanstack/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
 
 import { Progress } from '@/components/ui/progress'
 import {
@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/tooltip'
 import { aplicarMascaraDocumento } from '@/lib/utils'
 
-import { FornecedoresEmpresaType } from '../../../(api)/FornecedorApi'
+import type { FornecedoresEmpresaType } from '../../../(api)/FornecedorApi'
 
 import { MenuTabelaFornecedores } from './menu-tabela-fornecedores'
 import {
@@ -48,7 +48,7 @@ export const colunasFornecedores: ColumnDef<FornecedoresEmpresaType>[] = [
       const statusFiltro = row.getValue('critico') ? 'sim' : 'nao'
 
       const filtroFornecedoreCritico = optionsStatusCritico.find(
-        (critico) => statusFiltro === critico.value,
+        critico => statusFiltro === critico.value
       )
 
       if (!filtroFornecedoreCritico) return null
@@ -67,7 +67,7 @@ export const colunasFornecedores: ColumnDef<FornecedoresEmpresaType>[] = [
       const statusFiltro = row.getValue('aprovado') ? 'sim' : 'nao'
 
       const filtroFornecedorAprovado = optionsStatusAprovado.find(
-        (aprovado) => statusFiltro === aprovado.value,
+        aprovado => statusFiltro === aprovado.value
       )
 
       if (!filtroFornecedorAprovado) return null
