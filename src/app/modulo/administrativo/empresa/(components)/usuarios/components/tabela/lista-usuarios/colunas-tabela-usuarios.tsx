@@ -1,6 +1,6 @@
-import { ColumnDef } from '@tanstack/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
 
-import { UsuarioType } from '@/app/modulo/administrativo/empresa/schemas/SchemaUsuarios'
+import type { UsuarioType } from '@/app/modulo/administrativo/empresa/schemas/SchemaUsuarios'
 
 import { MenuTabelaUsuario } from './menu-tabela-usuarios'
 
@@ -46,7 +46,7 @@ export const colunasTabelaUsuario: ColumnDef<UsuarioType>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const status = optionsStatusUsuario.find(
-        (status) => status.value === row.getValue('status'),
+        status => status.value === row.getValue('status')
       )
 
       if (!status) {

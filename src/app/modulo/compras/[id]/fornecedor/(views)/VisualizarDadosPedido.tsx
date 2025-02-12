@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/table'
 import { formatarDataBrasil, formatarDocumento } from '@/lib/utils'
 
-import { PedidosFornecedorType } from '../../../(schemas)/compras/schema-compras'
+import type { PedidosFornecedorType } from '../../../(schemas)/compras/schema-compras'
 
 export interface VisualizacaoDadosPedidoProps {
   dadosPedido: PedidosFornecedorType
@@ -40,7 +40,7 @@ export default function VisualizacaoDadosPedido({
               width: '100%',
             }}
             value={`${dadosPedido.codigo}`}
-            viewBox={`0 0 256 256`}
+            viewBox={"0 0 256 256"}
           />
         </div>
         <div className="space-y-2 border rounded px-4 py-2">
@@ -55,7 +55,7 @@ export default function VisualizacaoDadosPedido({
               <strong>Data do Pedido:</strong>
               <span>
                 {formatarDataBrasil(
-                  new Date(dadosPedido.cadastro.dataCadastro),
+                  new Date(dadosPedido.cadastro.dataCadastro)
                 )}
               </span>
             </li>

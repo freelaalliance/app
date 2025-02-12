@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button'
 import { useEmpresa } from '@/lib/CaseAtom'
 
 import { excluirPerfil } from '../../../../api/Perfil'
-import { PerfilType } from '../../../../schemas/SchemaPerfil'
+import type { PerfilType } from '../../../../schemas/SchemaPerfil'
 
 interface DialogDeletaPerfilProps {
   id: string
@@ -36,7 +36,7 @@ export function DialogConfirmaDeletaPerfil({ id }: DialogDeletaPerfilProps) {
       if (context?.listaAntigaPerfis) {
         queryClient.setQueryData(
           ['listaPerfisEmpresa', empresaSelecionada.selected],
-          context.listaAntigaPerfis,
+          context.listaAntigaPerfis
         )
       }
 
@@ -49,12 +49,12 @@ export function DialogConfirmaDeletaPerfil({ id }: DialogDeletaPerfilProps) {
 
   function atualizarListaPerfis({ id }: DialogDeletaPerfilProps) {
     const listaPerfis: Array<PerfilType> | undefined = queryClient.getQueryData(
-      ['listaPerfisEmpresa', empresaSelecionada.selected],
+      ['listaPerfisEmpresa', empresaSelecionada.selected]
     )
 
     queryClient.setQueryData(
       ['listaPerfisEmpresa', empresaSelecionada.selected],
-      listaPerfis?.filter((perfil) => perfil.id !== id),
+      listaPerfis?.filter(perfil => perfil.id !== id)
     )
 
     return { listaPerfis }

@@ -27,21 +27,21 @@ export function DialogPermissoesPerfil({
   const { data: permissoesPerfil, isLoading } = useQuery({
     queryKey: ['listaPermissoesPerfil', idPerfil],
     queryFn: () => listarPermissoesPerfil(idPerfil),
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   const ViewPermissaoPerfil = dynamic(
     () => import('../../views/lista-permissoes-perfil'),
     {
       loading: () => <Loader2 className="text-center animate-spin h-6 w-6" />,
-    },
+    }
   )
 
   const ViewVincularPerfil = dynamic(
     () => import('../../views/adiciona-permissao-perfil'),
     {
       loading: () => <Loader2 className="text-center animate-spin h-6 w-6" />,
-    },
+    }
   )
   return (
     <DialogContent className="md:h-auto md:max-w-[48rem] md:space-y-2">

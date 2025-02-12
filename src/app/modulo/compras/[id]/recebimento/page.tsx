@@ -1,7 +1,7 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import { CalendarClock, FilePlus2, PackageOpen } from 'lucide-react'
+import { CalendarClock, PackageOpen } from 'lucide-react'
 
 import { IndicadorInformativo } from '@/components/IndicadorInfo'
 import {
@@ -12,14 +12,21 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 
-import { buscarPedidosPendentesEmpresa } from '../fornecedor/(api)/ComprasApi'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { buscarPedidosPorStatusEmpresa } from '../fornecedor/(api)/ComprasApi'
 import { ColunasPedidosEmpresaRecebimento } from '../fornecedor/components/tabelas/pedidos/colunas-tabela-pedidos-recebimento'
 import { TabelaPedidos } from '../fornecedor/components/tabelas/pedidos/tabela-pedidos'
 
 export default function RecebimentoPedidos() {
-  const listaPedidosEmpresa = useQuery({
-    queryKey: ['pedidosFornecedorRecebimento'],
-    queryFn: () => buscarPedidosPendentesEmpresa(),
+  const listaPedidosPendentesEmpresa = useQuery({
+    queryKey: ['pedidosPendenteFornecedor'],
+    queryFn: () => buscarPedidosPorStatusEmpresa('pendentes'),
+    staleTime: 60 * 60 * 24,
+  })
+
+  const listaPedidosRecebidosEmpresa = useQuery({
+    queryKey: ['pedidosRecebidosFornecedor'],
+    queryFn: () => buscarPedidosPorStatusEmpresa('recebidos'),
     staleTime: 60 * 60 * 24,
   })
 
@@ -32,57 +39,55 @@ export default function RecebimentoPedidos() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <section className="space-y-2">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+        <section className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <IndicadorInformativo
-              carregandoInformacao={listaPedidosEmpresa.isLoading}
-              titulo={'Compras realizadas hoje'}
+              carregandoInformacao={listaPedidosPendentesEmpresa.isLoading}
+              titulo={'Compras Pendentes'}
               info={String(
-                listaPedidosEmpresa.data?.dados?.filter(
-                  (compra) =>
-                    new Date(
-                      compra.cadastro.dataCadastro,
-                    ).toLocaleDateString() ===
-                      new Date().toLocaleDateString() && !compra.cancelado,
-                ).length,
-              )}
-              icon={FilePlus2}
-            />
-            <IndicadorInformativo
-              carregandoInformacao={listaPedidosEmpresa.isLoading}
-              titulo={'Recebimentos para hoje'}
-              info={String(
-                listaPedidosEmpresa.data?.dados?.filter(
-                  (compra) =>
-                    new Date(compra.prazoEntrega).toLocaleDateString() ===
-                      new Date().toLocaleDateString() && !compra.recebido,
-                ).length,
+                listaPedidosPendentesEmpresa.data?.dados?.length
               )}
               icon={CalendarClock}
             />
             <IndicadorInformativo
-              carregandoInformacao={listaPedidosEmpresa.isLoading}
-              titulo={'Entregas recebidas'}
+              carregandoInformacao={listaPedidosPendentesEmpresa.isLoading}
+              titulo={'Compras Recebidas'}
               info={String(
-                listaPedidosEmpresa.data?.dados?.filter(
-                  (compra) =>
-                    new Date(compra.prazoEntrega).toLocaleDateString() ===
-                      new Date().toLocaleDateString() && compra.recebido,
-                ).length,
+                listaPedidosRecebidosEmpresa.data?.dados?.length
               )}
               icon={PackageOpen}
             />
           </div>
-          <TabelaPedidos
-            novoPedido={false}
-            carregandoPedidos={listaPedidosEmpresa.isLoading}
-            listaPedidos={
-              listaPedidosEmpresa.data?.dados?.filter(
-                (compra) => !compra.cancelado && !compra.recebido,
-              ) ?? []
-            }
-            colunasTabela={ColunasPedidosEmpresaRecebimento}
-          />
+          <Card>
+            <CardContent className='py-4'>
+              <Tabs defaultValue="pendentes">
+                <TabsList>
+                  <TabsTrigger value="pendentes">Pendentes</TabsTrigger>
+                  <TabsTrigger value="recebidos">Recebidos</TabsTrigger>
+                </TabsList>
+                <TabsContent value="pendentes">
+                  <TabelaPedidos
+                    novoPedido={false}
+                    carregandoPedidos={listaPedidosPendentesEmpresa.isLoading}
+                    listaPedidos={
+                      listaPedidosPendentesEmpresa.data?.dados ?? []
+                    }
+                    colunasTabela={ColunasPedidosEmpresaRecebimento}
+                  />
+                </TabsContent>
+                <TabsContent value="recebidos">
+                  <TabelaPedidos
+                    novoPedido={false}
+                    carregandoPedidos={listaPedidosRecebidosEmpresa.isLoading}
+                    listaPedidos={
+                      listaPedidosRecebidosEmpresa.data?.dados ?? []
+                    }
+                    colunasTabela={ColunasPedidosEmpresaRecebimento}
+                  />
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
         </section>
       </CardContent>
     </Card>

@@ -5,7 +5,7 @@ import { ptBR } from 'date-fns/locale'
 import { CalendarIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { z } from 'zod'
+import type { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -30,11 +30,11 @@ import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 
 import {
-  FornecedoresEmpresaType,
+  type FornecedoresEmpresaType,
   salvarNovaAvaliacao,
 } from '../(api)/FornecedorApi'
 import { schemaAvaliacaoFornecedor } from '../../../(schemas)/fornecedores/schema-fornecedor'
-import { NovaAvaliacaoCriticoProps } from '../components/dialogs/NovaAvaliacaoCriticoDialog'
+import type { NovaAvaliacaoCriticoProps } from '../components/dialogs/NovaAvaliacaoCriticoDialog'
 
 export type FormularioNovaAvaliacao = z.infer<typeof schemaAvaliacaoFornecedor>
 
@@ -57,7 +57,7 @@ export default function NovaAvaliacaoCriticoView({
 
   const { mutateAsync: novaAvaliacao } = useMutation({
     mutationFn: salvarNovaAvaliacao,
-    onError: (error) => {
+    onError: error => {
       toast.error('Erro ao salvar a avaliação, tente novamente!', {
         description: error.message,
       })
@@ -74,7 +74,7 @@ export default function NovaAvaliacaoCriticoView({
 
         queryClient.setQueryData(
           ['fornecedoresEmpresa'],
-          listaFornecedores?.map((fornecedor) => {
+          listaFornecedores?.map(fornecedor => {
             if (fornecedor.id === idFornecedor) {
               return {
                 ...fornecedor,
@@ -83,7 +83,7 @@ export default function NovaAvaliacaoCriticoView({
               }
             }
             return fornecedor
-          }),
+          })
         )
 
         formNovaAvaliacao.reset()
@@ -114,7 +114,7 @@ export default function NovaAvaliacaoCriticoView({
                 <FormControl>
                   <Checkbox
                     checked={field.value}
-                    onCheckedChange={(value) => {
+                    onCheckedChange={value => {
                       if (value) {
                         formNovaAvaliacao.setValue('aprovado', false)
                         formNovaAvaliacao.trigger('aprovado')
@@ -189,7 +189,7 @@ export default function NovaAvaliacaoCriticoView({
                           variant={'outline'}
                           className={cn(
                             'w-[300px] pl-3 text-left font-normal',
-                            !field.value && 'text-muted-foreground',
+                            !field.value && 'text-muted-foreground'
                           )}
                         >
                           {field.value ? (

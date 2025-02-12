@@ -1,8 +1,9 @@
 import { axiosInstance } from '@/lib/AxiosLib'
 
-import { formNovoPedidoType } from '../(views)/NovoPedido'
-import { PedidosFornecedorType } from '../../../(schemas)/compras/schema-compras'
-import { FormVerificacaoEntregaType } from '../../recebimento/(view)/VerificacaoEntregaPedido'
+import type { ItemAvaliacaoType } from '@/app/modulo/administrativo/modulos/_api/AdmCompras'
+import type { formNovoPedidoType } from '../(views)/NovoPedido'
+import type { PedidosFornecedorType } from '../../../(schemas)/compras/schema-compras'
+import type { FormVerificacaoEntregaType } from '../../recebimento/(view)/VerificacaoEntregaPedido'
 
 interface ConsultaPedidoProps {
   idPedido?: string
@@ -40,10 +41,10 @@ export async function salvarNovoPedido(form: formNovoPedidoType) {
       codigo: form.codigo,
       itens: form.itens,
     })
-    .then((resp) => {
+    .then(resp => {
       return resp.data
     })
-    .catch((error) => {
+    .catch(error => {
       return {
         status: false,
         msg: 'Ocorreu um erro ao salvar o novo pedido.',
@@ -63,16 +64,16 @@ export async function consultarPedido({
       msg: string
       dados: null | PedidosFornecedorType
       error?: unknown
-    }>(`pedido`, {
+    }>('pedido', {
       params: {
         id: idPedido,
         codigo: codigoPedido,
       },
     })
-    .then((resp) => {
+    .then(resp => {
       return resp.data
     })
-    .catch((error) => {
+    .catch(error => {
       return {
         status: false,
         msg: 'Ocorreu um erro ao consultar o pedido.',
@@ -92,10 +93,10 @@ export async function buscarPedidosFornecedor({
       dados: Array<PedidosFornecedorType>
       error?: unknown
     }>(`pedido/${fornecedorId}/all`)
-    .then((resp) => {
+    .then(resp => {
       return resp.data
     })
-    .catch((error) => {
+    .catch(error => {
       return {
         status: false,
         msg: 'Ocorreu um erro ao consultar os pedidos.',
@@ -105,18 +106,18 @@ export async function buscarPedidosFornecedor({
     })
 }
 
-export async function buscarPedidosPendentesEmpresa() {
+export async function buscarPedidosPorStatusEmpresa(status: string) {
   return await axiosInstance
     .get<{
       status: boolean
       msg: string
       dados: Array<PedidosFornecedorType>
       error?: unknown
-    }>(`pedido/pendentes`)
-    .then((resp) => {
+    }>(`pedido/${status}`)
+    .then(resp => {
       return resp.data
     })
-    .catch((error) => {
+    .catch(error => {
       return {
         status: false,
         msg: 'Ocorreu um erro ao consultar os pedidos.',
@@ -137,17 +138,15 @@ export async function inserirRecebimento({
       error?: unknown
     }>(`pedido/${compraId}/recebimento`, {
       dataRecebimento: data.dataRecebimento,
-      notaRecebimento: data.notaRecebimento,
-      qtdIncorreta: data.qtdIncorreta,
-      entregaAvarias: data.entregaAvarias,
       numeroNotaFiscal: data.numeroNotaFiscal,
       numeroCertificado: data.numeroCertificado,
       pedidoRecebidoCompleto: data.pedidoRecebidoCompleto,
+      avaliacoes: data.avaliacao,
     })
-    .then((resp) => {
+    .then(resp => {
       return resp.data
     })
-    .catch((error) => {
+    .catch(error => {
       return {
         status: false,
         msg: 'Ocorreu um erro ao inserir o recebimento.',
@@ -166,10 +165,10 @@ export async function cancelarPedido({ idPedido }: AlteraPedidoProps) {
       } | null
       error?: unknown
     }>(`pedido/${idPedido}/cancelar`)
-    .then((resp) => {
+    .then(resp => {
       return resp.data
     })
-    .catch((error) => {
+    .catch(error => {
       return {
         status: false,
         msg: 'Ocorreu um erro ao cancelar o pedido.',
@@ -189,10 +188,10 @@ export async function excluirPedido({ idPedido }: AlteraPedidoProps) {
       } | null
       error?: unknown
     }>(`pedido/${idPedido}/excluir`)
-    .then((resp) => {
+    .then(resp => {
       return resp.data
     })
-    .catch((error) => {
+    .catch(error => {
       return {
         status: false,
         msg: 'Ocorreu um erro ao excluir o pedido.',
@@ -209,16 +208,24 @@ export async function buscarPedidosEmpresa() {
       msg: string
       dados: Array<PedidosFornecedorType>
       error?: unknown
-    }>(`pedido/pendentes`)
-    .then((resp) => {
+    }>('pedido/pendentes')
+    .then(resp => {
       return resp.data
     })
-    .catch((error) => {
+    .catch(error => {
       return {
         status: false,
         msg: 'Ocorreu um erro ao consultar os pedidos.',
         dados: null,
         error,
       }
+    })
+}
+
+export async function buscarItensAvaliativosRecebimento() {
+  return await axiosInstance
+    .get<Array<ItemAvaliacaoType>>('pedido/recebimento/avaliacao/itens')
+    .then(({ data }) => {
+      return data
     })
 }

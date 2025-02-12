@@ -1,7 +1,7 @@
-import { ColumnDef } from '@tanstack/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
 import Link from 'next/link'
 
-import { PedidosFornecedorType } from '@/app/modulo/compras/(schemas)/compras/schema-compras'
+import type { PedidosFornecedorType } from '@/app/modulo/compras/(schemas)/compras/schema-compras'
 import { Button } from '@/components/ui/button'
 import {
   Tooltip,

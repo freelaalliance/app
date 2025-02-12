@@ -13,10 +13,10 @@ import React from 'react'
 import { toast } from 'sonner'
 
 import {
+  type VinculoModuloEmpresaProps,
   removerModulosEmpresa,
-  VinculoModuloEmpresaProps,
 } from '@/app/modulo/administrativo/empresa/api/Empresa'
-import { ModuloType } from '@/app/modulo/administrativo/empresa/schemas/SchemaModulo'
+import type { ModuloType } from '@/app/modulo/administrativo/empresa/schemas/SchemaModulo'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -72,7 +72,7 @@ export function DataTableModulos({
       if (context?.cacheModulosEmpresa) {
         queryClient.setQueryData(
           ['listaModulosVinculadosEmpresa', idEmpresa],
-          context.cacheModulosEmpresa,
+          context.cacheModulosEmpresa
         )
       }
       toast.error('Falha ao desvincular módulo na empresa, tente novamente!')
@@ -87,20 +87,20 @@ export function DataTableModulos({
   function atualizarListaModulosEmpresa(
     modulos: Array<{
       idModulo: string
-    }>,
+    }>
   ) {
     const cacheModulosEmpresa: Array<ModuloType> | undefined =
       queryClient.getQueryData(['listaModulosVinculadosEmpresa', idEmpresa])
 
     if (cacheModulosEmpresa) {
-      modulos.forEach((moduloSelecionado) => {
+      modulos.forEach(moduloSelecionado => {
         const modulosEmpresa = cacheModulosEmpresa.filter(
-          (modulo) => modulo.id !== moduloSelecionado.idModulo,
+          modulo => modulo.id !== moduloSelecionado.idModulo
         )
 
         queryClient.setQueryData(
           ['listaModulosVinculadosEmpresa', idEmpresa],
-          modulosEmpresa,
+          modulosEmpresa
         )
       })
     } else {
@@ -122,7 +122,7 @@ export function DataTableModulos({
                 idEmpresa,
                 modulos: table
                   .getSelectedRowModel()
-                  .rows.map((moduloSelecionado) => {
+                  .rows.map(moduloSelecionado => {
                     return {
                       idModulo: moduloSelecionado.original.id,
                     }
@@ -148,7 +148,7 @@ export function DataTableModulos({
           className="w-full md:w-64"
           disabled={data?.length === 0}
           value={(table.getColumn('nome')?.getFilterValue() as string) ?? ''}
-          onChange={(event) =>
+          onChange={event =>
             table.getColumn('nome')?.setFilterValue(event.target.value)
           }
         />
@@ -156,16 +156,16 @@ export function DataTableModulos({
       <div className="rounded-md border shadow bg-gray-50">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
+            {table.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
+                {headerGroup.headers.map(header => {
                   return (
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext(),
+                            header.getContext()
                           )}
                     </TableHead>
                   )
@@ -187,16 +187,16 @@ export function DataTableModulos({
                 </TableRow>
               </>
             ) : table.getRowModel().rows?.length > 0 ? (
-              table.getRowModel().rows.map((row) => (
+              table.getRowModel().rows.map(row => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                 >
-                  {row.getVisibleCells().map((cell) => (
+                  {row.getVisibleCells().map(cell => (
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}

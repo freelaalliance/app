@@ -4,8 +4,8 @@ import { useQueryClient } from '@tanstack/react-query'
 import { ptBR } from 'date-fns/locale'
 import { ArrowBigDownDash, Filter, Percent, Truck } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { DateRange } from 'react-day-picker'
-import generatePDF, { Margin, Options, Resolution } from 'react-to-pdf'
+import type { DateRange } from 'react-day-picker'
+import generatePDF, { Margin, type Options, Resolution } from 'react-to-pdf'
 import { toast } from 'sonner'
 
 import { IndicadorInformativo } from '@/components/IndicadorInfo'
@@ -39,9 +39,9 @@ import {
 import { formatarDataBrasil } from '@/lib/utils'
 
 import {
+  type EstatisticasDadosRecebimentoType,
+  type ListaDadosRecebimentosType,
   buscarDadosRelatorioRecebimento,
-  EstatisticasDadosRecebimentoType,
-  ListaDadosRecebimentosType,
 } from '../api/RelatorioCompras'
 import { ChartAvaliacaoRecebimento } from '../components/ChartAvaliacaoRecebimento'
 import { ChartRecebimentos } from '../components/ChartQuantidadeRecebimentos'
@@ -76,7 +76,7 @@ export default function PainelRecebimentos() {
 
   const buscaDadosRelatorioRecebimento = async (
     dataInicial: Date,
-    dataFinal: Date,
+    dataFinal: Date
   ) => {
     try {
       toast.loading('Consultando os dados...')
@@ -94,7 +94,7 @@ export default function PainelRecebimentos() {
       toast.dismiss()
 
       setDadosRecebimentosCompraEmpresas(
-        listaPedidosEmpresa.estatisticasRecebimentos,
+        listaPedidosEmpresa.estatisticasRecebimentos
       )
       setListaRecebimentosCompraEmpresas(listaPedidosEmpresa.recebimentos)
     } catch (err) {
@@ -102,8 +102,9 @@ export default function PainelRecebimentos() {
     }
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (date && date.from && date.to) {
+    if (date?.from && date.to) {
       buscaDadosRelatorioRecebimento(date.from, date.to)
     }
   }, [date])
@@ -175,7 +176,7 @@ export default function PainelRecebimentos() {
             <IndicadorInformativo
               titulo="Recebimentos"
               info={String(
-                dadosRecebimentosCompraEmpresas?.totalRecebimentos ?? 0,
+                dadosRecebimentosCompraEmpresas?.totalRecebimentos ?? 0
               )}
               icon={Truck}
               carregandoInformacao={carregando}
@@ -189,25 +190,25 @@ export default function PainelRecebimentos() {
           </div>
           <div className="grid grid-cols-1 gap-2">
             <ChartRecebimentos
-              final={(date && date.to) ?? new Date()}
-              inicial={(date && date.from) ?? new Date()}
+              final={(date?.to) ?? new Date()}
+              inicial={(date?.from) ?? new Date()}
               dados={
                 dadosRecebimentosCompraEmpresas?.recebimentos.map(
-                  (recebimento) => {
+                  recebimento => {
                     return {
                       dataRecebimento: new Date(recebimento.data),
                       quantidade: recebimento.quantidade,
                     }
-                  },
+                  }
                 ) ?? []
               }
             />
             <ChartAvaliacaoRecebimento
-              final={(date && date.to) ?? new Date()}
-              inicial={(date && date.from) ?? new Date()}
+              final={(date?.to) ?? new Date()}
+              inicial={(date?.from) ?? new Date()}
               dados={
                 dadosRecebimentosCompraEmpresas?.recebimentos.map(
-                  (recebimento) => {
+                  recebimento => {
                     return {
                       dataRecebimento: new Date(recebimento.data),
                       maximaAvaliacaoEntrega:
@@ -217,7 +218,7 @@ export default function PainelRecebimentos() {
                       minimaAvaliacaoEntrega:
                         recebimento.minimaAvaliacaoEntrega ?? 0,
                     }
-                  },
+                  }
                 ) ?? []
               }
             />
@@ -229,38 +230,28 @@ export default function PainelRecebimentos() {
                   <TableHead className="w-auto">Pedido</TableHead>
                   <TableHead className="w-2/6">Dt. Entrega</TableHead>
                   <TableHead className="w-3/4">Responsável</TableHead>
-                  <TableHead className="w-2/6">NFs</TableHead>
+                  <TableHead className="w-2/6">NF-e</TableHead>
                   <TableHead className="w-2/6">Certificado</TableHead>
-                  <TableHead className="w-auto">Avarias</TableHead>
-                  <TableHead className="w-auto">Qtd. incorreta</TableHead>
                   <TableHead className="w-auto">Avaliação</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {listaRecebimentosCompraEmpresas.map((entrega) => (
+                {listaRecebimentosCompraEmpresas.map(entrega => (
                   <TableRow key={entrega.id}>
                     <TableCell>{entrega.compra.numPedido}</TableCell>
                     <TableCell>
                       {formatarDataBrasil(
                         new Date(entrega.recebidoEm),
                         false,
-                        'PP',
+                        'PP'
                       )}
                     </TableCell>
                     <TableCell>{entrega.usuario.pessoa.nome}</TableCell>
                     <TableCell>
-                      {entrega.AvaliacaoRecebimento?.numeroNota ?? '--'}
+                      {entrega.numeroNota ?? '--'}
                     </TableCell>
                     <TableCell>
-                      {entrega.AvaliacaoRecebimento?.numeroCertificado ?? '--'}
-                    </TableCell>
-                    <TableCell>
-                      {entrega.AvaliacaoRecebimento?.avaria ? 'Sim' : 'Não'}
-                    </TableCell>
-                    <TableCell>
-                      {entrega.AvaliacaoRecebimento?.quantidadeIncorreta
-                        ? 'Sim'
-                        : 'Não'}
+                      {entrega.numeroCertificado ?? '--'}
                     </TableCell>
                     <TableCell>{`${entrega.avaliacaoEntrega}%`}</TableCell>
                   </TableRow>

@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { ArrowBigDownDash, ArrowLeft, Loader2 } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
-import generatePDF, { Margin, Options, Resolution } from 'react-to-pdf'
+import generatePDF, { Margin, type Options, Resolution } from 'react-to-pdf'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -26,7 +26,7 @@ const PedidoView = dynamic(
       )
     },
     ssr: true,
-  },
+  }
 )
 
 export default function VisualizarPedido() {
@@ -55,7 +55,7 @@ export default function VisualizarPedido() {
         codigoPedido: codigo ?? '',
         idPedido,
       }),
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   return (
@@ -98,7 +98,7 @@ export default function VisualizarPedido() {
         </div>
       ) : (
         <div id="pedido" className="grid bg-white p-4 rounded space-y-4">
-          {dadosPedido.data && dadosPedido.data.dados ? (
+          {dadosPedido.data?.dados ? (
             <PedidoView dadosPedido={dadosPedido.data.dados} />
           ) : (
             <div className="flex justify-center items-center h-full py-4">

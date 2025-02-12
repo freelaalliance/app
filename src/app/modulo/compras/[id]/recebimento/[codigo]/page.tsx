@@ -7,6 +7,7 @@ import { useParams, useRouter } from 'next/navigation'
 
 import { listarPermissoesModuloPerfil } from '@/app/modulo/administrativo/empresa/api/Permissao'
 import { Button } from '@/components/ui/button'
+import { buscarItensAvaliativosRecebimento } from '../../fornecedor/(api)/ComprasApi'
 
 const VerficacaoPedido = dynamic(
   () => import('../../recebimento/(view)/VerificacaoEntregaPedido'),
@@ -19,7 +20,7 @@ const VerficacaoPedido = dynamic(
       )
     },
     ssr: true,
-  },
+  }
 )
 
 export default function ConferenciaRecebimentoPedido() {
@@ -31,18 +32,22 @@ export default function ConferenciaRecebimentoPedido() {
     idModulo = localStorage.getItem('modulo')
   }
 
+  const itensAvaliativos = useQuery({
+    queryKey: ['itemsAvaliacaoEmpresa'],
+    queryFn: buscarItensAvaliativosRecebimento,
+    staleTime: Number.POSITIVE_INFINITY,
+  })
+
   const { data: listaPermissoesPerfil, isLoading: carregandoPermissoes } =
     useQuery({
       queryKey: ['permissoesModulosPerfil', idModulo],
       queryFn: () => listarPermissoesModuloPerfil(idModulo),
-      staleTime: Infinity,
+      staleTime: Number.POSITIVE_INFINITY,
     })
 
-  const consultaExistePermissao =
-    listaPermissoesPerfil &&
-    listaPermissoesPerfil.find(
-      (permissao) => permissao.url === '/modulo/compras/[id]/recebimento',
-    )
+  const consultaExistePermissao = listaPermissoesPerfil?.find(
+    permissao => permissao.url === '/modulo/compras/[id]/recebimento'
+  )
 
   return !carregandoPermissoes ? (
     !consultaExistePermissao ? (
@@ -63,7 +68,14 @@ export default function ConferenciaRecebimentoPedido() {
         </Button>
       </div>
     ) : (
-      <VerficacaoPedido codigoPedido={codigo} />
+      <VerficacaoPedido
+        itensVerificacaoRecebimento={
+          !itensAvaliativos.isLoading && itensAvaliativos.data
+            ? itensAvaliativos.data
+            : []
+        }
+        codigoPedido={codigo}
+      />
     )
   ) : (
     <div className="flex flex-col justify-center items-center h-full py-4 space-y-4">

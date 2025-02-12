@@ -1,6 +1,6 @@
 import { ArrowBigDownDash, Loader2 } from 'lucide-react'
 import dynamic from 'next/dynamic'
-import generatePDF, { Margin, Options, Resolution } from 'react-to-pdf'
+import generatePDF, { Margin, type Options, Resolution } from 'react-to-pdf'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/tooltip'
 import { formatarDataBrasil } from '@/lib/utils'
 
-import { VisualizacaoDadosPedidoProps } from '../../(views)/VisualizarDadosPedido'
+import type { VisualizacaoDadosPedidoProps } from '../../(views)/VisualizarDadosPedido'
 
 const PedidoView = dynamic(
   () => import('../../(views)/VisualizarDadosPedido'),
@@ -41,7 +41,7 @@ const PedidoView = dynamic(
       )
     },
     ssr: true,
-  },
+  }
 )
 
 export function VisualizaDadosPedido({
@@ -105,19 +105,17 @@ export function VisualizaDadosPedido({
                     </TableHead>
                     <TableHead>Nota</TableHead>
                     <TableHead>Certificado</TableHead>
-                    <TableHead>Avaria</TableHead>
-                    <TableHead>Qtd. Incorreta</TableHead>
                     <TableHead>Avaliação Entrega</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {dadosPedido.recebimento.map((recebimento) => {
+                  {dadosPedido.recebimento.map(recebimento => {
                     return (
                       <TableRow key={recebimento.id}>
                         <TableCell>
                           {formatarDataBrasil(
                             new Date(recebimento.dataRecebimento),
-                            true,
+                            true
                           )}
                         </TableCell>
                         <TableCell className="capitalize">
@@ -125,12 +123,6 @@ export function VisualizaDadosPedido({
                         </TableCell>
                         <TableCell>{recebimento.numeroNota}</TableCell>
                         <TableCell>{recebimento.numeroCertificado}</TableCell>
-                        <TableCell>
-                          {recebimento.avaria ? 'Sim' : 'Não'}
-                        </TableCell>
-                        <TableCell>
-                          {recebimento.quantidadeIncorreta ? 'Sim' : 'Não'}
-                        </TableCell>
                         <TableCell>
                           {`${recebimento.avaliacaoEntrega}%`}
                         </TableCell>

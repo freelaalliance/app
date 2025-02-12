@@ -262,6 +262,7 @@ export default function NovoPedidoView({ fornecedorId }: NovoPedidoProps) {
               <ScrollArea className="max-h-[200px] md:max-h-96 overflow-auto">
                 {itens.map((item, index) => (
                   <div
+                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                     key={index}
                     className="flex flex-col md:flex-row py-2 md:p-4 md:rounded md:transition-all md:hover:bg-accent gap-2"
                   >

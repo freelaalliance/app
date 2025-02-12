@@ -2,12 +2,10 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { differenceInDays, format } from 'date-fns'
+import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { CalendarIcon } from 'lucide-react'
-import { redirect } from 'next/navigation'
-import { useMemo } from 'react'
-import { useForm } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
@@ -29,7 +27,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
 import {
@@ -40,30 +37,41 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
 import { cn, formatarDataBrasil } from '@/lib/utils'
 
+import type { ItemAvaliacaoType } from '@/app/modulo/administrativo/modulos/_api/AdmCompras'
+import { ScrollArea } from '@radix-ui/react-scroll-area'
 import {
   consultarPedido,
   inserirRecebimento,
 } from '../../fornecedor/(api)/ComprasApi'
+import { useRouter } from 'next/navigation'
 
 const schemaVerificacaoEntrega = z.object({
-  qtdIncorreta: z.coerce.boolean(),
   numeroCertificado: z.string().optional(),
   numeroNotaFiscal: z.string().optional(),
-  dataRecebimento: z.coerce.date(),
-  entregaAvarias: z.coerce.boolean(),
   pedidoRecebidoCompleto: z.coerce.boolean().default(true),
-  notaRecebimento: z.number(),
+  dataRecebimento: z.coerce.date(),
+  avaliacao: z.array(
+    z.object({
+      id: z.string().uuid(),
+      descricao: z.string(),
+      nota: z.coerce
+        .number()
+        .min(0, {
+          message: 'O valor deve ser de no mínimo 0',
+        })
+        .max(100, {
+          message: 'O valor deve ser de no máximo 100',
+        })
+        .default(0),
+    })
+  ),
 })
 
 interface VerificaEntregaPedidoProps {
   codigoPedido: string
+  itensVerificacaoRecebimento: Array<ItemAvaliacaoType>
 }
 
 export type FormVerificacaoEntregaType = z.infer<
@@ -74,29 +82,41 @@ const NOTA_INICIAL_AVALIACAO_RECEBIMENTO_PERCENT: number = 100
 
 export default function VerificaEntregaPedido({
   codigoPedido,
+  itensVerificacaoRecebimento,
 }: VerificaEntregaPedidoProps) {
+  const route = useRouter()
   const dadosPedido = useQuery({
     queryKey: ['visualizarDadosPedido', codigoPedido],
     queryFn: () =>
       consultarPedido({
         codigoPedido,
       }),
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   const formularioVerificacaoEntrega = useForm<FormVerificacaoEntregaType>({
     resolver: zodResolver(schemaVerificacaoEntrega),
     defaultValues: {
-      qtdIncorreta: false,
       dataRecebimento: new Date(),
       pedidoRecebidoCompleto: !dadosPedido.data?.dados?.permiteEntregaParcial,
-      notaRecebimento: NOTA_INICIAL_AVALIACAO_RECEBIMENTO_PERCENT,
+      numeroCertificado: '',
+      numeroNotaFiscal: '',
+      avaliacao: itensVerificacaoRecebimento.map(({ descricao, id }) => ({
+        id,
+        descricao,
+        nota: NOTA_INICIAL_AVALIACAO_RECEBIMENTO_PERCENT,
+      })),
     },
     mode: 'onChange',
   })
 
+  const { fields: itens } = useFieldArray({
+    control: formularioVerificacaoEntrega.control,
+    name: 'avaliacao',
+  })
+
   const limiteDataRecebimento = (date: Date) => {
-    if (dadosPedido.data && dadosPedido.data.dados) {
+    if (dadosPedido.data?.dados) {
       return (
         date < new Date(dadosPedido.data.dados.cadastro.dataCadastro) ||
         date > new Date()
@@ -105,78 +125,22 @@ export default function VerificaEntregaPedido({
     return date > new Date()
   }
 
-  const notaAvaliacao = useMemo(
-    () => {
-      let totalAvaliacao = NOTA_INICIAL_AVALIACAO_RECEBIMENTO_PERCENT
-
-      if (dadosPedido.data && dadosPedido.data.dados) {
-        const prazoEntrega = new Date(dadosPedido.data.dados.prazoEntrega)
-
-        const qtdDiasAtraso = differenceInDays(
-          new Date(
-            prazoEntrega.getFullYear(),
-            prazoEntrega.getMonth(),
-            prazoEntrega.getDate() + 1,
-          ),
-          formularioVerificacaoEntrega.watch('dataRecebimento'),
-        )
-
-        if (qtdDiasAtraso > 0) {
-          totalAvaliacao = totalAvaliacao - qtdDiasAtraso * 0.5
-        }
-      }
-
-      if (
-        !formularioVerificacaoEntrega.watch('numeroNotaFiscal') ||
-        formularioVerificacaoEntrega.watch('numeroNotaFiscal') === ''
-      ) {
-        totalAvaliacao = totalAvaliacao - 0.5
-      }
-
-      if (
-        !formularioVerificacaoEntrega.watch('numeroCertificado') ||
-        formularioVerificacaoEntrega.watch('numeroCertificado') === ''
-      ) {
-        totalAvaliacao = totalAvaliacao - 1
-      }
-
-      if (formularioVerificacaoEntrega.watch('entregaAvarias')) {
-        totalAvaliacao = totalAvaliacao - 1
-      }
-
-      if (formularioVerificacaoEntrega.watch('qtdIncorreta')) {
-        totalAvaliacao = totalAvaliacao - 1
-      }
-
-      formularioVerificacaoEntrega.setValue('notaRecebimento', totalAvaliacao)
-
-      return totalAvaliacao
-    },
-    formularioVerificacaoEntrega.watch([
-      'dataRecebimento',
-      'entregaAvarias',
-      'numeroCertificado',
-      'numeroCertificado',
-      'qtdIncorreta',
-    ]),
-  )
-
   const { mutateAsync: salvarVerificacaoEntrega } = useMutation({
     mutationFn: inserirRecebimento,
-    onSuccess: (data) => {
+    onSuccess: data => {
       if (data.status) {
         toast.success('Sucesso', {
           description: data.msg,
         })
 
-        redirect('recebimento')
+        route.push('recebimento')
       } else {
         toast.error('Falha ao salvar', {
           description: data.msg,
         })
       }
     },
-    onError: (error) => {
+    onError: error => {
       toast.error('Falha ao salvar', {
         description: error.message,
       })
@@ -184,14 +148,10 @@ export default function VerificaEntregaPedido({
   })
 
   const handleSubmitVerificacaoEntrega = async (
-    data: FormVerificacaoEntregaType,
+    data: FormVerificacaoEntregaType
   ) => {
     await salvarVerificacaoEntrega({
-      compraId:
-        (dadosPedido.data &&
-          dadosPedido.data.dados &&
-          dadosPedido.data.dados.id) ||
-        '',
+      compraId: dadosPedido.data?.dados?.id || '',
       data,
     })
   }
@@ -205,27 +165,14 @@ export default function VerificaEntregaPedido({
     </div>
   ) : (
     <section className="space-y-4 bg-padrao-white p-4 rounded">
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <div className="flex flex-row items-center gap-2">
-            <Progress className="h-2" value={notaAvaliacao} />
-            <span className="font-medium md:mb-1">{`${notaAvaliacao}%`}</span>
-          </div>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p className="text-wrap text-sm font-medium max-w-screen-sm md:max-w-screen-md">
-            {`A avaliação do pedido é baseada na pontuação dos demeritos (atraso, sem nota fiscal, sem certificado, avarias ou a quantidade incorretade itens do pedido). 
-            A pontuação máxima é 100% e a pontuação dessa entrega é de ${notaAvaliacao}%.`}
-          </p>
-        </TooltipContent>
-      </Tooltip>
+      
       <div className="grid grid-cols-1 md:grid-cols-8 gap-4">
         <div className="md:col-span-4">
           <Form {...formularioVerificacaoEntrega}>
             <form
               className="space-y-2"
               onSubmit={formularioVerificacaoEntrega.handleSubmit(
-                handleSubmitVerificacaoEntrega,
+                handleSubmitVerificacaoEntrega
               )}
             >
               <FormField
@@ -241,7 +188,7 @@ export default function VerificaEntregaPedido({
                             variant={'outline'}
                             className={cn(
                               'w-full  text-left font-normal',
-                              !field.value && 'text-muted-foreground',
+                              !field.value && 'text-muted-foreground'
                             )}
                           >
                             {field.value ? (
@@ -298,51 +245,6 @@ export default function VerificaEntregaPedido({
                   )}
                 />
               </div>
-
-              <FormField
-                control={formularioVerificacaoEntrega.control}
-                name="entregaAvarias"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row-reverse items-center bg-padrao-white justify-end rounded-lg border p-3 shadow-sm gap-4">
-                    <div className="space-y-0.5">
-                      <FormLabel>Avaria ou danificado?</FormLabel>
-                      <FormDescription className="select-none">
-                        Ao selecionar esse campo irá computar que o fornecedor
-                        realizou a entrega de algum item com avaria ou
-                        danificado
-                      </FormDescription>
-                    </div>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={formularioVerificacaoEntrega.control}
-                name="qtdIncorreta"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row-reverse items-center bg-padrao-white justify-end rounded-lg border p-3 shadow-sm gap-4">
-                    <div className="space-y-0.5">
-                      <FormLabel>Faltou algum item?</FormLabel>
-                      <FormDescription className="select-none">
-                        Ao selecionar esse campo irá computar que o fornecedor
-                        realizou a entrega com a quantidade diferente do que
-                        consta no pedido
-                      </FormDescription>
-                    </div>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
               {dadosPedido.data?.dados?.permiteEntregaParcial && (
                 <FormField
                   control={formularioVerificacaoEntrega.control}
@@ -366,6 +268,30 @@ export default function VerificaEntregaPedido({
                   )}
                 />
               )}
+              <ScrollArea className="max-h-[200px] md:max-h-96 overflow-auto">
+                {itens.map((item, index) => (
+                  <div
+                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                    key={index}
+                    className="flex flex-col md:flex-row py-2 px-1"
+                  >
+                    <FormField
+                      key={`${item.id}-avaliacao`}
+                      control={formularioVerificacaoEntrega.control}
+                      name={`avaliacao.${index}.nota`}
+                      render={({ field }) => (
+                        <FormItem className="w-full">
+                          <FormLabel>{`Nota ${item.descricao}`}</FormLabel>
+                          <FormControl>
+                            <Input placeholder="0-100" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                ))}
+              </ScrollArea>
               <div className="grid">
                 <Button
                   type="submit"
@@ -392,11 +318,10 @@ export default function VerificaEntregaPedido({
               <li className="flex justify-between items-center gap-2">
                 <strong>Data do Pedido</strong>
                 <span>
-                  {dadosPedido.data &&
-                    dadosPedido.data.dados &&
+                  {dadosPedido.data?.dados &&
                     formatarDataBrasil(
                       new Date(dadosPedido.data.dados.cadastro.dataCadastro),
-                      true,
+                      true
                     )}
                 </span>
               </li>
@@ -407,12 +332,11 @@ export default function VerificaEntregaPedido({
               <li className="flex justify-between items-center gap-2">
                 <strong>Prazo para entrega </strong>
                 <span>
-                  {dadosPedido.data &&
-                    dadosPedido.data.dados &&
+                  {dadosPedido.data?.dados &&
                     formatarDataBrasil(
                       new Date(dadosPedido.data.dados.prazoEntrega),
                       false,
-                      'PP',
+                      'PP'
                     )}
                 </span>
               </li>

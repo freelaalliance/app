@@ -71,12 +71,8 @@ export type ListaDadosRecebimentosType = {
       nome: string
     }
   }
-  AvaliacaoRecebimento: {
-    numeroNota: string | null
-    numeroCertificado: string | null
-    avaria: boolean
-    quantidadeIncorreta: boolean
-  } | null
+  numeroNota: string | null
+  numeroCertificado: string | null
 }
 
 interface FiltroRelatorioProps {
@@ -86,7 +82,7 @@ interface FiltroRelatorioProps {
 
 export async function buscarResumoCompras() {
   const response = await axiosInstance.get<ResumoComprasType>(
-    `relatorio/compras/resumo`,
+    "relatorio/compras/resumo"
   )
 
   return response.data
@@ -94,7 +90,7 @@ export async function buscarResumoCompras() {
 
 export async function buscarResumoFornecedor() {
   const response = await axiosInstance.get<ResumoFornecedoresType>(
-    `relatorio/fornecedor/resumo`,
+    "relatorio/fornecedor/resumo"
   )
 
   return response.data
@@ -105,13 +101,13 @@ export async function buscarListaPedidosEmpresa({
   dataFinal,
 }: FiltroRelatorioProps) {
   const response = await axiosInstance.get<Array<PedidosEmpresaType>>(
-    `relatorio/compras`,
+    "relatorio/compras",
     {
       params: {
         dataInicial,
         dataFinal,
       },
-    },
+    }
   )
 
   return response.data
