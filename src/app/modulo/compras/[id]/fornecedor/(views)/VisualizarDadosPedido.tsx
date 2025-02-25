@@ -85,10 +85,6 @@ export default function VisualizacaoDadosPedido({
                 <strong>Nome Fantasia/Razão Social:</strong>
                 <span>{` ${dadosPedido.empresa?.nome}`}</span>
               </li>
-              <li className="flex items-center gap-2">
-                <strong>CPF/CNPJ:</strong>
-                <span>{` ${dadosPedido.empresa?.documento ? formatarDocumento(dadosPedido.empresa.documento) : ''}`}</span>
-              </li>
             </ul>
           </div>
           <div>
@@ -133,10 +129,6 @@ export default function VisualizacaoDadosPedido({
             <li className="flex items-center gap-2">
               <strong>Nome Fantasia/Razão Social:</strong>
               <span>{` ${dadosPedido.fornecedor.nome}`}</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <strong>CPF/CNPJ:</strong>
-              <span>{` ${dadosPedido.fornecedor.documento ? formatarDocumento(dadosPedido.fornecedor.documento) : ''}`}</span>
             </li>
           </ul>
         </CardContent>

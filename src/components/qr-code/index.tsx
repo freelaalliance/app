@@ -12,6 +12,7 @@ export function LeitorQrCode({ setDadosQrCode }: LeitorQrCodeProps) {
       onScan={(result) => {
         setDadosQrCode(result[0].rawValue)
       }}
+      scanDelay={2000}
     />
   )
 }

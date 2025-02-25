@@ -1,4 +1,4 @@
-import { ElementType } from 'react'
+import type { ElementType } from 'react'
 
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
@@ -33,7 +33,7 @@ export function IndicadorInformativo({
           <Icon
             className={cn(
               'h-8 w-8 text-muted',
-              carregandoInformacao ? 'hidden' : 'flex',
+              carregandoInformacao ? 'hidden' : 'flex'
             )}
           />
         )}
