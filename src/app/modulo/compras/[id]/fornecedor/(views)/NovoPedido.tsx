@@ -70,7 +70,7 @@ const schemaFormNovoPedido = z.object({
         .min(1, {
           message: 'A quantidade do item deve ser no mínimo 1',
         }),
-    }),
+    })
   ),
 })
 
@@ -111,18 +111,18 @@ export default function NovoPedidoView({ fornecedorId }: NovoPedidoProps) {
 
   const { mutateAsync: novoPedido } = useMutation({
     mutationFn: salvarNovoPedido,
-    onError: (error) => {
+    onError: error => {
       toast.error('Erro ao salvar o pedido, tente novamente!', {
         description: error.message,
       })
     },
-    onSuccess: (data) => {
+    onSuccess: data => {
       if (data.status) {
         toast.success(data.msg, {
           action: {
             onClick: () => {
               router.push(
-                `pedido/${data.dados?.id}/visualizar?codigo=${data.dados?.codigo}`,
+                `pedido/${data.dados?.id}/visualizar?codigo=${data.dados?.codigo}`
               )
             },
             label: 'Visualizar pedido',
@@ -159,7 +159,7 @@ export default function NovoPedidoView({ fornecedorId }: NovoPedidoProps) {
                           variant={'outline'}
                           className={cn(
                             'w-full  text-left font-normal',
-                            !field.value && 'text-muted-foreground',
+                            !field.value && 'text-muted-foreground'
                           )}
                         >
                           {field.value ? (
@@ -173,13 +173,12 @@ export default function NovoPedidoView({ fornecedorId }: NovoPedidoProps) {
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
+                    <PopoverContent className="w-auto h-full p-0" align="start">
                       <Calendar
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date) => date <= new Date()}
-                        locale={ptBR}
+                        disabled={date => date <= new Date()}
                         initialFocus
                       />
                     </PopoverContent>

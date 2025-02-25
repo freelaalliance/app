@@ -1,7 +1,7 @@
 'use client'
 
 import {
-  ColumnDef,
+  type ColumnDef,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -11,7 +11,7 @@ import {
 import { Plus, QrCode } from 'lucide-react'
 import { useState } from 'react'
 
-import { PedidosFornecedorType } from '@/app/modulo/compras/(schemas)/compras/schema-compras'
+import type { PedidosFornecedorType } from '@/app/modulo/compras/(schemas)/compras/schema-compras'
 import { LeitorQrCode } from '@/components/qr-code'
 import { Button } from '@/components/ui/button'
 import {
@@ -125,7 +125,7 @@ export function TabelaPedidos({
                   .getColumn('numPedido')
                   ?.getFilterValue() as number) ?? ''
               }
-              onChange={(event) =>
+              onChange={event =>
                 tabelaPedidosFornecedor
                   .getColumn('numPedido')
                   ?.setFilterValue(event.target.value)
@@ -142,7 +142,7 @@ export function TabelaPedidos({
                   .getColumn('nome')
                   ?.getFilterValue() as string) ?? ''
               }
-              onChange={(event) =>
+              onChange={event =>
                 tabelaPedidosFornecedor
                   .getColumn('nome')
                   ?.setFilterValue(event.target.value)
@@ -154,16 +154,16 @@ export function TabelaPedidos({
       <div className="rounded-md border shadow overflow-auto bg-gray-50 ">
         <Table>
           <TableHeader>
-            {tabelaPedidosFornecedor.getHeaderGroups().map((headerGroup) => (
+            {tabelaPedidosFornecedor.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
+                {headerGroup.headers.map(header => {
                   return (
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext(),
+                            header.getContext()
                           )}
                     </TableHead>
                   )
@@ -192,16 +192,16 @@ export function TabelaPedidos({
                 </TableRow>
               </>
             ) : tabelaPedidosFornecedor.getRowModel().rows?.length > 0 ? (
-              tabelaPedidosFornecedor.getRowModel().rows.map((row) => (
+              tabelaPedidosFornecedor.getRowModel().rows.map(row => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                 >
-                  {row.getVisibleCells().map((cell) => (
+                  {row.getVisibleCells().map(cell => (
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}
