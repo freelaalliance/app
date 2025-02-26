@@ -179,6 +179,7 @@ export default function NovoPedidoView({ fornecedorId }: NovoPedidoProps) {
                         selected={field.value}
                         onSelect={field.onChange}
                         disabled={date => date <= new Date()}
+                        locale={ptBR}
                         initialFocus
                       />
                     </PopoverContent>
