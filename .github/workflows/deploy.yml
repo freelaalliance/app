@@ -61,4 +61,4 @@ jobs:
             docker stop app 
             docker rm app 
             docker pull adrsilva01/works:alliance-app 
-            docker run --name app --restart=always -d -p${{vars.PORT_APP_EXPOSE}}:${{vars.PORT_APP}} --env NODE_ENV=production adrsilva01/works:alliance-app
+            docker run --name app --restart=always -d -p${{vars.PORT_APP}}:${{vars.PORT_APP}} --env NODE_ENV=production adrsilva01/works:alliance-app
