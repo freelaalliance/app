@@ -35,20 +35,6 @@ const VisualizarDadosCompras = dynamic(() => import('./(views)/ComprasView'), {
   ssr: true,
 })
 
-const VisualizarDadosRecebimento = dynamic(
-  () => import('./(views)/RecebimentosView'),
-  {
-    loading: () => {
-      return (
-        <div className="flex justify-center">
-          <Loader2 className="size-10 animate-spin" />
-        </div>
-      )
-    },
-    ssr: true,
-  },
-)
-
 export default function PagePainelCompras() {
   return (
     <Card>
@@ -60,15 +46,11 @@ export default function PagePainelCompras() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="recebimentos">
+        <Tabs defaultValue="fornecedores">
           <TabsList className="w-full">
-            <TabsTrigger value="recebimentos">Recebimentos</TabsTrigger>
-            <TabsTrigger value="compras">Compras</TabsTrigger>
             <TabsTrigger value="fornecedores">Fornecedores</TabsTrigger>
+            <TabsTrigger value="compras">Compras</TabsTrigger>
           </TabsList>
-          <TabsContent value="recebimentos">
-            <VisualizarDadosRecebimento />
-          </TabsContent>
           <TabsContent value="compras">
             <VisualizarDadosCompras />
           </TabsContent>

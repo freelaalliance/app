@@ -7,7 +7,7 @@ import { useParams, useRouter } from 'next/navigation'
 
 import { listarPermissoesModuloPerfil } from '@/app/modulo/administrativo/empresa/api/Permissao'
 import { Button } from '@/components/ui/button'
-import { buscarItensAvaliativosRecebimento } from '../../fornecedor/(api)/ComprasApi'
+import { buscarItensAvaliativosRecebimento } from '@/app/modulo/compras/[id]/fornecedor/(api)/ComprasApi'
 
 const VerficacaoPedido = dynamic(
   () => import('../../recebimento/(view)/VerificacaoEntregaPedido'),
@@ -46,7 +46,7 @@ export default function ConferenciaRecebimentoPedido() {
     })
 
   const consultaExistePermissao = listaPermissoesPerfil?.find(
-    permissao => permissao.url === '/modulo/compras/[id]/recebimento'
+    permissao => permissao.url === '/modulo/recebimentos/[id]/recebimento'
   )
 
   return !carregandoPermissoes ? (

@@ -12,10 +12,10 @@ export default function LayoutModuloManutencao({
       <main className="space-y-6 pb-16 md:block container mt-4">
         <section className="space-y-0.5">
           <h2 className="text-2xl font-bold tracking-tight">
-            Módulo de compras
+            Módulo de recebimentos
           </h2>
           <p className="text-muted-foreground">
-            Gestão de fornecedores e processo de compras
+            Gestão de recebimentos de compras da empresa
           </p>
         </section>
         <Separator className="my-6" />

@@ -11,8 +11,8 @@ import {
   PackageCheck,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { DateRange } from 'react-day-picker'
-import generatePDF, { Margin, Options, Resolution } from 'react-to-pdf'
+import type { DateRange } from 'react-day-picker'
+import generatePDF, { Margin, type Options, Resolution } from 'react-to-pdf'
 
 import { IndicadorInformativo } from '@/components/IndicadorInfo'
 import { Button } from '@/components/ui/button'
@@ -45,9 +45,9 @@ import {
 import { aplicarMascaraDocumento, formatarDataBrasil } from '@/lib/utils'
 
 import {
+  type PedidosEmpresaType,
   buscarListaPedidosEmpresa,
   buscarResumoCompras,
-  PedidosEmpresaType,
 } from '../api/RelatorioCompras'
 
 export default function PainelCompras() {
@@ -65,7 +65,7 @@ export default function PainelCompras() {
   const resumoEstatisticasCompras = useQuery({
     queryKey: ['resumoEstatisticaCompras'],
     queryFn: () => buscarResumoCompras(),
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   const getDadosRelatorioCompras = () =>
@@ -94,8 +94,9 @@ export default function PainelCompras() {
     setListaCompras(listaPedidosEmpresa)
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (date && date.from && date.to) {
+    if (date?.from && date.to) {
       ConsultaListaCompras(date.from, date.to)
     }
   }, [date])
@@ -201,14 +202,14 @@ export default function PainelCompras() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {listaComprasEmpresas.map((pedido) => (
+                {listaComprasEmpresas.map(pedido => (
                   <TableRow key={pedido.id}>
                     <TableCell>{pedido.numPedido}</TableCell>
                     <TableCell>
                       {formatarDataBrasil(
                         new Date(pedido.prazoEntrega),
                         false,
-                        'PP',
+                        'PP'
                       )}
                     </TableCell>
                     <TableCell>

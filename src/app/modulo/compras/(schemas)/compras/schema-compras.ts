@@ -82,13 +82,3 @@ export type PedidosFornecedorEmpresaType = {
   }
 }
 
-export type RecebimentosPedidosFornecedorType = {
-  id: string
-  usuario: string
-  dataRecebimento: string
-  avaliacaoEntrega: number
-  quantidadeIncorreta: number
-  avaria: boolean
-  numeroNota?: string
-  numeroCertificado?: string
-}

@@ -122,7 +122,7 @@ export default function NovoPedidoView({ fornecedorId }: NovoPedidoProps) {
           action: {
             onClick: () => {
               router.push(
-                `pedido/${data.dados?.id}/visualizar?codigo=${data.dados?.codigo}`
+                `fornecedor/pedido/${data.dados?.id}/visualizar?codigo=${data.dados?.codigo}`
               )
             },
             label: 'Visualizar pedido',

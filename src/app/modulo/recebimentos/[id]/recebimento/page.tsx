@@ -13,9 +13,9 @@ import {
 } from '@/components/ui/card'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { buscarPedidosPorStatusEmpresa } from '../fornecedor/(api)/ComprasApi'
-import { ColunasPedidosEmpresaRecebimento } from '../fornecedor/components/tabelas/pedidos/colunas-tabela-pedidos-recebimento'
-import { TabelaPedidos } from '../fornecedor/components/tabelas/pedidos/tabela-pedidos'
+import { buscarPedidosPorStatusEmpresa } from '@/app/modulo/compras/[id]/fornecedor/(api)/ComprasApi'
+import { TabelaPedidos } from '@/app/modulo/compras/[id]/fornecedor/components/tabelas/pedidos/tabela-pedidos'
+import { ColunasPedidosEmpresaRecebimento } from '@/app/modulo/compras/[id]/fornecedor/components/tabelas/pedidos/colunas-tabela-pedidos-recebimento'
 
 export default function RecebimentoPedidos() {
   const listaPedidosPendentesEmpresa = useQuery({

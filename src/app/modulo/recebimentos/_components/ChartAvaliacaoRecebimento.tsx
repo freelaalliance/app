@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
@@ -70,7 +70,7 @@ export function ChartAvaliacaoRecebimento({
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => {
+              tickFormatter={value => {
                 return formatarDataBrasil(value, false, 'dd/MM/yyyy')
               }}
             />

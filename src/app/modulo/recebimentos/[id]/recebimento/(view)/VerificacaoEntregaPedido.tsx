@@ -41,17 +41,17 @@ import { cn, formatarDataBrasil } from '@/lib/utils'
 
 import type { ItemAvaliacaoType } from '@/app/modulo/administrativo/modulos/_api/AdmCompras'
 import { ScrollArea } from '@radix-ui/react-scroll-area'
-import {
-  consultarPedido,
-  inserirRecebimento,
-} from '../../fornecedor/(api)/ComprasApi'
 import { useRouter } from 'next/navigation'
+import { consultarPedido } from '@/app/modulo/compras/[id]/fornecedor/(api)/ComprasApi'
+import { inserirRecebimento } from '../../../_api/RelatorioRecebimentos'
+import { Textarea } from '@/components/ui/textarea'
 
 const schemaVerificacaoEntrega = z.object({
   numeroCertificado: z.string().optional(),
   numeroNotaFiscal: z.string().optional(),
   pedidoRecebidoCompleto: z.coerce.boolean().default(true),
   dataRecebimento: z.coerce.date(),
+  observacao: z.string().optional(),
   avaliacao: z.array(
     z.object({
       id: z.string().uuid(),
@@ -101,6 +101,7 @@ export default function VerificaEntregaPedido({
       pedidoRecebidoCompleto: !dadosPedido.data?.dados?.permiteEntregaParcial,
       numeroCertificado: '',
       numeroNotaFiscal: '',
+      observacao: '',
       avaliacao: itensVerificacaoRecebimento.map(({ descricao, id }) => ({
         id,
         descricao,
@@ -133,7 +134,7 @@ export default function VerificaEntregaPedido({
           description: data.msg,
         })
 
-        route.push('recebimento')
+        route.back()
       } else {
         toast.error('Falha ao salvar', {
           description: data.msg,
@@ -165,7 +166,6 @@ export default function VerificaEntregaPedido({
     </div>
   ) : (
     <section className="space-y-4 bg-padrao-white p-4 rounded">
-      
       <div className="grid grid-cols-1 md:grid-cols-8 gap-4">
         <div className="md:col-span-4">
           <Form {...formularioVerificacaoEntrega}>
@@ -245,6 +245,23 @@ export default function VerificaEntregaPedido({
                   )}
                 />
               </div>
+              <FormField
+                control={formularioVerificacaoEntrega.control}
+                name="observacao"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Observações do recebimento</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Insira observações sobre o recebimento desta compra"
+                        className="resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               {dadosPedido.data?.dados?.permiteEntregaParcial && (
                 <FormField
                   control={formularioVerificacaoEntrega.control}

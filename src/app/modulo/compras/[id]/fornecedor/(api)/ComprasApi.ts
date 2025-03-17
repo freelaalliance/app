@@ -3,7 +3,6 @@ import { axiosInstance } from '@/lib/AxiosLib'
 import type { ItemAvaliacaoType } from '@/app/modulo/administrativo/modulos/_api/AdmCompras'
 import type { formNovoPedidoType } from '../(views)/NovoPedido'
 import type { PedidosFornecedorType } from '../../../(schemas)/compras/schema-compras'
-import type { FormVerificacaoEntregaType } from '../../recebimento/(view)/VerificacaoEntregaPedido'
 
 interface ConsultaPedidoProps {
   idPedido?: string
@@ -12,11 +11,6 @@ interface ConsultaPedidoProps {
 
 interface ConsultaPedidosFornecedorProps {
   fornecedorId: string
-}
-
-interface InsereRecebimentoProps {
-  compraId: string
-  data: FormVerificacaoEntregaType
 }
 
 export interface AlteraPedidoProps {
@@ -122,34 +116,6 @@ export async function buscarPedidosPorStatusEmpresa(status: string) {
         status: false,
         msg: 'Ocorreu um erro ao consultar os pedidos.',
         dados: null,
-        error,
-      }
-    })
-}
-
-export async function inserirRecebimento({
-  compraId,
-  data,
-}: InsereRecebimentoProps) {
-  return await axiosInstance
-    .post<{
-      status: boolean
-      msg: string
-      error?: unknown
-    }>(`pedido/${compraId}/recebimento`, {
-      dataRecebimento: data.dataRecebimento,
-      numeroNotaFiscal: data.numeroNotaFiscal,
-      numeroCertificado: data.numeroCertificado,
-      pedidoRecebidoCompleto: data.pedidoRecebidoCompleto,
-      avaliacoes: data.avaliacao,
-    })
-    .then(resp => {
-      return resp.data
-    })
-    .catch(error => {
-      return {
-        status: false,
-        msg: 'Ocorreu um erro ao inserir o recebimento.',
         error,
       }
     })

@@ -37,14 +37,13 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { formatarDataBrasil } from '@/lib/utils'
-
 import {
   type EstatisticasDadosRecebimentoType,
   type ListaDadosRecebimentosType,
   buscarDadosRelatorioRecebimento,
-} from '../api/RelatorioCompras'
-import { ChartAvaliacaoRecebimento } from '../components/ChartAvaliacaoRecebimento'
-import { ChartRecebimentos } from '../components/ChartQuantidadeRecebimentos'
+} from '../../../_api/RelatorioRecebimentos'
+import { ChartAvaliacaoRecebimento } from '../../../_components/ChartAvaliacaoRecebimento'
+import { ChartRecebimentos } from '../../../_components/ChartQuantidadeRecebimentos'
 
 export default function PainelRecebimentos() {
   const queryClient = useQueryClient()
@@ -190,8 +189,8 @@ export default function PainelRecebimentos() {
           </div>
           <div className="grid grid-cols-1 gap-2">
             <ChartRecebimentos
-              final={(date?.to) ?? new Date()}
-              inicial={(date?.from) ?? new Date()}
+              final={date?.to ?? new Date()}
+              inicial={date?.from ?? new Date()}
               dados={
                 dadosRecebimentosCompraEmpresas?.recebimentos.map(
                   recebimento => {
@@ -204,8 +203,8 @@ export default function PainelRecebimentos() {
               }
             />
             <ChartAvaliacaoRecebimento
-              final={(date?.to) ?? new Date()}
-              inicial={(date?.from) ?? new Date()}
+              final={date?.to ?? new Date()}
+              inicial={date?.from ?? new Date()}
               dados={
                 dadosRecebimentosCompraEmpresas?.recebimentos.map(
                   recebimento => {
@@ -247,12 +246,8 @@ export default function PainelRecebimentos() {
                       )}
                     </TableCell>
                     <TableCell>{entrega.usuario.pessoa.nome}</TableCell>
-                    <TableCell>
-                      {entrega.numeroNota ?? '--'}
-                    </TableCell>
-                    <TableCell>
-                      {entrega.numeroCertificado ?? '--'}
-                    </TableCell>
+                    <TableCell>{entrega.numeroNota ?? '--'}</TableCell>
+                    <TableCell>{entrega.numeroCertificado ?? '--'}</TableCell>
                     <TableCell>{`${entrega.avaliacaoEntrega}%`}</TableCell>
                   </TableRow>
                 )) ?? []}
