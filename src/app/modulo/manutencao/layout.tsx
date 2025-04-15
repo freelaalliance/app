@@ -1,7 +1,12 @@
-import { ModuloLayoutProps } from '@/app/provider'
+import type { ModuloLayoutProps } from '@/app/provider'
 import { HeaderApp } from '@/components/header/header'
 import { SidebarNav } from '@/components/nav/SidebarNav'
 import { Separator } from '@/components/ui/separator'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'ERP | Manutenção',
+}
 
 export default function LayoutModuloManutencao({
   children,

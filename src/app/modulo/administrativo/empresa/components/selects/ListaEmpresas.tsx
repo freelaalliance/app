@@ -26,7 +26,7 @@ export function ListaEmpresas() {
   const { data: dadosEmpresas, isLoading: carregandoDados } = useQuery({
     queryKey: ['empresas'],
     queryFn: listarEmpresas,
-    staleTime: Infinity,
+    initialData: [],
   })
 
   const [open, setOpen] = React.useState(false)
@@ -38,15 +38,14 @@ export function ListaEmpresas() {
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          role="combobox"
           aria-expanded={open}
           className="w-full md:w-56 justify-between"
           disabled={carregandoDados}
         >
           {empresaSelecionada
             ? dadosEmpresas?.find(
-                (empresa) => empresa.id === empresaSelecionada.selected,
-              )?.nome
+              (empresa) => empresa.id === empresaSelecionada.selected,
+            )?.nome
             : 'Selecione uma empresa...'}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>

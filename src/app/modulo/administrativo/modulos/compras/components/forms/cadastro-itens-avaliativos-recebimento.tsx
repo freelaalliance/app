@@ -103,7 +103,7 @@ export function CadastroItensAvaliativoRecebimentoForm({
           </TooltipTrigger>
           <TooltipContent>Adicione um novo item avaliativo de recebimento</TooltipContent>
         </Tooltip>
-        <ScrollArea className="max-h-[200px] md:max-h-96 overflow-auto">
+        <ScrollArea className="max-h-[150px] md:max-h-96 overflow-auto border rounded-lg">
           {itens.map((item, index) => (
             <div
               // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
@@ -136,7 +136,7 @@ export function CadastroItensAvaliativoRecebimentoForm({
             </div>
           ))}
         </ScrollArea>
-        <DialogFooter>
+        <DialogFooter className='gap-2'>
           <DialogClose asChild>
             <Button
               type="button"

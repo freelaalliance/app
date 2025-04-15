@@ -1,11 +1,10 @@
 import { atom, useAtom } from 'jotai'
 
-import {
+import type {
   FuncaoModuloType,
   ModuloType,
 } from '@/app/modulo/administrativo/empresa/schemas/SchemaModulo'
-import { empresaType } from '@/app/modulo/administrativo/empresa/schemas/SchemaNovaEmpresa'
-
+import type { empresaType } from '@/app/modulo/administrativo/empresa/schemas/SchemaNovaEmpresa'
 
 type ConfigEmpresasType = {
   selected: empresaType['id'] | null
@@ -34,7 +33,6 @@ const configAtomFuncoesModulo = atom<ConfigFuncaoModuloType>({
 export function useEmpresa() {
   return useAtom(configAtomEmpresas)
 }
-
 
 export function useModulos() {
   return useAtom(configAtomModulos)

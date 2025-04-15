@@ -1,4 +1,4 @@
-import { Metadata } from 'next'
+import type { Metadata } from 'next'
 
 import { HeaderApp } from '@/components/header/header'
 import { SidebarNav } from '@/components/nav/SidebarNav'

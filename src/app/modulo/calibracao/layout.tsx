@@ -1,9 +1,14 @@
 import { HeaderApp } from '@/components/header/header'
 import { SidebarNav } from '@/components/nav/SidebarNav'
 import { Separator } from '@/components/ui/separator'
+import type { Metadata } from 'next'
 
 interface CalibracaoLayoutProps {
   children: React.ReactNode
+}
+
+export const metadata: Metadata = {
+  title: 'ERP | Calibração',
 }
 
 export default function CalibracaoLayout({ children }: CalibracaoLayoutProps) {
