@@ -61,4 +61,4 @@ jobs:
             docker stop app 
             docker rm app 
             docker pull adrsilva01/works:alliance-app 
-            docker run --name app --restart=always -d -p${{vars.PORT_APP}}:${{vars.PORT_APP}} --env NODE_ENV=production adrsilva01/works:alliance-app
+            docker run --name app --restart=always -d -p${{vars.PORT_APP}}:${{vars.PORT_APP}} --env S3_URL=${{secrets.S3_URL}} --env S3_BUCKET=${{secrets.S3_BUCKET}} --env S3_SECRET_ACCESS_KEY=${{secrets.S3_SECRET_ACCESS_KEY}} --env S3_ACCESS_KEY_ID=${{secrets.S3_ACCESS_KEY_ID}} --env NODE_ENV=production adrsilva01/works:alliance-app

@@ -1,8 +1,8 @@
 'use server'
 
-import { axiosInstance, RespostaType } from '@/lib/AxiosLib'
+import { type RespostaType, axiosInstance } from '@/lib/AxiosLib'
 
-import { FormularioPerfilType, PerfilType } from '../schemas/SchemaPerfil'
+import type { FormularioPerfilType, PerfilType } from '../schemas/SchemaPerfil'
 
 interface VincularPermissaoPerfilProps {
   idFuncao: string
@@ -14,7 +14,7 @@ interface RemoverPermissoesPerfilProps {
 
 export async function buscarListaPerfis(empresaId: string) {
   const listaPerfis = await axiosInstance.get<Array<PerfilType>>(
-    `admin/empresa/${empresaId}/perfis`,
+    `admin/empresa/${empresaId}/perfis`
   )
 
   return listaPerfis.data
@@ -49,7 +49,7 @@ export async function modificarPerfil({
 
 export async function excluirPerfil(id: string) {
   const response = await axiosInstance.delete<RespostaType>(
-    `admin/perfil/${id}`,
+    `admin/perfil/${id}`
   )
 
   return response.data
@@ -57,11 +57,11 @@ export async function excluirPerfil(id: string) {
 
 export async function adicionarPermissaoPerfil(
   idPerfil: string,
-  permissoes: VincularPermissaoPerfilProps[],
+  permissoes: VincularPermissaoPerfilProps[]
 ) {
   const response = await axiosInstance.post<RespostaType>(
     `admin/perfil/${idPerfil}/vincular/funcao`,
-    permissoes,
+    permissoes
   )
 
   return response.data
@@ -69,13 +69,13 @@ export async function adicionarPermissaoPerfil(
 
 export async function removerPermissoesPerfil(
   idPerfil: string,
-  permissoes: RemoverPermissoesPerfilProps[],
+  permissoes: RemoverPermissoesPerfilProps[]
 ) {
   const response = await axiosInstance.delete<RespostaType>(
     `admin/perfil/${idPerfil}/remover/funcao`,
     {
       data: permissoes,
-    },
+    }
   )
 
   return response.data

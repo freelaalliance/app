@@ -16,6 +16,7 @@ export function ListaArquivo({
     <div className="flex flex-row gap-2 overflow-auto">
       {listaArquivoSelecionado.map((arquivo, index) => (
         <div
+          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
           key={index}
           className="flex flex-row justify-between items-center md:justify-normal gap-2 rounded border shadow"
         >

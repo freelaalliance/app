@@ -93,6 +93,7 @@ export function DataTableModulos({
       queryClient.getQueryData(['listaModulosVinculadosEmpresa', idEmpresa])
 
     if (cacheModulosEmpresa) {
+      // biome-ignore lint/complexity/noForEach: <explanation>
       modulos.forEach(moduloSelecionado => {
         const modulosEmpresa = cacheModulosEmpresa.filter(
           modulo => modulo.id !== moduloSelecionado.idModulo

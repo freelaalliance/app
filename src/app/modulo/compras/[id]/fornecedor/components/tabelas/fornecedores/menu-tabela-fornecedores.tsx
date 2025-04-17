@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Separator } from '@/components/ui/separator'
 
-import { FornecedoresEmpresaType } from '../../../(api)/FornecedorApi'
+import type { FornecedoresEmpresaType } from '../../../(api)/FornecedorApi'
 import { NovaAvaliacaoCriticoDialog } from '../../dialogs/NovaAvaliacaoCriticoDialog'
 import { NovoPedidoDialog } from '../../dialogs/NovoPedidoDialog'
 import { ExclusaoFornecedor } from '../../dialogs/RemoverFornecedorDialog'
@@ -45,7 +45,7 @@ export function MenuTabelaFornecedores({
           <Dialog>
             <DialogTrigger asChild>
               <DropdownMenuItem
-                onSelect={(e) => {
+                onSelect={e => {
                   e.preventDefault()
                 }}
               >
@@ -58,7 +58,7 @@ export function MenuTabelaFornecedores({
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <DropdownMenuItem
-              onSelect={(e) => {
+              onSelect={e => {
                 e.preventDefault()
               }}
             >
@@ -71,7 +71,7 @@ export function MenuTabelaFornecedores({
         <Dialog>
           <DialogTrigger asChild>
             <DropdownMenuItem
-              onSelect={(e) => {
+              onSelect={e => {
                 e.preventDefault()
               }}
             >

@@ -9,15 +9,16 @@ interface uploadProps {
   selecionaArquivo: (arquivo: Array<File>) => void
 }
 
+const arquivoSuportado = {
+  'application/pdf': ['.pdf'],
+  'image/*': ['.png', '.jpg', '.gif', '.jpeg', '.webp'],
+}
+
 export function Upload({
   selecionaArquivo,
   multiplo,
-  qtdArquivos,
+  qtdArquivos
 }: uploadProps) {
-  const arquivoSuportado = {
-    'application/pdf': ['.pdf'],
-    'image/*': ['.png', '.jpg', '.gif', '.jpeg', '.webp'],
-  }
 
   const mensagemArquivo = (isDragActive: boolean, isDragReject: boolean) => {
     if (isDragReject) {

@@ -1,6 +1,6 @@
-import { axiosInstance, RespostaType } from '@/lib/AxiosLib'
+import { type RespostaType, axiosInstance } from '@/lib/AxiosLib'
 
-import {
+import type {
   FormularioEdicaoUsuarioType,
   FormularioNovoUsuarioType,
 } from '../schemas/SchemaUsuarios'
@@ -8,7 +8,7 @@ import {
 export async function criarUsuario(dadosUsuario: FormularioNovoUsuarioType) {
   const response = await axiosInstance.post<RespostaType>(
     'admin/usuarios',
-    dadosUsuario,
+    dadosUsuario
   )
 
   return response.data
@@ -19,14 +19,14 @@ export async function alterarStatusUsuario(idUsuario: string, status: boolean) {
     `admin/usuarios/${idUsuario}/status`,
     {
       status,
-    },
+    }
   )
 
   return response.data
 }
 
 export async function alterarDadosUsuario(
-  dadosUsuario: FormularioEdicaoUsuarioType,
+  dadosUsuario: FormularioEdicaoUsuarioType
 ) {
   const response = await axiosInstance.put<RespostaType>(
     `admin/usuarios/${dadosUsuario.id}`,
@@ -34,7 +34,7 @@ export async function alterarDadosUsuario(
       nome: dadosUsuario.nome,
       email: dadosUsuario.email,
       perfil: dadosUsuario.perfil,
-    },
+    }
   )
 
   return response.data

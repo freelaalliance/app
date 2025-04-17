@@ -35,6 +35,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Textarea } from '@/components/ui/textarea'
 import { ListaArquivo } from '@/components/upload/lista-arquivo'
 import { Upload } from '@/components/upload/upload'
+import { consultarCep } from '@/lib/ViacepLib'
 import {
   cn,
   encodeFileToBase64,
@@ -42,10 +43,9 @@ import {
   formatarNumeroTelefone,
   removerCaracteresEspecial,
 } from '@/lib/utils'
-import { consultarCep } from '@/lib/ViacepLib'
 
 import {
-  FornecedoresEmpresaType,
+  type FornecedoresEmpresaType,
   salvarNovoFornecedor,
 } from '../(api)/FornecedorApi'
 import { schemaCadastroFornecedorForm } from '../../../(schemas)/fornecedores/schema-fornecedor'
@@ -187,19 +187,19 @@ export default function CadastroFornecedorView() {
 
   const { mutateAsync: salvarFornecedor } = useMutation({
     mutationFn: salvarNovoFornecedor,
-    onError: (error) => {
+    onError: error => {
       toast.error('Erro ao salvar novo fornecedor', {
         description: error.message,
       })
     },
-    onSuccess: (data) => {
+    onSuccess: data => {
       if (data.status) {
         const fornecedores: Array<FornecedoresEmpresaType> | undefined =
           queryClient.getQueryData(['fornecedoresEmpresa'])
 
         queryClient.setQueryData(
           ['fornecedoresEmpresa'],
-          [...(fornecedores ?? []), data.dados],
+          [...(fornecedores ?? []), data.dados]
         )
 
         toast.success(data.msg)
@@ -216,10 +216,10 @@ export default function CadastroFornecedorView() {
 
   async function onSubmitFornecedor(data: FormularioCadastroFornecedor) {
     const arquivosCodificados: documentosFornecedor[] = await Promise.all(
-      listaArquivoSelecionado.map(async (arquivo) => ({
+      listaArquivoSelecionado.map(async arquivo => ({
         nome: arquivo.name,
         arquivo: await encodeFileToBase64(arquivo),
-      })),
+      }))
     )
 
     if (data.emails.length === 0) {
@@ -231,7 +231,7 @@ export default function CadastroFornecedorView() {
       (!data.validade || data.validade === new Date())
     ) {
       toast.warning(
-        'Data de validade de avaliação do fornecedor é obrigatória e não pode ser a data atual ou a data do cadastro',
+        'Data de validade de avaliação do fornecedor é obrigatória e não pode ser a data atual ou a data do cadastro'
       )
     } else {
       salvarFornecedor({
@@ -242,6 +242,7 @@ export default function CadastroFornecedorView() {
     }
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useMemo(() => {
     const cep = formNovoFornecedor.getValues('cep')
 
@@ -269,10 +270,10 @@ export default function CadastroFornecedorView() {
                       <Input
                         placeholder="000.000.000-00"
                         {...field}
-                        onChange={(event) => {
+                        onChange={event => {
                           formNovoFornecedor.setValue(
                             'documento',
-                            formatarDocumento(event.target.value),
+                            formatarDocumento(event.target.value)
                           )
                         }}
                       />
@@ -306,7 +307,7 @@ export default function CadastroFornecedorView() {
                 <FormControl>
                   <Checkbox
                     checked={field.value}
-                    onCheckedChange={(value) => {
+                    onCheckedChange={value => {
                       if (value) {
                         formNovoFornecedor.setValue('aprovado', false)
                         formNovoFornecedor.trigger('aprovado')
@@ -384,7 +385,7 @@ export default function CadastroFornecedorView() {
                               variant={'outline'}
                               className={cn(
                                 'w-[240px] pl-3 text-left font-normal',
-                                !field.value && 'text-muted-foreground',
+                                !field.value && 'text-muted-foreground'
                               )}
                             >
                               {field.value ? (
@@ -403,7 +404,7 @@ export default function CadastroFornecedorView() {
                             mode="single"
                             selected={field.value}
                             onSelect={field.onChange}
-                            disabled={(date) => date < new Date()}
+                            disabled={date => date < new Date()}
                             locale={ptBR}
                             initialFocus
                           />
@@ -595,6 +596,7 @@ export default function CadastroFornecedorView() {
                 <ScrollArea className="max-h-52 md:max-h-72 w-full overflow-auto">
                   {telefones.map((telefone, index) => (
                     <div
+                      // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                       key={index}
                       className="flex flex-row justify-between p-4 rounded transition-all hover:bg-accent"
                     >
@@ -646,6 +648,7 @@ export default function CadastroFornecedorView() {
                 <ScrollArea className="max-h-52 md:max-h-72 w-full overflow-auto">
                   {emails.map((email, index) => (
                     <div
+                      // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                       key={index}
                       className="flex flex-row justify-between p-4 rounded transition-all hover:bg-accent"
                     >
@@ -670,11 +673,11 @@ export default function CadastroFornecedorView() {
                   <>
                     <ListaArquivo
                       listaArquivoSelecionado={listaArquivoSelecionado}
-                      excluiArquivo={(indexArquivo) =>
+                      excluiArquivo={indexArquivo =>
                         adicionaArquivo(
                           listaArquivoSelecionado.filter(
-                            (_, index) => index !== indexArquivo,
-                          ),
+                            (_, index) => index !== indexArquivo
+                          )
                         )
                       }
                     />
@@ -682,8 +685,9 @@ export default function CadastroFornecedorView() {
                   </>
                 )}
                 <Upload
-                  selecionaArquivo={(anexo) => {
-                    anexo.forEach((arquivo) => {
+                  selecionaArquivo={anexo => {
+                    // biome-ignore lint/complexity/noForEach: <explanation>
+                    anexo.forEach(arquivo => {
                       adicionaArquivo([...listaArquivoSelecionado, arquivo])
                     })
                   }}
