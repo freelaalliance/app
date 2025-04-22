@@ -110,7 +110,7 @@ export function NovoDocumentoForm({
       copias: 0,
       retencao: addDays(new Date(), 1),
       usuariosAcessos: [],
-      arquivo: '',
+      arquivo: crypto.randomUUID(),
     },
     mode: 'onChange',
   })
@@ -164,9 +164,9 @@ export function NovoDocumentoForm({
           return prev + 5
         })
       }, 100)
-
       const formData = new FormData()
       formData.append('file', arquivoSelecionado)
+      formData.append('keyArquivo', formNovoDocumento.getValues('arquivo'))
 
       const result = await uploadFile(formData)
 
@@ -180,7 +180,8 @@ export function NovoDocumentoForm({
       setUploadProgress(100)
       setUploadComplete(true)
 
-      if (uploadComplete && result.key) {
+      if (uploadComplete && result.success && result.key) {
+        
         setUploading(false)
         toast.success('Upload realizado com sucesso!')
       }
@@ -198,10 +199,7 @@ export function NovoDocumentoForm({
       return
     }
 
-    await salvarDocumentos({
-      ...data,
-      arquivo: arquivoSelecionado?.name ?? '',
-    })
+    await salvarDocumentos(data)
   }
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>

@@ -2,12 +2,7 @@ import { cadastrarNovaRevisaoDocumento } from "@/app/modulo/documentos/_api/docu
 import { Button } from '@/components/ui/button'
 import { DialogClose, DialogFooter } from "@/components/ui/dialog"
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+  Form
 } from '@/components/ui/form'
 import { Progress } from "@/components/ui/progress"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -42,7 +37,7 @@ export function NovaRevisaoDocumentoForm({ idDocumento }: NovaRevisaoDocumentoFo
     resolver: zodResolver(schemaNovaRevisaoDocumentoForm),
     defaultValues: {
       id: idDocumento,
-      arquivo: '',
+      arquivo: crypto.randomUUID(),
     },
     mode: 'onChange',
   })
@@ -88,8 +83,10 @@ export function NovaRevisaoDocumentoForm({ idDocumento }: NovaRevisaoDocumentoFo
         })
       }, 100)
 
+
       const formData = new FormData()
       formData.append('file', arquivoSelecionado)
+      formData.append('keyArquivo', formNovaRevisaoDocumento.getValues('arquivo'))
 
       const result = await uploadFile(formData)
 
@@ -103,7 +100,7 @@ export function NovaRevisaoDocumentoForm({ idDocumento }: NovaRevisaoDocumentoFo
       setUploadProgress(100)
       setUploadComplete(true)
 
-      if (uploadComplete && result.key) {
+      if (uploadComplete && result.success && result.key) {
         setUploading(false)
         toast.success('Upload realizado com sucesso!')
       }
@@ -121,10 +118,7 @@ export function NovaRevisaoDocumentoForm({ idDocumento }: NovaRevisaoDocumentoFo
       return
     }
 
-    await salvarRevisaoDocumento({
-      ...data,
-      arquivo: arquivoSelecionado?.name ?? '',
-    })
+    await salvarRevisaoDocumento(data)
   }
 
   return (

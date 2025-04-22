@@ -27,26 +27,29 @@ export async function uploadFile(formData: FormData) {
     
     const file = formData.get("file") as File
 
+    if (!file) {
+      throw new Error("Nenhum arquivo fornecido")
+    }
+
     const buffer = Buffer.from(await file.arrayBuffer());
 
     const resultUpload = await s3.send(
       new PutObjectCommand({
         Bucket: envS3.S3_BUCKET,
-        Key: file.name,
+        Key: formData.get('keyArquivo') as string,
         Body: buffer,
         ContentType: file.type,
+        ContentLength: file.size,
       })
     )
-    
-    console.log("Upload result:", resultUpload)
 
-    if (!file) {
-      throw new Error("Nenhum arquivo fornecido")
+    if(!resultUpload || resultUpload.$metadata.httpStatusCode !== 200) {
+      throw new Error("Falha ao fazer upload do arquivo")
     }
 
     return {
-      success: true,
-      key: file.name,
+      success: resultUpload.$metadata.httpStatusCode === 200,
+      key: formData.get('keyArquivo'),
     }
   } catch (error) {
     console.error("Erro ao fazer upload:", error)
