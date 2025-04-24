@@ -1,6 +1,6 @@
 "use server"
 
-import { S3Client, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { z } from "zod";
 
@@ -74,5 +74,21 @@ export async function downloadFile(fileName: string) {
   } catch (error) {
     console.error("Erro ao fazer download:", error)
     return null
+  }
+}
+
+export async function deleteFile(fileName: string) {
+  try {
+    const resultDelete = await s3.send(
+      new DeleteObjectCommand({
+        Bucket: envS3.S3_BUCKET,
+        Key: fileName,
+      })
+    )
+
+    return resultDelete.$metadata.httpStatusCode === 204
+  } catch (error) {
+    console.error("Erro ao deletar:", error)
+    return false
   }
 }

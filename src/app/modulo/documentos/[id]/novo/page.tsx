@@ -2,9 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogOverlay, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useQuery } from "@tanstack/react-query";
-import { getCoreRowModel, getFilteredRowModel, getPaginationRowModel, useReactTable } from "@tanstack/react-table";
+import { Loader2 } from "lucide-react";
 import { buscarCategoriasDocumento, buscarDocumentosEmpresa, buscarUsuariosEmpresaPermissaoDocumentos } from "../../_api/documentos";
 import { NovoDocumentoForm } from "./_components/forms/novo-documento-form";
 import { ColunasDocumentosEmpresa } from "./_components/tables/documentos/colunas-tabela-documentos-empresa";
@@ -41,7 +41,7 @@ export default function NovoDocumentoPage() {
         </div>
 
         <Dialog>
-          <DialogTrigger asChild>
+          <DialogTrigger asChild >
             <Button className="shadow bg-padrao-red hover:bg-red-800 flex md:justify-between justify-center md:gap-4 gap-2 w-full md:w-auto">
               Novo documento
             </Button>

@@ -14,7 +14,7 @@ export function NovaRevisaoDocumentoDialog({
   idDocumento,
 }: NovaRevisaoDocumentoFormProps) {
   return (
-    <DialogContent className="md:max-w-screen-md">
+    <DialogContent className="md:max-w-screen-md" >
       <DialogHeader>
         <DialogTitle>Nova revisão do documento</DialogTitle>
         <DialogDescription>
