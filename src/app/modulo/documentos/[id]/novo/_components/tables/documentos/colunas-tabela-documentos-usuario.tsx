@@ -3,7 +3,7 @@ import type { ColumnDef } from '@tanstack/react-table'
 import type { DocumentoType } from '@/app/modulo/documentos/_api/documentos'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { formatarDataBrasil } from '@/lib/utils'
-import { MenuTabelaDocumentosUsuario } from './menu-tabela-documentos-usuario copy'
+import { MenuTabelaDocumentosUsuario } from './menu-tabela-documentos-usuario'
 
 export const ColunasDocumentosUsuario: Array<ColumnDef<DocumentoType>> = [
   {
@@ -34,6 +34,9 @@ export const ColunasDocumentosUsuario: Array<ColumnDef<DocumentoType>> = [
           </Tooltip>
         </TooltipProvider>
       )
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
     },
   },
   {
@@ -99,59 +102,6 @@ export const ColunasDocumentosUsuario: Array<ColumnDef<DocumentoType>> = [
     },
   },
   {
-    accessorKey: 'copias',
-    header: 'Cópias',
-    enableHiding: false,
-    enableColumnFilter: true,
-    cell: ({ row }) => {
-      return (
-        <span>{row.original.copias}</span>
-      )
-    },
-  },
-  {
-    accessorKey: 'recuperacao',
-    header: 'Recuperação',
-    enableHiding: false,
-    enableColumnFilter: true,
-    cell: ({ row }) => {
-      return (
-        <span className='capitalize'>{row.original.recuperacao}</span>
-      )
-    },
-  },
-  {
-    accessorKey: 'uso',
-    header: 'Uso',
-    enableHiding: false,
-    enableColumnFilter: true,
-    cell: ({ row }) => {
-      return (
-        <span className='capitalize'>{row.original.uso}</span>
-      )
-    },
-  },
-  {
-    accessorKey: 'elegibilidade',
-    header: 'Pres. legibilidade',
-    enableHiding: false,
-    enableColumnFilter: true,
-    cell: ({ row }) => {
-      return (
-        <TooltipProvider >
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className='line-clamp-1'>{row.original.elegibilidade}</span>
-            </TooltipTrigger>
-            <TooltipContent align='start' >
-              <span>{row.original.elegibilidade}</span>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      )
-    },
-  },
-  {
     accessorKey: 'retencao',
     header: 'Retenção',
     enableHiding: false,
@@ -167,16 +117,5 @@ export const ColunasDocumentosUsuario: Array<ColumnDef<DocumentoType>> = [
         </div>
       )
     },
-  },
-  {
-    accessorKey: 'disposicao',
-    header: 'Disposição',
-    enableHiding: false,
-    enableColumnFilter: true,
-    cell: ({ row }) => {
-      return (
-        <span className='capitalize'>{row.original.disposicao}</span>
-      )
-    },
-  },
+  }
 ]

@@ -1,4 +1,4 @@
-import { ColumnDef } from '@tanstack/react-table'
+import type { ColumnDef } from '@tanstack/react-table'
 
 import {
   Tooltip,
@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/tooltip'
 import { formatarDataBrasil } from '@/lib/utils'
 
-import { Calibracao } from '../../../schemas/(calibracoes)/SchemaNovaCalibracao'
+import type { Calibracao } from '../../../schemas/(calibracoes)/SchemaNovaCalibracao'
 
 import { DataTableRowActions } from './acoes-lista-calibracao'
 import { optionsStatusCalibracao } from './data-table-calibracao'
@@ -124,7 +124,7 @@ export const colunasCalibracao: ColumnDef<Calibracao>[] = [
     header: 'Sts. calibração',
     cell: ({ row }) => {
       const statusCalibracao = optionsStatusCalibracao.find(
-        (status) => status.value === row.getValue('status'),
+        status => status.value === row.getValue('status')
       )
 
       if (!statusCalibracao) {

@@ -1,8 +1,10 @@
+import type { RevisoesDocumentoType } from '@/app/modulo/documentos/_api/documentos'
 import { Button } from '@/components/ui/button'
 import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -10,7 +12,10 @@ import {
 import { formatarDataBrasil } from '@/lib/utils'
 import { Download } from 'lucide-react'
 import { downloadFile } from '../../../_actions/upload-actions'
-import type { TabelaRevisoesDocumentoProps } from '../../dialogs/revisoes-documento-dialog'
+
+interface TabelaRevisoesDocumentoProps {
+  revisoes: Array<RevisoesDocumentoType>
+}
 
 export function TabelaRevisoesDocumento({
   revisoes,
@@ -31,7 +36,7 @@ export function TabelaRevisoesDocumento({
   return (
     <div className="w-full">
       <Table>
-        <TableHeader>
+        <TableHeader className='select-none'>
           <TableRow>
             <TableHead>Revisão</TableHead>
             <TableHead>Data</TableHead>
@@ -58,6 +63,9 @@ export function TabelaRevisoesDocumento({
             </TableRow>
           ))}
         </TableBody>
+        <TableFooter className='flex flex-row h-8 items-center select-none px-4'>
+          <span>{`${revisoes.length} ${revisoes.length <= 1 ? 'revisão registrada' : 'revisões registradas'}`}</span>
+        </TableFooter>
       </Table>
     </div>
   )

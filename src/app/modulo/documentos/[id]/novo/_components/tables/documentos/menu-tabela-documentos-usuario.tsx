@@ -5,14 +5,13 @@ import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { MoreVertical } from 'lucide-react';
 import { downloadFile } from '../../../_actions/upload-actions';
-import { RevisoesDocumentoDialog } from '../../dialogs/revisoes-documento-dialog';
-import { NovaRevisaoDocumentoDialog } from '../../dialogs/nova-revisao-documento-dialog';
+import { DadosDocumentoDialog } from '../../dialogs/documento-dialog';
 
-interface MenuTabelaDocumentosEmpresaProps {
+interface MenuTabelaDocumentosUsuarioProps {
   documento: DocumentoType
 }
 
-export function MenuTabelaDocumentosEmpresa({ documento }: MenuTabelaDocumentosEmpresaProps) {
+export function MenuTabelaDocumentosUsuario({ documento }: MenuTabelaDocumentosUsuarioProps) {
 
   const handleDownload = async (arquivo: string) => {
     const url = await downloadFile(arquivo);
@@ -49,20 +48,10 @@ export function MenuTabelaDocumentosEmpresa({ documento }: MenuTabelaDocumentosE
             <DropdownMenuItem onSelect={e => {
               e.preventDefault()
             }}>
-              Revisões
+              Detalhes
             </DropdownMenuItem>
           </DialogTrigger>
-          <RevisoesDocumentoDialog revisoes={documento.revisoes} />
-        </Dialog>
-        <Dialog>
-          <DialogTrigger asChild>
-            <DropdownMenuItem onSelect={e => {
-              e.preventDefault()
-            }}>
-              Nova revisão
-            </DropdownMenuItem>
-          </DialogTrigger>
-          <NovaRevisaoDocumentoDialog idDocumento={documento.id} />
+          <DadosDocumentoDialog documento={documento} />
         </Dialog>
       </DropdownMenuContent>
     </DropdownMenu>

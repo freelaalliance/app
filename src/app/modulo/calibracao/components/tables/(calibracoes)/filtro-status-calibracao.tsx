@@ -1,6 +1,6 @@
-import { Column } from '@tanstack/react-table'
+import type { Column } from '@tanstack/react-table'
 import { Check, PlusCircle } from 'lucide-react'
-import * as React from 'react'
+import type * as React from 'react'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -64,8 +64,8 @@ export function FiltroStatusCalibracao<TData, TValue>({
                   </Badge>
                 ) : (
                   options
-                    .filter((option) => selectedValues.has(option.value))
-                    .map((option) => (
+                    .filter(option => selectedValues.has(option.value))
+                    .map(option => (
                       <Badge
                         variant="secondary"
                         key={option.value}
@@ -86,7 +86,7 @@ export function FiltroStatusCalibracao<TData, TValue>({
           <CommandList>
             <CommandEmpty>Nenhum filtro encontrado</CommandEmpty>
             <CommandGroup>
-              {options.map((option) => {
+              {options.map(option => {
                 const isSelected = selectedValues.has(option.value)
                 return (
                   <CommandItem
@@ -99,7 +99,7 @@ export function FiltroStatusCalibracao<TData, TValue>({
                       }
                       const filterValues = Array.from(selectedValues)
                       column?.setFilterValue(
-                        filterValues.length ? filterValues : undefined,
+                        filterValues.length ? filterValues : undefined
                       )
                     }}
                   >
@@ -108,7 +108,7 @@ export function FiltroStatusCalibracao<TData, TValue>({
                         'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
                         isSelected
                           ? 'bg-primary text-primary-foreground'
-                          : 'opacity-50 [&_svg]:invisible',
+                          : 'opacity-50 [&_svg]:invisible'
                       )}
                     >
                       <Check className={cn('h-4 w-4')} />

@@ -4,11 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogOverlay, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2 } from "lucide-react";
 import { buscarCategoriasDocumento, buscarDocumentosEmpresa, buscarUsuariosEmpresaPermissaoDocumentos } from "../../_api/documentos";
 import { NovoDocumentoForm } from "./_components/forms/novo-documento-form";
-import { ColunasDocumentosEmpresa } from "./_components/tables/documentos/colunas-tabela-documentos-empresa";
 import { TabelaDocumentos } from "./_components/tables/documentos/tabela-documentos";
+import { ColunasDocumentosEmpresa } from "./_components/tables/documentos/colunas-tabela-documentos-empresa";
 
 export default function NovoDocumentoPage() {
 
@@ -65,6 +64,7 @@ export default function NovoDocumentoPage() {
           carregandoDados={documentosEmpresa.isFetching}
           colunasDocumento={ColunasDocumentosEmpresa}
           dadosDocumentos={documentosEmpresa.data ?? []}
+          categoriasDocumento={categoriasDocumentos.data ?? []}
         />
       </CardContent>
     </Card>
