@@ -103,7 +103,7 @@ export const ColunasDocumentosUsuario: Array<ColumnDef<DocumentoType>> = [
   },
   {
     accessorKey: 'retencao',
-    header: 'Retenção',
+    header: 'Retenção/Validade',
     enableHiding: false,
     enableColumnFilter: true,
     cell: ({ row }) => {

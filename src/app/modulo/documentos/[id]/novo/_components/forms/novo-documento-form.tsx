@@ -215,7 +215,7 @@ export function NovoDocumentoForm({
               name={'elegibilidade'}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Preservação e elegibilidade</FormLabel>
+                  <FormLabel>Preservação de legibilidade</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>

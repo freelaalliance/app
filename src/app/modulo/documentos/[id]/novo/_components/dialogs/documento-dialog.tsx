@@ -30,7 +30,7 @@ export function DadosDocumentoDialog({ documento }: DadosDocumentoDialogProps) {
           </div>
 
           <div>
-            <h3 className="text-sm font-medium text-gray-500">Retenção</h3>
+            <h3 className="text-sm font-medium text-gray-500">Retenção/Validade</h3>
             <p className="mt-1 flex items-center">
               <CalendarIcon className="mr-2 h-4 w-4" />
               {format(documento.retencao, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
@@ -45,7 +45,7 @@ export function DadosDocumentoDialog({ documento }: DadosDocumentoDialogProps) {
           </div>
 
           <div>
-            <h3 className="text-sm font-medium text-gray-500">Elegibilidade</h3>
+            <h3 className="text-sm font-medium text-gray-500">Preservação de legibilidade</h3>
             <p className="mt-1">{documento.elegibilidade}</p>
           </div>
         </div>
