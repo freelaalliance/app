@@ -180,7 +180,7 @@ export function TabelaDocumentos({
           </PopoverContent>
         </Popover>
       </div>
-      <div className="rounded-md border shadow bg-gray-50 overflow-auto w-[300px] md:w-[1110.4px]">
+      <div className="rounded-md border shadow bg-gray-50">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map(headerGroup => (

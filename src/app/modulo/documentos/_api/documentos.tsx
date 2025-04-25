@@ -29,6 +29,7 @@ export type DocumentoType = {
   disposicao: string
   retencao: Date
   uso: string
+  empresaId: string
   categoriaDocumentoNome: string
   revisoes: RevisoesDocumentoType[]
 }
@@ -54,9 +55,13 @@ export async function buscarDocumentosUsuario() {
     .catch(() => null)
 }
 
-export async function buscarDocumentosEmpresa() {
+export async function buscarDocumentosEmpresa(idEmpresa?:string|null) {
   return await axiosInstance
-    .get<Array<DocumentoType>>('documentos/empresa')
+    .get<Array<DocumentoType>>('documentos/empresa', {
+      params: {
+        id: idEmpresa
+      }
+    })
     .then(({ data }) => data)
     .catch(() => null)
 }
@@ -78,3 +83,11 @@ export async function cadastrarNovaRevisaoDocumento(
     .then(({ data }) => data)
     .catch(() => null)
 }
+
+export async function removerDocumento({id, empresaId}: Pick<DocumentoType, 'id'> & {empresaId: string}) {
+  return await axiosInstance
+    .delete<ResponseType>(`documentos/${id}/empresa/${empresaId}`)
+    .then(({ data }) => data)
+    .catch(() => null)
+}
+

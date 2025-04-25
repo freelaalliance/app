@@ -25,7 +25,7 @@ export default function NovoDocumentoPage() {
 
   const documentosEmpresa = useQuery({
     queryKey: ['documentosEmpresa'],
-    queryFn: buscarDocumentosEmpresa,
+    queryFn: () => buscarDocumentosEmpresa(),
     initialData: [],
   })
 
