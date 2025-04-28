@@ -19,12 +19,12 @@ import {
   Timer,
 } from 'lucide-react'
 import { useState } from 'react'
-import generatePDF, { Margin, Options, Resolution } from 'react-to-pdf'
+import generatePDF, { Margin, type Options, Resolution } from 'react-to-pdf'
 
-import CalendarioEventos, {
-  eventoCalendario,
-} from '@/components/calendario/CalendarioEventos'
 import { IndicadorInformativo } from '@/components/IndicadorInfo'
+import CalendarioEventos, {
+  type eventoCalendario,
+} from '@/components/calendario/CalendarioEventos'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -44,9 +44,9 @@ import { cn } from '@/lib/utils'
 
 import { IndicadorFalhasEquipamentoEmpresa } from '../components/charts/IndicadorFalhasEquipamentosEmpresa'
 import { ListaEventoInspecoesEmpresa } from '../components/lists/ListaEventoInspecoesEmpresa'
-import { DadosEquipamentoType } from '../schemas/EquipamentoSchema'
-import { AgendaInspecoesEmpresa } from '../schemas/InspecaoSchema'
-import {
+import type { DadosEquipamentoType } from '../schemas/EquipamentoSchema'
+import type { AgendaInspecoesEmpresa } from '../schemas/InspecaoSchema'
+import type {
   dadosIndicadoresManutencaoEquipamentoEmpresaType,
   estatisticasEquipamentoType,
   estatisticasManutencaoType,
@@ -99,7 +99,7 @@ export default function MetricasEquipamentosEmpresaView({
   }
 
   const dadosMtbfEMttr: indicadoresFalhasEquipamentosEmpresaType[] =
-    indicadores.dados.map((equipamento) => {
+    indicadores.dados.map(equipamento => {
       return {
         equipamento: equipamento.nome,
         mtbf: calculaMtbf({
@@ -116,80 +116,79 @@ export default function MetricasEquipamentosEmpresaView({
 
   const agenda: eventoCalendario =
     agendaEquipamento.eventos.length > 0
-      ? agendaEquipamento.eventos.map((agendamento) => {
-          const dataAgendamento = new Date(agendamento.agendadoPara)
-          const dataAtual = new Date()
+      ? agendaEquipamento.eventos.map(agendamento => {
+        const dataAgendamento = new Date(agendamento.agendadoPara)
+        const dataAtual = new Date()
 
-          const diferencaDias = differenceInDays(
-            new Date(
-              dataAgendamento.getFullYear(),
-              dataAgendamento.getMonth(),
-              dataAgendamento.getDate(),
-            ),
-            new Date(
-              dataAtual.getFullYear(),
-              dataAtual.getMonth(),
-              dataAtual.getDate(),
-            ),
+        const diferencaDias = differenceInDays(
+          new Date(
+            dataAgendamento.getFullYear(),
+            dataAgendamento.getMonth(),
+            dataAgendamento.getDate()
+          ),
+          new Date(
+            dataAtual.getFullYear(),
+            dataAtual.getMonth(),
+            dataAtual.getDate()
           )
+        )
 
-          if (agendamento.inspecaoRealizada) {
-            return {
-              id: String(agendamento.id),
-              allDay: true,
-              start: new Date(agendamento.agendadoPara),
-              title: agendamento.equipamento.nome.toUpperCase(),
-              display: 'auto',
-              backgroundColor: '#168821',
-              textColor: '#fff',
-              borderColor: '#168821',
-              color: '#168821',
-            }
-          } else if (
-            !agendamento.inspecaoRealizada &&
-            diferencaDias < agendamento.equipamento.frequencia &&
-            diferencaDias > 0
-          ) {
-            return {
-              id: String(agendamento.id),
-              allDay: true,
-              start: new Date(agendamento.agendadoPara),
-              title: agendamento.equipamento.nome.toUpperCase(),
-              display: 'auto',
-              backgroundColor: '#ffcd07',
-              textColor: '#000',
-              borderColor: '#ffcd07',
-              color: '#fff',
-            }
-          } else if (
-            !agendamento.inspecaoRealizada &&
-            diferencaDias >= agendamento.equipamento.frequencia
-          ) {
-            return {
-              id: String(agendamento.id),
-              allDay: true,
-              start: new Date(agendamento.agendadoPara),
-              title: agendamento.equipamento.nome.toUpperCase(),
-              display: 'auto',
-              backgroundColor: '#155BCB',
-              textColor: '#fff',
-              borderColor: '#155BCB',
-              color: '#155BCB',
-            }
-          } else {
-            return {
-              id: String(agendamento.id),
-              allDay: true,
-              start: new Date(agendamento.agendadoPara),
-              title: agendamento.equipamento.nome.toUpperCase(),
-              display: 'auto',
-              backgroundColor: '#E52207',
-              textColor: '#fff',
-              borderColor: '#E52207',
-              color: '#E52207',
-            }
+        if (agendamento.inspecaoRealizada) {
+          return {
+            id: String(agendamento.id),
+            allDay: true,
+            start: new Date(agendamento.agendadoPara),
+            title: agendamento.equipamento.nome.toUpperCase(),
+            display: 'auto',
+            backgroundColor: '#168821',
+            textColor: '#fff',
+            borderColor: '#168821',
+            color: '#168821',
           }
-        })
+        } if (
+          !agendamento.inspecaoRealizada &&
+          diferencaDias < agendamento.equipamento.frequencia &&
+          diferencaDias > 0
+        ) {
+          return {
+            id: String(agendamento.id),
+            allDay: true,
+            start: new Date(agendamento.agendadoPara),
+            title: agendamento.equipamento.nome.toUpperCase(),
+            display: 'auto',
+            backgroundColor: '#ffcd07',
+            textColor: '#000',
+            borderColor: '#ffcd07',
+            color: '#fff',
+          }
+        } if (
+          !agendamento.inspecaoRealizada &&
+          diferencaDias >= agendamento.equipamento.frequencia
+        ) {
+          return {
+            id: String(agendamento.id),
+            allDay: true,
+            start: new Date(agendamento.agendadoPara),
+            title: agendamento.equipamento.nome.toUpperCase(),
+            display: 'auto',
+            backgroundColor: '#155BCB',
+            textColor: '#fff',
+            borderColor: '#155BCB',
+            color: '#155BCB',
+          }
+        }
+        return {
+          id: String(agendamento.id),
+          allDay: true,
+          start: new Date(agendamento.agendadoPara),
+          title: agendamento.equipamento.nome.toUpperCase(),
+          display: 'auto',
+          backgroundColor: '#E52207',
+          textColor: '#fff',
+          borderColor: '#E52207',
+          color: '#E52207',
+        }
+      })
       : []
 
   return (
@@ -217,7 +216,7 @@ export default function MetricasEquipamentosEmpresaView({
         <div
           className={cn(
             'grid grid-cols-1',
-            agendaEquipamento && 'md:grid-cols-3 gap-y-2 md:gap-2',
+            agendaEquipamento && 'md:grid-cols-3 gap-y-2 md:gap-2'
           )}
         >
           <div className="col-span-2">
@@ -238,7 +237,7 @@ export default function MetricasEquipamentosEmpresaView({
                         zero: true,
                         locale: ptBR,
                         format: ['hours', 'minutes'],
-                      },
+                      }
                     )}
                     titulo="Duração total das corretivas"
                     icon={Timer}
@@ -255,9 +254,9 @@ export default function MetricasEquipamentosEmpresaView({
                         zero: true,
                         locale: ptBR,
                         format: ['hours', 'minutes'],
-                      },
+                      }
                     )}
-                    titulo={`Média de duração das corretivas`}
+                    titulo={'Média de duração das corretivas'}
                     icon={Timer}
                   />
                   <IndicadorInformativo
@@ -278,7 +277,7 @@ export default function MetricasEquipamentosEmpresaView({
                     info={
                       metricasManutencoes.dados.qtd_manutencoes_realizadas ?? 0
                     }
-                    titulo={`Manutenções corretivas realizada(s)`}
+                    titulo={'Manutenções corretivas realizada(s)'}
                     icon={Hammer}
                   />
                   <IndicadorInformativo
@@ -374,10 +373,11 @@ export default function MetricasEquipamentosEmpresaView({
                           {listaEquipamentos.dados.length > 0 &&
                             listaEquipamentos.dados.map(
                               (equipamento, index) => (
+                                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                                 <SelectItem key={index} value={equipamento.id}>
                                   {equipamento.nome}
                                 </SelectItem>
-                              ),
+                              )
                             )}
                         </SelectContent>
                       </Select>
@@ -392,12 +392,12 @@ export default function MetricasEquipamentosEmpresaView({
                           ) : equipamentoSelecionado !== '0' ? (
                             agendaEquipamento.eventos
                               .filter(
-                                (evento) =>
+                                evento =>
                                   evento.equipamento.id ===
-                                    equipamentoSelecionado &&
-                                  !evento.inspecaoRealizada,
+                                  equipamentoSelecionado &&
+                                  !evento.inspecaoRealizada
                               )
-                              .map((evento) => {
+                              .map(evento => {
                                 return (
                                   <ListaEventoInspecoesEmpresa
                                     key={evento.id}
@@ -407,8 +407,8 @@ export default function MetricasEquipamentosEmpresaView({
                               })
                           ) : (
                             agendaEquipamento.eventos
-                              .filter((evento) => !evento.inspecaoRealizada)
-                              .map((evento) => {
+                              .filter(evento => !evento.inspecaoRealizada)
+                              .map(evento => {
                                 return (
                                   <ListaEventoInspecoesEmpresa
                                     key={evento.id}

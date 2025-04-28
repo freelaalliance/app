@@ -105,7 +105,7 @@ export function FormularioAutenticacao() {
             />
           </div>
           <Button
-            className="leading-none text-white bg-sky-600 hover:bg-sky-700 shadow"
+            className="leading-none text-white bg-padrao-gray-250 hover:bg-gray-900 shadow"
             type="submit"
             disabled={formAuth.formState.isSubmitting}
           >

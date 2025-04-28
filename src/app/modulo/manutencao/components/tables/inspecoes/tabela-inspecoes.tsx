@@ -23,7 +23,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-import { DadosInspecoesEquipamentoType } from '../../../schemas/EquipamentoSchema'
+import type { DadosInspecoesEquipamentoType } from '../../../schemas/EquipamentoSchema'
 import { NovaInspecaoEquipamentoDialog } from '../../dialogs/(inspecao)/NovaInspecaoEquipamentoDialog'
 
 import { colunasInspecoesEquipamento } from './colunas-tabela-inspecoes'
@@ -87,16 +87,16 @@ export function TabelaInspecoesEquipamento({
       <div className="rounded-md border shadow-md bg-gray-50">
         <Table>
           <TableHeader>
-            {tabela.getHeaderGroups().map((headerGroup) => (
+            {tabela.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
+                {headerGroup.headers.map(header => {
                   return (
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext(),
+                            header.getContext()
                           )}
                     </TableHead>
                   )
@@ -124,16 +124,16 @@ export function TabelaInspecoesEquipamento({
                 </TableRow>
               </>
             ) : tabela.getRowModel().rows?.length > 0 ? (
-              tabela.getRowModel().rows.map((row) => (
+              tabela.getRowModel().rows.map(row => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                 >
-                  {row.getVisibleCells().map((cell) => (
+                  {row.getVisibleCells().map(cell => (
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}

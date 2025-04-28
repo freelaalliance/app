@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button'
 import { AlertEncerrarManutencaoEquipamento } from '../components/dialogs/(manutencao)/AlertDialogEncerrarManutencao'
 import { AlertIniciarManutencaoEquipamento } from '../components/dialogs/(manutencao)/AlertDialogIniciarManutencao'
 import { TabelaManutencoesEquipamento } from '../components/tables/manutencoes/tabela-manutencao-equipamento'
-import { DadosManutencaoEquipamentoType } from '../schemas/ManutencaoSchema'
+import type { DadosManutencaoEquipamentoType } from '../schemas/ManutencaoSchema'
 
 interface ManutencaoEquipamentoProps {
   idEquipamento: string
@@ -25,10 +25,10 @@ export default function ManutencoesEquipamentoView({
   listaManutencoes,
 }: ManutencaoEquipamentoProps) {
   const manutencaoAndamento = listaManutencoes.find(
-    (manutencoes) =>
+    manutencoes =>
       manutencoes.criadoEm &&
       !manutencoes.finalizadoEm &&
-      !manutencoes.canceladoEm,
+      !manutencoes.canceladoEm
   )
   const tempoEquipamentoParado = manutencaoAndamento
     ? differenceInMinutes(new Date(), new Date(manutencaoAndamento?.criadoEm))
