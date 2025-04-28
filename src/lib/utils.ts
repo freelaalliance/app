@@ -8,10 +8,19 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function validaCNPJ(cnpj: string) {
+export function validaCNPJ(documento: string) {
+  let cnpj = documento.replace(/[^\d]+/g, '')
+
   if (cnpj === '') return false
 
-  if (cnpj.length !== 14) return false
+  if (cnpj.length === 13 || cnpj.length === 12) {
+    if (cnpj.length === 13) {
+      cnpj = `0${cnpj}`
+    }
+    if (cnpj.length === 12) {
+      cnpj = `00${cnpj}`
+    }
+  } else if (cnpj.length <= 11) return false
 
   if (
     cnpj === '00000000000000' ||
@@ -74,32 +83,33 @@ export function validarCPF(cpf: string) {
   )
     return false
 
-  let sum, rest
+  let sum: number
+  let rest: number
   sum = 0
   for (let i = 1; i <= 9; i++) {
-    sum = sum + parseInt(cpf.substring(i - 1, i)) * (11 - i)
+    sum = sum + Number.parseInt(cpf.substring(i - 1, i)) * (11 - i)
   }
 
   rest = (sum * 10) % 11
   if (rest === 10 || rest === 11) rest = 0
-  if (rest !== parseInt(cpf.substring(9, 10))) return false
+  if (rest !== Number.parseInt(cpf.substring(9, 10))) return false
 
   sum = 0
   for (let i = 1; i <= 10; i++) {
-    sum = sum + parseInt(cpf.substring(i - 1, i)) * (12 - i)
+    sum = sum + Number.parseInt(cpf.substring(i - 1, i)) * (12 - i)
   }
 
   rest = (sum * 10) % 11
   if (rest === 10 || rest === 11) rest = 0
-  if (rest !== parseInt(cpf.substring(10, 11))) return false
+  if (rest !== Number.parseInt(cpf.substring(10, 11))) return false
 
   return true
 }
 
 export function validarDocumento(documento: string) {
-  documento = documento.replace(/[^\d]+/g, '')
+  const documentoPessoa = documento.replace(/[^\d]+/g, '')
 
-  return documento.length === 11 ? validarCPF(documento) : validaCNPJ(documento)
+  return documentoPessoa.length === 11 ? validarCPF(documentoPessoa) : validaCNPJ(documentoPessoa)
 }
 
 export function encodeFileToBase64(file: File | string): Promise<string> {
@@ -109,14 +119,14 @@ export function encodeFileToBase64(file: File | string): Promise<string> {
     } else {
       const reader = new FileReader()
       reader.onload = () => resolve(reader.result as string)
-      reader.onerror = (error) => reject(error)
+      reader.onerror = error => reject(error)
       reader.readAsDataURL(file)
     }
   })
 }
 
 export function identifyFileTypeFromBase64(
-  base64String: string,
+  base64String: string
 ): string | null {
   if (!/^data:.*;base64,.*/.test(base64String)) {
     return null
@@ -141,7 +151,7 @@ export function identifyFileTypeFromBase64(
 
 export const downloadFileFromBase64 = (
   base64String: string,
-  fileName: string,
+  fileName: string
 ) => {
   const link = document.createElement('a')
 
@@ -156,7 +166,7 @@ export const downloadFileFromBase64 = (
 
 export async function handleDownloadFile(
   anexo: string,
-  id: string,
+  id: string
 ): Promise<void> {
   const tipoArquivo: string | null = identifyFileTypeFromBase64(anexo)
 
@@ -172,8 +182,8 @@ export async function handleDownloadFile(
 
 export function formatarDataBrasil(
   data: Date,
-  horas: boolean = false,
-  formato: string = 'PPPP',
+  horas = false,
+  formato = 'PPPP'
 ): string {
   if (horas) {
     data = new Date(
@@ -181,7 +191,7 @@ export function formatarDataBrasil(
       data.getMonth(),
       data.getDate(),
       data.getHours(),
-      data.getMinutes(),
+      data.getMinutes()
     )
     return format(data, 'dd/MM/yyyy HH:mm', {
       locale: ptBR,
@@ -202,14 +212,14 @@ export function formatCamelCase(palavra: string) {
 
   const formatacaoPrimeiraPalavra = String(arrayPalavra[0]).replace(
     /\b\w/g,
-    (char) => {
+    char => {
       return char.toUpperCase()
-    },
+    }
   )
 
   return (
     formatacaoPrimeiraPalavra +
-    (arrayPalavra[1] ? ' ' + arrayPalavra[1].toLowerCase() : '')
+    (arrayPalavra[1] ? ` ${arrayPalavra[1].toLowerCase()}` : '')
   )
 }
 
@@ -222,7 +232,7 @@ export function formatarDocumento(valor: string): string {
 
   return valorNumeros.replace(
     /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
-    '$1.$2.$3/$4-$5',
+    '$1.$2.$3/$4-$5'
   )
 }
 
@@ -234,7 +244,7 @@ export function aplicarMascaraDocumento(valor: string): string {
   }
   return valorNumeros.replace(
     /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
-    '$1.***.***/$4-$5',
+    '$1.***.***/$4-$5'
   )
 }
 

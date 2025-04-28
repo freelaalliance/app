@@ -18,14 +18,14 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import { consultarCep } from '@/lib/ViacepLib'
 import { queryClient } from '@/lib/react-query'
 import { formatarDocumento } from '@/lib/utils'
-import { consultarCep } from '@/lib/ViacepLib'
 
 import { cadastrarEmpresa } from '../../api/Empresa'
 import {
+  type EmpresaFormType,
   empresaFormSchema,
-  EmpresaFormType,
   valoresFormPadrao,
 } from '../../schemas/SchemaNovaEmpresa'
 
@@ -64,6 +64,7 @@ export function FormularioNovaEmpresa() {
     }
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (
       formEmpresa.watch('cep') !== '' &&
@@ -71,7 +72,6 @@ export function FormularioNovaEmpresa() {
     ) {
       buscarEnderecoCep(formEmpresa.watch('cep'))
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formEmpresa.watch('cep')])
 
   return (
@@ -88,10 +88,10 @@ export function FormularioNovaEmpresa() {
                   <Input
                     placeholder="Documento da empresa"
                     {...field}
-                    onChange={(event) => {
+                    onChange={event => {
                       formEmpresa.setValue(
                         'cnpj',
-                        formatarDocumento(event.target.value),
+                        formatarDocumento(event.target.value)
                       )
                     }}
                   />
