@@ -8,10 +8,10 @@ export default function Auth() {
       <div className="hidden lg:flex items-center justify-center flex-1">
         <div className="max-w-md text-center">
           <Image
-            src={'/access_account.svg'}
-            alt="SVG Autenticação Alliance sistemas de gestão"
-            width={'531'}
-            height={'531'}
+            src={'/ISO_9001-ERP.png'}
+            alt="ISO 9001 ERP Alliance"
+            width={'500'}
+            height={'500'}
             loading="lazy"
           />
         </div>
