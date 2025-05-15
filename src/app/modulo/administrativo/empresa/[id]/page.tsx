@@ -11,6 +11,8 @@ import { useEmpresa } from '@/lib/CaseAtom'
 
 import { DialogNovaEmpresa } from '../components/dialogs/NovaEmpresaDialog'
 import { ListaEmpresas } from '../components/selects/ListaEmpresas'
+import { AlertDialog, AlertDialogTrigger } from '@/components/ui/alert-dialog'
+import { ExcluirEmpresa } from '../components/dialogs/DeletarEmpresaDialog'
 
 export interface EmpresaViewProps {
   idEmpresa: string
@@ -44,6 +46,14 @@ export default function PageEmpresas() {
             </DialogTrigger>
             <DialogNovaEmpresa />
           </Dialog>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button disabled={!empresaSelecionada.selected} className="shadow-md bg-red-500 hover:bg-red-600">
+                {'Remover empresa'}
+              </Button>
+            </AlertDialogTrigger>
+            <ExcluirEmpresa empresaId={empresaSelecionada.selected ?? ''}/>
+          </AlertDialog>
         </div>
       </section>
       {empresaSelecionada.selected ? (

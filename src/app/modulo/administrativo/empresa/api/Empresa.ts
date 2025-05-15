@@ -85,3 +85,15 @@ export async function buscarUsuariosEmpresa(idEmpresa: string) {
 
   return usuarios.data
 }
+
+export async function excluirEmpresa(
+  idEmpresa: string
+) {
+  return await axiosInstance.delete<RespostaType>(
+    `admin/empresa/${idEmpresa}`
+  ).then(({data}) => {
+    return data
+  }).catch((error) => {
+    return error.response.data
+  })
+}
