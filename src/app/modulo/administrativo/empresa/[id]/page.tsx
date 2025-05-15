@@ -36,7 +36,7 @@ export default function PageEmpresas() {
   return (
     <div className="space-y-4">
       <section className="shadow-lg rounded-lg p-4 bg-zinc-200 space-y-2">
-        <div className="flex flex-row justify-center md:justify-start space-x-2">
+        <div className="flex flex-col md:flex-row md:justify-start gap-2">
           <ListaEmpresas />
           <Dialog>
             <DialogTrigger asChild>
