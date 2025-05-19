@@ -39,14 +39,15 @@ export function FormularioNovaEmpresa() {
   async function buscarEnderecoCep(cep: string) {
     const dadosCep = await consultarCep({ cep })
 
-    if (dadosCep) {
-      formEmpresa.setValue('logradouro', dadosCep.data.logradouro)
-      formEmpresa.setValue('bairro', dadosCep.data.bairro)
-      formEmpresa.setValue('cidade', dadosCep.data.localidade)
-      formEmpresa.setValue('estado', dadosCep.data.uf)
-      formEmpresa.setValue('cep', dadosCep.data.cep)
-      formEmpresa.setValue('complemento', dadosCep.data.complemento)
+    if(dadosCep.erro) {
+      toast.error(dadosCep.msg)
     }
+
+    formEmpresa.setValue('logradouro', dadosCep.dados.logradouro)
+    formEmpresa.setValue('bairro', dadosCep.dados.bairro)
+    formEmpresa.setValue('cidade', dadosCep.dados.localidade)
+    formEmpresa.setValue('estado', dadosCep.dados.uf)
+    formEmpresa.setValue('complemento', dadosCep.dados.complemento)
   }
 
   async function onSubmit(data: EmpresaFormType) {
