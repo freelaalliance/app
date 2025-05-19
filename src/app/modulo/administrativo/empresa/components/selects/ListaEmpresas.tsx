@@ -74,15 +74,15 @@ export function ListaEmpresas() {
               {dadosEmpresas?.map((empresa) => (
                 <CommandItem
                   key={empresa.id}
-                  value={empresa.id}
-                  onSelect={(currentValue) => {
+                  value={empresa.nome}
+                  onSelect={(currentValue: string) => {
+                    const dadosEmpresaSelecionada = dadosEmpresas.find((empresa) => empresa.nome.toLowerCase() === currentValue.toLowerCase())
+
                     selecionarEmpresa({
                       ...empresaSelecionada,
-                      selected:
-                        currentValue === empresaSelecionada.selected
-                          ? dadosEmpresas[0].id ?? null
-                          : currentValue,
+                      selected: (dadosEmpresaSelecionada?.id) ?? null
                     })
+
                     setOpen(false)
                   }}
                 >
