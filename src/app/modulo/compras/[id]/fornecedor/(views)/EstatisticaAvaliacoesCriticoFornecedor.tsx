@@ -33,7 +33,7 @@ import {
 } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 
-import { AvaliacaoFornecedorType } from '../(api)/FornecedorApi'
+import type { AvaliacaoFornecedorType } from '../(api)/FornecedorApi'
 import { NovaAvaliacaoCriticoDialog } from '../components/dialogs/NovaAvaliacaoCriticoDialog'
 
 interface EstatisticaAvaliacaoCriticoProps {
@@ -54,7 +54,7 @@ export default function ViewEstatisticaAvaliacoesCritico({
     nota: number
   }> =
     avaliacoes.length > 0
-      ? avaliacoes.map((avaliacao) => {
+      ? avaliacoes.map(avaliacao => {
           return {
             date: new Date(avaliacao.avaliadoEm),
             nota: Number(avaliacao.nota),
@@ -154,7 +154,7 @@ export default function ViewEstatisticaAvaliacoesCritico({
                     tickLine={false}
                     axisLine={false}
                     tickMargin={4}
-                    tickFormatter={(value) => {
+                    tickFormatter={value => {
                       return format(new Date(value), 'P', {
                         locale: ptBR,
                       })
@@ -204,13 +204,14 @@ export default function ViewEstatisticaAvaliacoesCritico({
             >
               {avaliacoes.map((avaliacao, index) => {
                 return (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                   <AccordionItem value={avaliacao.id} key={index}>
                     <AccordionTrigger>{`Avaliado em ${format(
                       new Date(avaliacao.avaliadoEm),
                       'PP',
                       {
                         locale: ptBR,
-                      },
+                      }
                     )}`}</AccordionTrigger>
                     <AccordionContent className="grid">
                       <p className="text-sm font-medium tracking-normal text-muted-foreground">

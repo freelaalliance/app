@@ -16,18 +16,18 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { queryClient } from '@/lib/react-query'
 import { consultarCep } from '@/lib/ViacepLib'
+import { queryClient } from '@/lib/react-query'
 
 import {
-  ResponseFornecedorType,
+  type ResponseFornecedorType,
   salvarModificacaoEndereco,
 } from '../(api)/FornecedorApi'
 import {
-  EnderecoFornecedorType,
+  type EnderecoFornecedorType,
   schemaEnderecoForm,
 } from '../../../(schemas)/fornecedores/schema-fornecedor'
-import { EdicaoEnderecoFornecedorProps } from '../components/dialogs/EdicaoEnderecoFornecedorDialog'
+import type { EdicaoEnderecoFornecedorProps } from '../components/dialogs/EdicaoEnderecoFornecedorDialog'
 
 export default function EdicaoEnderecoFornecedorView({
   idFornecedor,
@@ -51,24 +51,25 @@ export default function EdicaoEnderecoFornecedorView({
   async function buscarEnderecoCep(cep: string) {
     const dadosCep = await consultarCep({ cep })
 
-    if (dadosCep) {
-      formEdicaoEndereco.setValue('logradouro', dadosCep.data.logradouro)
-      formEdicaoEndereco.setValue('bairro', dadosCep.data.bairro)
-      formEdicaoEndereco.setValue('cidade', dadosCep.data.localidade)
-      formEdicaoEndereco.setValue('estado', dadosCep.data.uf)
-      formEdicaoEndereco.setValue('cep', dadosCep.data.cep)
-      formEdicaoEndereco.setValue('complemento', dadosCep.data.complemento)
+    if(dadosCep.erro) {
+      toast.error(dadosCep.msg)
     }
+
+    formEdicaoEndereco.setValue('logradouro', dadosCep.dados.logradouro)
+    formEdicaoEndereco.setValue('bairro', dadosCep.dados.bairro)
+    formEdicaoEndereco.setValue('cidade', dadosCep.dados.localidade)
+    formEdicaoEndereco.setValue('estado', dadosCep.dados.uf)
+    formEdicaoEndereco.setValue('complemento', dadosCep.dados.complemento)
   }
 
   const { mutateAsync: salvarEndereco } = useMutation({
     mutationFn: salvarModificacaoEndereco,
-    onError: (error) => {
+    onError: error => {
       toast.error('Erro ao salvar a endereço, tente novamente!', {
         description: error.message,
       })
     },
-    onSuccess: (resp) => {
+    onSuccess: resp => {
       if (resp.status) {
         const dadosFornecedor: ResponseFornecedorType | undefined =
           queryClient.getQueryData(['dadosFornecedor', idFornecedor])
@@ -91,7 +92,7 @@ export default function EdicaoEnderecoFornecedorView({
                   id: resp.dados.id,
                 },
               },
-            },
+            }
         )
 
         formEdicaoEndereco.reset()
@@ -106,6 +107,7 @@ export default function EdicaoEnderecoFornecedorView({
     await salvarEndereco({ idFornecedor, endereco: data })
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useMemo(() => {
     const cep = formEdicaoEndereco.getValues('cep')
 

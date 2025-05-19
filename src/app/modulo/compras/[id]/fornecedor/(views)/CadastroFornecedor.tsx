@@ -153,14 +153,15 @@ export default function CadastroFornecedorView() {
   async function buscarEnderecoCep(cep: string) {
     const dadosCep = await consultarCep({ cep })
 
-    if (dadosCep) {
-      formNovoFornecedor.setValue('logradouro', dadosCep.data.logradouro)
-      formNovoFornecedor.setValue('bairro', dadosCep.data.bairro)
-      formNovoFornecedor.setValue('cidade', dadosCep.data.localidade)
-      formNovoFornecedor.setValue('estado', dadosCep.data.uf)
-      formNovoFornecedor.setValue('cep', dadosCep.data.cep)
-      formNovoFornecedor.setValue('complemento', dadosCep.data.complemento)
+    if(dadosCep.erro) {
+      toast.error(dadosCep.msg)
     }
+
+    formNovoFornecedor.setValue('logradouro', dadosCep.dados.logradouro)
+    formNovoFornecedor.setValue('bairro', dadosCep.dados.bairro)
+    formNovoFornecedor.setValue('cidade', dadosCep.dados.localidade)
+    formNovoFornecedor.setValue('estado', dadosCep.dados.uf)
+    formNovoFornecedor.setValue('complemento', dadosCep.dados.complemento)
   }
 
   async function onSubmitEmail(data: z.infer<typeof schemaEmail>) {
