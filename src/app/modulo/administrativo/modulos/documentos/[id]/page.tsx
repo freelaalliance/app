@@ -9,9 +9,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { buscarDocumentosEmpresa } from "@/app/modulo/documentos/_api/documentos";
 import { TabelaDocumentos } from "@/app/modulo/documentos/[id]/novo/_components/tables/documentos/tabela-documentos";
 import { ColunasDocumentosEmpresaAdmin } from "@/app/modulo/documentos/[id]/novo/_components/tables/documentos/colunas-tabela-documentos-empresa-admin";
+import { listarEmpresas } from "../../../empresa/api/Empresa";
 
 export default function AdmDocumentosPage() {
   const [empresaSelecionada] = useEmpresa()
+
+  const { data: dadosEmpresas, isFetching: carregandoDados } = useQuery({
+    queryKey: ['empresas'],
+    queryFn: listarEmpresas,
+    initialData: [],
+  })
 
   const categoriasDocumento = useQuery({
     queryKey: [
@@ -27,17 +34,17 @@ export default function AdmDocumentosPage() {
   })
 
   const documentosEmpresaAdmin = useQuery({
-      queryKey: ['documentosEmpresaAdmin', empresaSelecionada.selected],
-      queryFn: () => buscarDocumentosEmpresa(empresaSelecionada.selected),
-      enabled: !!empresaSelecionada.selected,
-      initialData: [],
-    })
+    queryKey: ['documentosEmpresaAdmin', empresaSelecionada.selected],
+    queryFn: () => buscarDocumentosEmpresa(empresaSelecionada.selected),
+    enabled: !!empresaSelecionada.selected,
+    initialData: [],
+  })
 
   return (
     <div className="space-y-4">
       <section className="shadow-lg rounded-lg p-4 bg-zinc-200 space-y-2">
         <div className="flex flex-row justify-center md:justify-start space-x-2">
-          <ListaEmpresas />
+          <ListaEmpresas listaEmpresas={dadosEmpresas} carregandoDados={carregandoDados} />
         </div>
       </section>
       <Tabs defaultValue="documentos">

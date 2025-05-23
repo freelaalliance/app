@@ -2,7 +2,6 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Loader2, Plus } from 'lucide-react'
-import React from 'react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -10,13 +9,13 @@ import { useModulos } from '@/lib/CaseAtom'
 
 import { DataTableModulos } from '../(components)/modulos/components/tabela/modulos-vinculados/lista-modulos'
 import { ListaModulos } from '../(components)/perfil/components/selects/lista-modulos'
-import { EmpresaViewProps } from '../[id]/page'
+import type { EmpresaViewProps } from '../[id]/page'
 import {
   adicionarModulosEmpresa,
   buscarListaModulosSistema,
 } from '../api/Empresa'
 import { listarModulosEmpresa } from '../api/Permissao'
-import { ModuloType } from '../schemas/SchemaModulo'
+import type { ModuloType } from '../schemas/SchemaModulo'
 
 export default function ModulosEmpresa({ idEmpresa }: EmpresaViewProps) {
   const queryClient = useQueryClient()
@@ -25,20 +24,20 @@ export default function ModulosEmpresa({ idEmpresa }: EmpresaViewProps) {
     useQuery({
       queryKey: ['listaModulosVinculadosEmpresa', idEmpresa],
       queryFn: () => listarModulosEmpresa(idEmpresa),
-      staleTime: Infinity,
+      staleTime: Number.POSITIVE_INFINITY,
     })
 
   const { data: listaModulos, isLoading: carregandoListaModulos } = useQuery({
     queryKey: ['listaModulosSistema'],
     queryFn: buscarListaModulosSistema,
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   const modulosNaoVinculado =
-    listaModulos?.filter((modulo) => {
+    listaModulos?.filter(modulo => {
       if (listaModulosEmpresa) {
         const moduloVinculado = listaModulosEmpresa.some(
-          (moduloEmpresa) => moduloEmpresa.id === modulo.id,
+          moduloEmpresa => moduloEmpresa.id === modulo.id
         )
 
         return !moduloVinculado
@@ -64,7 +63,7 @@ export default function ModulosEmpresa({ idEmpresa }: EmpresaViewProps) {
       if (context?.cacheModulosEmpresa) {
         queryClient.setQueryData(
           ['listaModulosVinculadosEmpresa', idEmpresa],
-          context.cacheModulosEmpresa,
+          context.cacheModulosEmpresa
         )
       }
       toast.error('Falha ao vincular módulo na empresa, tente novamente!')
@@ -78,14 +77,12 @@ export default function ModulosEmpresa({ idEmpresa }: EmpresaViewProps) {
     const cacheModulosEmpresa: Array<ModuloType> | undefined =
       queryClient.getQueryData(['listaModulosVinculadosEmpresa', idEmpresa])
 
-    const moduloVinculado = listaModulos?.find(
-      (modulo) => idModulo === modulo.id,
-    )
+    const moduloVinculado = listaModulos?.find(modulo => idModulo === modulo.id)
 
     if (moduloVinculado && cacheModulosEmpresa) {
       queryClient.setQueryData(
         ['listaModulosVinculadosEmpresa', idEmpresa],
-        cacheModulosEmpresa.concat(moduloVinculado),
+        cacheModulosEmpresa.concat(moduloVinculado)
       )
     } else {
       toast.error('Problema ao atualizar modulos vinculados')
@@ -113,7 +110,7 @@ export default function ModulosEmpresa({ idEmpresa }: EmpresaViewProps) {
                 vincularModuloEmpresa({ idEmpresa, idModulo })
               } else {
                 toast.warning(
-                  'Selecione o módulo que deseja vincular a esta empresa',
+                  'Selecione o módulo que deseja vincular a esta empresa'
                 )
               }
             }}

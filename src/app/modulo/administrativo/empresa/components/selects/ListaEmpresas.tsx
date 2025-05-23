@@ -49,7 +49,7 @@ export function ListaEmpresas({carregandoDados, listaEmpresas}: ListaEmpresasPro
               >
                 <span className="line-clamp-1">
                   {empresaSelecionada
-                    ? listaEmpresas.find(
+                    ? listaEmpresas?.find(
                         empresa => empresa.id === empresaSelecionada.selected
                       )?.nome
                     : 'Selecione uma empresa...'}
@@ -61,7 +61,7 @@ export function ListaEmpresas({carregandoDados, listaEmpresas}: ListaEmpresasPro
           <TooltipContent>
             <p>
               {empresaSelecionada &&
-                listaEmpresas.find(
+                listaEmpresas?.find(
                   empresa => empresa.id === empresaSelecionada.selected
                 )?.nome}
             </p>

@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Loader2 } from 'lucide-react'
 
 import { DataTableUsuarios } from '../(components)/usuarios/components/tabela/lista-usuarios/tabela-usuarios'
-import { EmpresaViewProps } from '../[id]/page'
+import type { EmpresaViewProps } from '../[id]/page'
 import { buscarUsuariosEmpresa } from '../api/Empresa'
 
 export default function UsuariosEmpresaView({ idEmpresa }: EmpresaViewProps) {
@@ -12,7 +12,7 @@ export default function UsuariosEmpresaView({ idEmpresa }: EmpresaViewProps) {
     useQuery({
       queryKey: ['listaUsuariosEmpresa', idEmpresa],
       queryFn: () => buscarUsuariosEmpresa(idEmpresa),
-      staleTime: Infinity,
+      staleTime: Number.POSITIVE_INFINITY,
     })
 
   return carregandoUsuariosEmpresa ? (
