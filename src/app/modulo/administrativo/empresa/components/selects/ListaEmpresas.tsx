@@ -1,6 +1,3 @@
-'use client'
-
-import { useQuery } from '@tanstack/react-query'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import React from 'react'
 
@@ -21,16 +18,19 @@ import {
 import { useEmpresa } from '@/lib/CaseAtom'
 import { cn } from '@/lib/utils'
 
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { listarEmpresas } from '../../api/Empresa'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import type { empresaType } from '../../schemas/SchemaNovaEmpresa'
 
-export function ListaEmpresas() {
-  const { data: dadosEmpresas, isLoading: carregandoDados } = useQuery({
-    queryKey: ['empresas'],
-    queryFn: listarEmpresas,
-    initialData: [],
-  })
-
+interface ListaEmpresasProps {
+  carregandoDados: boolean
+  listaEmpresas: Array<empresaType>
+}
+export function ListaEmpresas({carregandoDados, listaEmpresas}: ListaEmpresasProps) {
   const [open, setOpen] = React.useState(false)
 
   const [empresaSelecionada, selecionarEmpresa] = useEmpresa()
@@ -47,21 +47,24 @@ export function ListaEmpresas() {
                 className="flex w-full justify-between"
                 disabled={carregandoDados}
               >
-                <span className='line-clamp-1'>
-                  {
-                    empresaSelecionada ? dadosEmpresas?.find(
-                      (empresa) => empresa.id === empresaSelecionada.selected,
-                    )?.nome : 'Selecione uma empresa...'
-                  }
+                <span className="line-clamp-1">
+                  {empresaSelecionada
+                    ? listaEmpresas.find(
+                        empresa => empresa.id === empresaSelecionada.selected
+                      )?.nome
+                    : 'Selecione uma empresa...'}
                 </span>
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
           </TooltipTrigger>
           <TooltipContent>
-            <p>{empresaSelecionada && dadosEmpresas?.find(
-              (empresa) => empresa.id === empresaSelecionada.selected,
-            )?.nome}</p>
+            <p>
+              {empresaSelecionada &&
+                listaEmpresas.find(
+                  empresa => empresa.id === empresaSelecionada.selected
+                )?.nome}
+            </p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
@@ -71,16 +74,20 @@ export function ListaEmpresas() {
           <CommandList>
             <CommandEmpty>Empresa não encontrada</CommandEmpty>
             <CommandGroup>
-              {dadosEmpresas?.map((empresa) => (
+              {listaEmpresas.map(empresa => (
                 <CommandItem
                   key={empresa.id}
                   value={empresa.nome}
                   onSelect={(currentValue: string) => {
-                    const dadosEmpresaSelecionada = dadosEmpresas.find((empresa) => empresa.nome.toLowerCase() === currentValue.toLowerCase())
+                    const dadosEmpresaSelecionada = listaEmpresas.find(
+                      empresa =>
+                        empresa.nome.toLowerCase() ===
+                        currentValue.toLowerCase()
+                    )
 
                     selecionarEmpresa({
                       ...empresaSelecionada,
-                      selected: (dadosEmpresaSelecionada?.id) ?? null
+                      selected: dadosEmpresaSelecionada?.id ?? null,
                     })
 
                     setOpen(false)
@@ -91,7 +98,7 @@ export function ListaEmpresas() {
                       'mr-2 h-4 w-4',
                       empresaSelecionada.selected === empresa.id
                         ? 'opacity-100'
-                        : 'opacity-0',
+                        : 'opacity-0'
                     )}
                   />
                   {empresa.nome}
@@ -101,6 +108,6 @@ export function ListaEmpresas() {
           </CommandList>
         </Command>
       </PopoverContent>
-    </Popover >
+    </Popover>
   )
 }

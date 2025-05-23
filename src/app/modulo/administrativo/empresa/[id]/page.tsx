@@ -9,16 +9,26 @@ import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useEmpresa } from '@/lib/CaseAtom'
 
+import { AlertDialog, AlertDialogTrigger } from '@/components/ui/alert-dialog'
+import { useQuery } from '@tanstack/react-query'
+import { listarEmpresas } from '../api/Empresa'
+import { ExcluirEmpresa } from '../components/dialogs/DeletarEmpresaDialog'
+import { DialogEdicaoEmpresa } from '../components/dialogs/EditarEmpresaDialog'
 import { DialogNovaEmpresa } from '../components/dialogs/NovaEmpresaDialog'
 import { ListaEmpresas } from '../components/selects/ListaEmpresas'
-import { AlertDialog, AlertDialogTrigger } from '@/components/ui/alert-dialog'
-import { ExcluirEmpresa } from '../components/dialogs/DeletarEmpresaDialog'
 
 export interface EmpresaViewProps {
   idEmpresa: string
 }
 
 export default function PageEmpresas() {
+
+  const { data: dadosEmpresas, isFetching: carregandoDados } = useQuery({
+    queryKey: ['empresas'],
+    queryFn: listarEmpresas,
+    initialData: [],
+  })
+
   const [empresaSelecionada] = useEmpresa()
 
   const ViewPerfil = dynamic(() => import('../(views)/PerfisEmpresaView'), {
@@ -37,7 +47,8 @@ export default function PageEmpresas() {
     <div className="space-y-4">
       <section className="shadow-lg rounded-lg p-4 bg-zinc-200 space-y-2">
         <div className="flex flex-col md:flex-row md:justify-start gap-2">
-          <ListaEmpresas />
+          <ListaEmpresas listaEmpresas={dadosEmpresas} carregandoDados={carregandoDados} />
+          
           <Dialog>
             <DialogTrigger asChild>
               <Button className="shadow-md bg-sky-500 hover:bg-sky-600">
@@ -45,6 +56,18 @@ export default function PageEmpresas() {
               </Button>
             </DialogTrigger>
             <DialogNovaEmpresa />
+          </Dialog>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button disabled={!empresaSelecionada.selected} className="shadow-md bg-sky-500 hover:bg-sky-600">
+                {'Editar empresa'}
+              </Button>
+            </DialogTrigger>
+            <DialogEdicaoEmpresa
+              dadosEmpresa={dadosEmpresas.find(
+                empresa => empresa.id === empresaSelecionada.selected
+              )}
+            />
           </Dialog>
           <AlertDialog>
             <AlertDialogTrigger asChild>

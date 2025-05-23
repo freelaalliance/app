@@ -1,5 +1,6 @@
 import { type RespostaType, axiosInstance } from '@/lib/AxiosLib'
 
+import type { EdicaoEmpresaFormType } from '../components/forms/FormularioEdicaoEmpresa'
 import type { ModuloType } from '../schemas/SchemaModulo'
 import type { EmpresaFormType, empresaType } from '../schemas/SchemaNovaEmpresa'
 import type { UsuarioType } from '../schemas/SchemaUsuarios'
@@ -30,6 +31,37 @@ export async function cadastrarEmpresa({
   complemento,
 }: EmpresaFormType) {
   const response = await axiosInstance.post<RespostaType>('admin/empresa', {
+    nome,
+    cnpj,
+    logradouro,
+    bairro,
+    cidade,
+    estado,
+    numero,
+    complemento,
+    cep,
+  })
+
+  return response.data
+}
+
+export async function editarEmpresa({
+  id,
+  idEndereco,
+  idPessoa,
+  cep,
+  logradouro,
+  bairro,
+  cidade,
+  cnpj,
+  estado,
+  nome,
+  numero,
+  complemento,
+}: EdicaoEmpresaFormType) {
+  const response = await axiosInstance.put<RespostaType>(`admin/empresa/${id}`, {
+    idEndereco,
+    idPessoa,
     nome,
     cnpj,
     logradouro,
@@ -86,14 +118,13 @@ export async function buscarUsuariosEmpresa(idEmpresa: string) {
   return usuarios.data
 }
 
-export async function excluirEmpresa(
-  idEmpresa: string
-) {
-  return await axiosInstance.delete<RespostaType>(
-    `admin/empresa/${idEmpresa}`
-  ).then(({data}) => {
-    return data
-  }).catch((error) => {
-    return error.response.data
-  })
+export async function excluirEmpresa(idEmpresa: string) {
+  return await axiosInstance
+    .delete<RespostaType>(`admin/empresa/${idEmpresa}`)
+    .then(({ data }) => {
+      return data
+    })
+    .catch(error => {
+      return error.response.data
+    })
 }

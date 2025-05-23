@@ -52,9 +52,18 @@ const empresaFormSchema = z.object({
 
 export type EmpresaFormType = z.infer<typeof empresaFormSchema>
 export type empresaType = {
-  id: string
-  imagemLogo?: string | null
-  nome: string
+    id: string;
+    nome: string;
+    idPessoa: string;
+    cnpj: string;
+    idEndereco: string | undefined;
+    logradouro: string | undefined;
+    numero: string | undefined;
+    bairro: string | undefined;
+    cidade: string | undefined;
+    estado: string | undefined;
+    cep: string | undefined;
+    complemento: string | undefined;
 }
 
 const valoresFormPadrao: Partial<EmpresaFormType> = {
