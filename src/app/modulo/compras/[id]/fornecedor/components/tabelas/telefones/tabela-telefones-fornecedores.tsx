@@ -6,9 +6,9 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { z } from 'zod'
+import type { z } from 'zod'
 
-import { schemaTelefoneForm } from '@/app/modulo/compras/(schemas)/fornecedores/schema-fornecedor'
+import type { schemaTelefoneForm } from '@/app/modulo/compras/(schemas)/fornecedores/schema-fornecedor'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -43,16 +43,16 @@ export function TabelaTelefonesFornecedor({
       <div className="rounded-md border shadow overflow-auto bg-gray-50 ">
         <Table>
           <TableHeader>
-            {tabelaTelefonesFornecedor.getHeaderGroups().map((headerGroup) => (
+            {tabelaTelefonesFornecedor.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
+                {headerGroup.headers.map(header => {
                   return (
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext(),
+                            header.getContext()
                           )}
                     </TableHead>
                   )
@@ -81,16 +81,16 @@ export function TabelaTelefonesFornecedor({
                 </TableRow>
               </>
             ) : tabelaTelefonesFornecedor.getRowModel().rows?.length > 0 ? (
-              tabelaTelefonesFornecedor.getRowModel().rows.map((row) => (
+              tabelaTelefonesFornecedor.getRowModel().rows.map(row => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                 >
-                  {row.getVisibleCells().map((cell) => (
+                  {row.getVisibleCells().map(cell => (
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}

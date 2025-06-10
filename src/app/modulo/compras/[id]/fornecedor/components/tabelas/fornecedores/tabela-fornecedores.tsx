@@ -24,7 +24,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-import { FornecedoresEmpresaType } from '../../../(api)/FornecedorApi'
+import type { FornecedoresEmpresaType } from '../../../(api)/FornecedorApi'
 import { NovoFornecedorDialog } from '../../dialogs/NovoFornecedorDialog'
 
 import { colunasFornecedores } from './colunas-tabela-fornecedores'
@@ -91,7 +91,7 @@ export function TabelaFornecedores({
                 .getColumn('nome')
                 ?.getFilterValue() as string) ?? ''
             }
-            onChange={(event) =>
+            onChange={event =>
               tabelaFornecedor
                 .getColumn('nome')
                 ?.setFilterValue(event.target.value)
@@ -112,16 +112,16 @@ export function TabelaFornecedores({
       <div className="rounded-md border shadow overflow-auto bg-gray-50 ">
         <Table>
           <TableHeader>
-            {tabelaFornecedor.getHeaderGroups().map((headerGroup) => (
+            {tabelaFornecedor.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
+                {headerGroup.headers.map(header => {
                   return (
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext(),
+                            header.getContext()
                           )}
                     </TableHead>
                   )
@@ -150,16 +150,16 @@ export function TabelaFornecedores({
                 </TableRow>
               </>
             ) : tabelaFornecedor.getRowModel().rows?.length > 0 ? (
-              tabelaFornecedor.getRowModel().rows.map((row) => (
+              tabelaFornecedor.getRowModel().rows.map(row => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                 >
-                  {row.getVisibleCells().map((cell) => (
+                  {row.getVisibleCells().map(cell => (
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}

@@ -2,9 +2,9 @@
 
 import { MoreVertical } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
-import { z } from 'zod'
+import type { z } from 'zod'
 
-import { schemaTelefoneForm } from '@/app/modulo/compras/(schemas)/fornecedores/schema-fornecedor'
+import type { schemaTelefoneForm } from '@/app/modulo/compras/(schemas)/fornecedores/schema-fornecedor'
 import { AlertDialog, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import {
@@ -42,7 +42,7 @@ export function MenuTabelaTelefonesFornecedor({
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <DropdownMenuItem
-              onSelect={(e) => {
+              onSelect={e => {
                 e.preventDefault()
               }}
             >

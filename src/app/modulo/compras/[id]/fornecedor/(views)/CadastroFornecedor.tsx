@@ -699,7 +699,7 @@ export default function CadastroFornecedorView() {
             </TabsContent>
           </Tabs>
           <Separator />
-          <DialogFooter>
+          <DialogFooter className='gap-2'>
             <DialogClose asChild>
               <Button
                 type="button"
