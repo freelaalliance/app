@@ -23,7 +23,7 @@ import { useMemo } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
-import { useCreateCliente, useUpdateCliente } from '../../../_servicos/useClientes';
+import { useCreateCliente } from '../../../_servicos/useClientes';
 
 const clienteSchema = z.object({
   documento: z.string().min(11, 'Documento inválido'),
