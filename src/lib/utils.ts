@@ -256,11 +256,21 @@ export function formatarValorMoeda(valor: number): string {
 }
 
 export function formatarNumeroTelefone(telefone: string): string {
+  
   if (telefone.length === 9) {
     return telefone.replace(/(\d{1})(\d{4})(\d{4})/, '$1 $2-$3')
   }
 
   return telefone.replace(/(\d{4})(\d{4})/, '$1-$2')
+}
+
+export function formatarNumeroTelefoneComDDD(telefone: string): string {
+  
+  if (telefone.length === 11) {
+    return telefone.replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, '($1) $2 $3-$4')
+  }
+
+  return telefone.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3')
 }
 
 export function removerCaracteresEspecial(informacao: string) {

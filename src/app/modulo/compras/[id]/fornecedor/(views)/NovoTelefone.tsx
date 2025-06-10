@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { z } from 'zod'
+import type { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
 import { DialogClose, DialogFooter } from '@/components/ui/dialog'
@@ -20,11 +20,11 @@ import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 
 import {
-  ResponseFornecedorType,
+  type ResponseFornecedorType,
   salvarNovoTelefone,
 } from '../(api)/FornecedorApi'
 import { schemaTelefoneForm } from '../../../(schemas)/fornecedores/schema-fornecedor'
-import { NovoTelefoneProps } from '../components/dialogs/NovoTelefoneFornecedorDialog'
+import type { NovoTelefoneProps } from '../components/dialogs/NovoTelefoneFornecedorDialog'
 
 export type FormularioNovoTelefone = z.infer<typeof schemaTelefoneForm>
 
@@ -42,12 +42,12 @@ export default function NovoTelefoneView({ idFornecedor }: NovoTelefoneProps) {
 
   const { mutateAsync: novoTelefone } = useMutation({
     mutationFn: salvarNovoTelefone,
-    onError: (error) => {
+    onError: error => {
       toast.error('Erro ao salvar o telefone, tente novamente!', {
         description: error.message,
       })
     },
-    onSuccess: (data) => {
+    onSuccess: data => {
       if (data.status) {
         const dadosFornecedor: ResponseFornecedorType | undefined =
           queryClient.getQueryData(['dadosFornecedor', idFornecedor])
@@ -65,7 +65,7 @@ export default function NovoTelefoneView({ idFornecedor }: NovoTelefoneProps) {
                   data.dados,
                 ],
               },
-            },
+            }
         )
 
         formNovoTelefone.reset()

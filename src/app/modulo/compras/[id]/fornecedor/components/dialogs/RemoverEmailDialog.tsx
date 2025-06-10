@@ -15,7 +15,10 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 
-import { excluirEmail, ResponseFornecedorType } from '../../(api)/FornecedorApi'
+import {
+  type ResponseFornecedorType,
+  excluirEmail,
+} from '../../(api)/FornecedorApi'
 
 interface ExcluirEmailDialogProps {
   id: string
@@ -29,12 +32,12 @@ export function ExclusaoEmailFornecedor({
 
   const { mutateAsync: removerEmail, isPending } = useMutation({
     mutationFn: excluirEmail,
-    onError: (error) => {
+    onError: error => {
       toast.error('Erro ao excluir o email', {
         description: error.message,
       })
     },
-    onSuccess: (resp) => {
+    onSuccess: resp => {
       const dadosFornecedor: ResponseFornecedorType | undefined =
         queryClient.getQueryData(['dadosFornecedor', idFornecedor])
 
@@ -46,10 +49,10 @@ export function ExclusaoEmailFornecedor({
             dados: {
               ...dadosFornecedor?.dados,
               emails: dadosFornecedor.dados?.emails.filter(
-                (email) => email.id !== id,
+                email => email.id !== id
               ),
             },
-          },
+          }
       )
 
       toast.success('Email excluído com sucesso!')

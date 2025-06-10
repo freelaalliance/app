@@ -1,4 +1,4 @@
-import { Table } from '@tanstack/react-table'
+import type { Table } from '@tanstack/react-table'
 import { SlidersVertical } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -45,15 +45,15 @@ export function ConfigColunasTabela<TData>({
         {tabela
           .getAllColumns()
           .filter(
-            (column) =>
-              typeof column.accessorFn !== 'undefined' && column.getCanHide(),
+            column =>
+              typeof column.accessorFn !== 'undefined' && column.getCanHide()
           )
-          .map((column) => {
+          .map(column => {
             return (
               <DropdownMenuCheckboxItem
                 key={column.id}
                 checked={column.getIsVisible()}
-                onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                onCheckedChange={value => column.toggleVisibility(!!value)}
               >
                 {formatCamelCase(column.id)}
               </DropdownMenuCheckboxItem>

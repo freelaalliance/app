@@ -1,7 +1,7 @@
 import { Loader2 } from 'lucide-react'
 import dynamic from 'next/dynamic'
 
-import { EnderecoFornecedorType } from '@/app/modulo/compras/(schemas)/fornecedores/schema-fornecedor'
+import type { EnderecoFornecedorType } from '@/app/modulo/compras/(schemas)/fornecedores/schema-fornecedor'
 import {
   DialogContent,
   DialogDescription,
@@ -25,7 +25,7 @@ const EdicaoEnderecoFornecedor = dynamic(
       )
     },
     ssr: true,
-  },
+  }
 )
 
 export function EdicaoEnderecoFornecedorDialog({

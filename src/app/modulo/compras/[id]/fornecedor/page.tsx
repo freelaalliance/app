@@ -9,7 +9,7 @@ export default function PageFornecedores() {
   const fornecedoresEmpresa = useQuery({
     queryKey: ['fornecedoresEmpresa'],
     queryFn: buscarFornecedores,
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   return (

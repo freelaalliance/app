@@ -17,7 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { formatarDataBrasil, formatarDocumento } from '@/lib/utils'
+import { formatarDataBrasil } from '@/lib/utils'
 
 import type { PedidosFornecedorType } from '../../../(schemas)/compras/schema-compras'
 

@@ -1,13 +1,13 @@
-import { z } from 'zod'
+import type { z } from 'zod'
 
 import { axiosInstance } from '@/lib/AxiosLib'
 
-import { FormularioCadastroFornecedor } from '../(views)/CadastroFornecedor'
-import { FormularioNovaAvaliacao } from '../(views)/NovaAvaliacao'
-import { FormularioNovoEmail } from '../(views)/NovoEmail'
-import { FormularioNovoTelefone } from '../(views)/NovoTelefone'
-import { FormularioAnexoType } from '../(views)/VisualizarDadosFornecedores'
-import {
+import type { FormularioCadastroFornecedor } from '../(views)/CadastroFornecedor'
+import type { FormularioNovaAvaliacao } from '../(views)/NovaAvaliacao'
+import type { FormularioNovoEmail } from '../(views)/NovoEmail'
+import type { FormularioNovoTelefone } from '../(views)/NovoTelefone'
+import type { FormularioAnexoType } from '../(views)/VisualizarDadosFornecedores'
+import type {
   EnderecoFornecedorType,
   schemaDocumentoForm,
   schemaEmailForm,
@@ -156,15 +156,15 @@ type ResponseAnexoFornecedor = {
 
 export async function buscarFornecedores() {
   const response =
-    await axiosInstance.get<FornecedoresEmpresaType[]>(`fornecedor`)
+    await axiosInstance.get<FornecedoresEmpresaType[]>('fornecedor')
 
   return response.data
 }
 
 export async function salvarNovoFornecedor(data: FormularioCadastroFornecedor) {
   const response = await axiosInstance
-    .post<ResponseNovoFornecedorType>(`fornecedor`, data)
-    .then((response) => {
+    .post<ResponseNovoFornecedorType>('fornecedor', data)
+    .then(response => {
       return {
         status: response.data.status,
         msg: response.data.msg,
@@ -172,7 +172,7 @@ export async function salvarNovoFornecedor(data: FormularioCadastroFornecedor) {
         erro: null,
       }
     })
-    .catch((err) => {
+    .catch(err => {
       return {
         status: false,
         msg: err?.response.data.msg,
@@ -187,7 +187,7 @@ export async function salvarNovoFornecedor(data: FormularioCadastroFornecedor) {
 export async function consultarDadosFornecedor({ id }: FornecedorProps) {
   return await axiosInstance
     .get<ResponseFornecedorType>(`fornecedor/${id}`)
-    .then((resp) => {
+    .then(resp => {
       return {
         status: resp.data.status,
         msg: resp.data.msg,
@@ -195,7 +195,7 @@ export async function consultarDadosFornecedor({ id }: FornecedorProps) {
         erro: null,
       }
     })
-    .catch((error) => {
+    .catch(error => {
       return {
         status: false,
         msg: error.response.data.msg,
@@ -208,7 +208,7 @@ export async function consultarDadosFornecedor({ id }: FornecedorProps) {
 export async function consultarAvaliacoesFornecedor({ id }: FornecedorProps) {
   return await axiosInstance
     .get<ResponseAvaliacoesFornecedorType>(`fornecedor/${id}/avaliacoes`)
-    .then((resp) => {
+    .then(resp => {
       return {
         status: resp.data.status,
         msg: resp.data.msg,
@@ -216,7 +216,7 @@ export async function consultarAvaliacoesFornecedor({ id }: FornecedorProps) {
         erro: null,
       }
     })
-    .catch((error) => {
+    .catch(error => {
       return {
         status: false,
         msg: error.response.data.msg,
@@ -231,9 +231,9 @@ export async function consultarAvaliacoesRecebimentoFornecedor({
 }: FornecedorProps) {
   return await axiosInstance
     .get<ResponseAvaliacoesRecebimentoFornecedorType>(
-      `fornecedor/${id}/avaliacoes-entrega`,
+      `fornecedor/${id}/avaliacoes-entrega`
     )
-    .then((resp) => {
+    .then(resp => {
       return {
         status: resp.data.status,
         msg: resp.data.msg,
@@ -241,7 +241,7 @@ export async function consultarAvaliacoesRecebimentoFornecedor({
         erro: null,
       }
     })
-    .catch((error) => {
+    .catch(error => {
       return {
         status: false,
         msg: error.response.data.msg,
@@ -254,7 +254,7 @@ export async function consultarAvaliacoesRecebimentoFornecedor({
 export async function consultarAnexosFornecedor({ id }: FornecedorProps) {
   return await axiosInstance
     .get<ResponseAnexosFornecedorType>(`fornecedor/${id}/documentos`)
-    .then((response) => {
+    .then(response => {
       return {
         status: response.data.status,
         msg: response.data.msg,
@@ -262,7 +262,7 @@ export async function consultarAnexosFornecedor({ id }: FornecedorProps) {
         erro: null,
       }
     })
-    .catch((error) => {
+    .catch(error => {
       return {
         status: false,
         msg: error.response.data.msg,
@@ -286,13 +286,13 @@ export async function salvarNovaAvaliacao({
       validade,
       critico,
     })
-    .then((response) => {
+    .then(response => {
       return {
         status: response.data.status,
         msg: response.data.msg,
       }
     })
-    .catch((error) => {
+    .catch(error => {
       return {
         status: false,
         msg: error.response.data.msg,
@@ -307,9 +307,9 @@ export async function salvarModificacaoEndereco({
   return await axiosInstance
     .put<ResponseEnderecoFornecedor>(
       `fornecedor/${idFornecedor}/endereco/${endereco.id}`,
-      endereco,
+      endereco
     )
-    .then((response) => {
+    .then(response => {
       return {
         status: response.data.status,
         msg: response.data.msg,
@@ -317,7 +317,7 @@ export async function salvarModificacaoEndereco({
         erro: null,
       }
     })
-    .catch((error) => {
+    .catch(error => {
       return {
         status: false,
         msg: error.response.data.msg,
@@ -336,13 +336,13 @@ export async function excluirTelefone({ id }: ExclusaoDadosProps): Promise<{
       status: boolean
       msg: string
     }>(`fornecedor/telefone/${id}`)
-    .then((response) => {
+    .then(response => {
       return {
         status: response.data.status,
         msg: response.data.msg,
       }
     })
-    .catch((error) => {
+    .catch(error => {
       return {
         status: false,
         msg: error.response.data.msg,
@@ -359,13 +359,13 @@ export async function excluirEmail({ id }: ExclusaoDadosProps): Promise<{
       status: boolean
       msg: string
     }>(`fornecedor/email/${id}`)
-    .then((response) => {
+    .then(response => {
       return {
         status: response.data.status,
         msg: response.data.msg,
       }
     })
-    .catch((error) => {
+    .catch(error => {
       return {
         status: false,
         msg: error.response.data.msg,
@@ -382,13 +382,13 @@ export async function excluirAnexo({ id }: ExclusaoDadosProps): Promise<{
       status: boolean
       msg: string
     }>(`fornecedor/anexo/${id}`)
-    .then((response) => {
+    .then(response => {
       return {
         status: response.data.status,
         msg: response.data.msg,
       }
     })
-    .catch((error) => {
+    .catch(error => {
       return {
         status: false,
         msg: error.response.data.msg,
@@ -405,13 +405,13 @@ export async function excluirFornecedor({ id }: ExclusaoDadosProps): Promise<{
       status: boolean
       msg: string
     }>(`fornecedor/${id}`)
-    .then((response) => {
+    .then(response => {
       return {
         status: response.data.status,
         msg: response.data.msg,
       }
     })
-    .catch((error) => {
+    .catch(error => {
       return {
         status: false,
         msg: error.response.data.msg,
@@ -426,16 +426,16 @@ export async function salvarNovoTelefone({
   return await axiosInstance
     .post<ResponseTelefoneFornecedor>(
       `fornecedor/${idFornecedor}/telefone`,
-      telefone,
+      telefone
     )
-    .then((response) => {
+    .then(response => {
       return {
         status: response.data.status,
         msg: response.data.msg,
         dados: response.data.dados,
       }
     })
-    .catch((error) => {
+    .catch(error => {
       return {
         status: false,
         msg: String(error.response.data.msg),
@@ -448,14 +448,14 @@ export async function salvarNovoTelefone({
 export async function salvarNovoEmail({ idFornecedor, email }: NovoEmailProps) {
   return await axiosInstance
     .post<ResponseEmailFornecedor>(`fornecedor/${idFornecedor}/email`, email)
-    .then((response) => {
+    .then(response => {
       return {
         status: response.data.status,
         msg: response.data.msg,
         dados: response.data.dados,
       }
     })
-    .catch((error) => {
+    .catch(error => {
       return {
         status: false,
         msg: String(error.response.data.msg),
@@ -471,14 +471,14 @@ export async function salvarAnexoFornecedor({
 }: NovoAnexoProps) {
   return await axiosInstance
     .post<ResponseAnexoFornecedor>(`fornecedor/${idFornecedor}/anexo`, anexo)
-    .then((response) => {
+    .then(response => {
       return {
         status: response.data.status,
         msg: response.data.msg,
         dados: response.data.dados,
       }
     })
-    .catch((error) => {
+    .catch(error => {
       return {
         status: false,
         msg: String(error.response.data.msg),

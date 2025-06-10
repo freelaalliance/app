@@ -1,7 +1,7 @@
-import { ColumnDef } from '@tanstack/react-table'
-import { z } from 'zod'
+import type { ColumnDef } from '@tanstack/react-table'
+import type { z } from 'zod'
 
-import { schemaTelefoneForm } from '@/app/modulo/compras/(schemas)/fornecedores/schema-fornecedor'
+import type { schemaTelefoneForm } from '@/app/modulo/compras/(schemas)/fornecedores/schema-fornecedor'
 import { formatarNumeroTelefone } from '@/lib/utils'
 
 import { MenuTabelaTelefonesFornecedor } from './menu-tabela-telefones-fornecedor'
