@@ -1,6 +1,5 @@
-
 import { axiosInstance } from '@/lib/AxiosLib'
-import type { ProdutoServicoFormType } from '../[id]/produtos/schemas/produtoServico.schema'
+import type { ProdutoServicoFormType } from '../_schemas/produtoServico.schema'
 
 export async function fetchProdutosServicos() {
   const { data } = await axiosInstance.get('/produtos-servicos')
