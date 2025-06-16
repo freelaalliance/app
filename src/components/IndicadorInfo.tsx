@@ -2,10 +2,12 @@ import type { ElementType } from 'react'
 
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 
 interface IndicadorInformativoProps {
   titulo: string
   info: number | string
+  subtitulo?: string
   icon?: ElementType
   carregandoInformacao: boolean
 }
@@ -13,31 +15,37 @@ interface IndicadorInformativoProps {
 export function IndicadorInformativo({
   titulo,
   info,
+  subtitulo,
   icon: Icon,
   carregandoInformacao,
 }: IndicadorInformativoProps) {
   return (
-    <div className="grid rounded space-y-1 px-4 py-4 shadow-lg w-full select-none bg-slate-50">
-      {carregandoInformacao ? (
-        <Skeleton className="h-10 w-10" />
-      ) : (
-        <b className="text-4xl">{info}</b>
-      )}
-      <div className="flex flex-row justify-between items-center">
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         {carregandoInformacao ? (
-          <Skeleton className="h-4 w-48" />
+          <Skeleton className="h-10 w-10" />
         ) : (
-          <span className="text-sm">{titulo}</span>
+          <CardTitle className="text-sm font-medium">{titulo}</CardTitle>
         )}
-        {Icon && (
-          <Icon
-            className={cn(
-              'h-8 w-8 text-muted',
-              carregandoInformacao ? 'hidden' : 'flex'
-            )}
-          />
-        )}
-      </div>
-    </div>
+        {
+          Icon && (<Icon className={cn(
+            'h-8 w-8 text-muted',
+            carregandoInformacao ? 'hidden' : 'flex'
+          )} />)
+        }
+      </CardHeader>
+
+      {carregandoInformacao ? (
+        <CardContent className='space-y-2'>
+          <Skeleton className="h-8 w-32" />
+          <Skeleton className="h-2 w-48 text-muted-foreground" />
+        </CardContent>
+      ) : (
+        <CardContent className='space-y-1'>
+          <div className="text-2xl font-bold">{info}</div>
+          <p className="text-sm text-muted-foreground">{subtitulo}</p>
+        </CardContent>
+      )}
+    </Card>
   )
 }

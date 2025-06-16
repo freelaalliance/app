@@ -1,14 +1,6 @@
 'use client'
 
-import { DadosInspecoesEquipamentoType, DadosPecasEquipamentoType } from "../../../schemas/EquipamentoSchema";
-import { useFieldArray, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { DialogClose, DialogFooter } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { toast } from "sonner";
+import { salvarInspecaoEquipamento } from '@/app/modulo/manutencao/api/InspecaoEquipamentoAPI'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,13 +10,35 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger
-} from "@/components/ui/alert-dialog";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { DadosInspecaoType, schemaFormInspecao } from "../../../schemas/InspecaoSchema";
-import { Textarea } from "@/components/ui/textarea";
-import React from "react";
-import { salvarInspecaoEquipamento } from "@/app/modulo/manutencao/api/InspecaoEquipamentoAPI";
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
+import { Button } from '@/components/ui/button'
+import { DialogClose, DialogFooter } from '@/components/ui/dialog'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Switch } from '@/components/ui/switch'
+import { Textarea } from '@/components/ui/textarea'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import React from 'react'
+import { useFieldArray, useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import type {
+  DadosInspecoesEquipamentoType,
+  DadosPecasEquipamentoType,
+} from '../../../schemas/EquipamentoSchema'
+import {
+  type DadosInspecaoType,
+  schemaFormInspecao,
+} from '../../../schemas/InspecaoSchema'
 
 interface NovaInspecaoFormProps {
   pecasEquipamento: Array<DadosPecasEquipamentoType>
@@ -35,9 +49,8 @@ interface NovaInspecaoFormProps {
 export function NovaInspecaoForm({
   pecasEquipamento,
   idEquipamento,
-  fecharModalInspecao
+  fecharModalInspecao,
 }: NovaInspecaoFormProps) {
-
   const [alertOpen, setAlertOpen] = React.useState(false)
   const queryClient = useQueryClient()
 
@@ -51,40 +64,44 @@ export function NovaInspecaoForm({
       finalizadoEm: undefined,
       equipamentoId: idEquipamento,
       observacao: undefined,
-      inspecaoPeca: pecasEquipamento.map((peca) => ({
+      inspecaoPeca: pecasEquipamento.map(peca => ({
         pecaEquipamentoId: peca.id,
         aprovado: false,
         inspecionadoEm: null,
-        inspecionado: false
-      }))
+        inspecionado: false,
+      })),
     },
     mode: 'onChange',
   })
 
-  const {
-    fields: pecas,
-  } = useFieldArray({
+  const { fields: pecas } = useFieldArray({
     control: formInspecao.control,
     name: 'inspecaoPeca',
   })
 
   function verificarTodosItensInspecionado() {
+    const todosItensInspecionado =
+      !(
+      formInspecao.getValues('inspecaoPeca').filter(peca => !peca.inspecionado)
+        .length > 0)
 
-    const todosItensInspecionado = formInspecao.getValues('inspecaoPeca').filter((peca) => !peca.inspecionado).length > 0 ? false : true
-
-    todosItensInspecionado ? formInspecao.setValue('finalizadoEm', new Date()) : formInspecao.setValue('finalizadoEm', undefined)
+    todosItensInspecionado
+      ? formInspecao.setValue('finalizadoEm', new Date())
+      : formInspecao.setValue('finalizadoEm', undefined)
 
     return todosItensInspecionado
   }
 
   function verificarTodosItensAprovados() {
-    return formInspecao.getValues('inspecaoPeca').find((inspecao) => !inspecao.aprovado) ? false : true
+    return !formInspecao
+      .getValues('inspecaoPeca')
+      .find(inspecao => !inspecao.aprovado)
   }
 
   function verificaDadosInspecao() {
     const dadosFormulario = formInspecao.getValues('inspecaoPeca')
 
-    if (dadosFormulario.find((inspecao) => !inspecao.aprovado)) {
+    if (dadosFormulario.find(inspecao => !inspecao.aprovado)) {
       return 'Deseja realmente enviar esse equipamento para a manutenção?'
     }
 
@@ -93,14 +110,17 @@ export function NovaInspecaoForm({
 
   const { mutateAsync: salvarInspecao } = useMutation({
     mutationFn: salvarInspecaoEquipamento,
-    onError: (error) => {
+    onError: error => {
       toast.error('Erro ao salvar inspeção do equipamento', {
         description: error.message,
       })
     },
-    onSuccess: (dados) => {
-      const listaInspecaoEquipamento: Array<DadosInspecoesEquipamentoType> | undefined = queryClient.getQueryData([
-        'listaInspecoesEquipamento', idEquipamento
+    onSuccess: dados => {
+      const listaInspecaoEquipamento:
+        | Array<DadosInspecoesEquipamentoType>
+        | undefined = queryClient.getQueryData([
+        'listaInspecoesEquipamento',
+        idEquipamento,
       ])
 
       queryClient.setQueryData(
@@ -110,17 +130,15 @@ export function NovaInspecaoForm({
 
       if (!todosItensAprovado && todosItensInspecionado) {
         toast.info('Equipamento enviado para manutenção com sucesso!')
-      }
-      else if (todosItensAprovado && todosItensInspecionado) {
+      } else if (todosItensAprovado && todosItensInspecionado) {
         toast.success('Inspeção salva com sucesso!')
-      }
-      else {
+      } else {
         toast.success('Inspeção pausado com sucesso com sucesso!')
       }
 
       fecharModalInspecao()
       formInspecao.reset()
-    }
+    },
   })
 
   async function pausarInspecao(dados: DadosInspecaoType) {
@@ -128,23 +146,27 @@ export function NovaInspecaoForm({
   }
 
   async function encerrarInspecao(dados: DadosInspecaoType) {
-
     if (!todosItensInspecionado) {
-      toast.warning('Necessário marcar todos os itens como inspecionado para salvar!')
-    }
-    else {
+      toast.warning(
+        'Necessário marcar todos os itens como inspecionado para salvar!'
+      )
+    } else {
       formInspecao.setValue('finalizadoEm', new Date())
 
       const observacaoManutencao = formInspecao.getValues('observacao')
 
-      if (!todosItensAprovado && (observacaoManutencao === '' || !observacaoManutencao)) {
-        toast.warning('Necessário preencher a observação de manutenção para encerrar a inspeção!')
+      if (
+        !todosItensAprovado &&
+        (observacaoManutencao === '' || !observacaoManutencao)
+      ) {
+        toast.warning(
+          'Necessário preencher a observação de manutenção para encerrar a inspeção!'
+        )
         formInspecao.setError('observacao', {
-          type: "required",
-          message: "Observação de manutenção é obrigatória",
+          type: 'required',
+          message: 'Observação de manutenção é obrigatória',
         })
-      }
-      else {
+      } else {
         await salvarInspecao(dados)
       }
 
@@ -157,118 +179,142 @@ export function NovaInspecaoForm({
       <form className="space-y-2">
         <div className="grid gap-2">
           <ScrollArea className="max-h-72 w-full">
-            {
-              pecas.map((peca, index) => (
-                <div
-                  key={index}
-                  className="flex-1 flex-row justify-between gap-2 my-2 p-4 space-y-4 rounded-md border"
-                >
-                  <div>
-                    <FormField
-                      key={`${peca.id}.aprovacao`}
-                      control={formInspecao.control}
-                      name={`inspecaoPeca.${index}.aprovado`}
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-center gap-4">
-                          <FormControl>
-                            <Switch
-                              checked={field.value}
-                              onCheckedChange={(checked: boolean) => {
-                                field.onChange(checked)
-                                formInspecao.setValue(`inspecaoPeca.${index}.inspecionadoEm`, new Date())
+            {pecas.map((peca, index) => (
+              <div
+                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                key={index}
+                className="flex-1 flex-row justify-between gap-2 my-2 p-4 space-y-4 rounded-md border"
+              >
+                <div>
+                  <FormField
+                    key={`${peca.id}.aprovacao`}
+                    control={formInspecao.control}
+                    name={`inspecaoPeca.${index}.aprovado`}
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center gap-4">
+                        <FormControl>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={(checked: boolean) => {
+                              field.onChange(checked)
+                              formInspecao.setValue(
+                                `inspecaoPeca.${index}.inspecionadoEm`,
+                                new Date()
+                              )
 
-                                setarItensAprovado(verificarTodosItensAprovados())
+                              setarItensAprovado(verificarTodosItensAprovados())
 
-                                if (checked) {
-                                  formInspecao.setValue(`inspecaoPeca.${index}.inspecionado`, true)
-                                  formInspecao.trigger(`inspecaoPeca.${index}.inspecionado`)
-                                  setarInspecionado(verificarTodosItensInspecionado())
-                                }
-                              }}
-                            />
-                          </FormControl>
-                          <div className="space-y-0.5 leading-none">
-                            <FormLabel className="text-base">
-                              {
-                                `Item ${pecasEquipamento.find(
-                                  (pecaEquipamento) => pecaEquipamento.id === formInspecao.getValues(`inspecaoPeca.${index}.pecaEquipamentoId`)
-                                )?.nome ?? ''} aprovado`
+                              if (checked) {
+                                formInspecao.setValue(
+                                  `inspecaoPeca.${index}.inspecionado`,
+                                  true
+                                )
+                                formInspecao.trigger(
+                                  `inspecaoPeca.${index}.inspecionado`
+                                )
+                                setarInspecionado(
+                                  verificarTodosItensInspecionado()
+                                )
                               }
-                            </FormLabel>
-                            <FormDescription>
-                              Se aprovado na inspeção, marque para aprovar
-                            </FormDescription>
-                          </div>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <div>
-                    <FormField
-                      key={`${peca.id}.inspecao`}
-                      control={formInspecao.control}
-                      name={`inspecaoPeca.${index}.inspecionado`}
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-center gap-4">
-                          <FormControl>
-                            <Switch
-                              checked={field.value}
-                              onCheckedChange={(checked: boolean) => {
-                                field.onChange(checked)
-                                if (checked) {
-                                  formInspecao.setValue(`inspecaoPeca.${index}.inspecionadoEm`, new Date())
-                                }
-                                else {
-                                  formInspecao.setValue(`inspecaoPeca.${index}.inspecionadoEm`, null)
-                                  formInspecao.setValue(`inspecaoPeca.${index}.aprovado`, false)
-                                  formInspecao.trigger(`inspecaoPeca.${index}.aprovado`)
-                                }
-
-                                setarInspecionado(verificarTodosItensInspecionado())
-                              }}
-                            />
-                          </FormControl>
-                          <div className="space-y-0.5 leading-none">
-                            <FormLabel className="text-base">
-                              Item inspecionado
-                            </FormLabel>
-                            <FormDescription>
-                              Se o item foi inspecionado marque para validar
-                            </FormDescription>
-                          </div>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+                            }}
+                          />
+                        </FormControl>
+                        <div className="space-y-0.5 leading-none">
+                          <FormLabel className="text-base">
+                            {`Item ${
+                              pecasEquipamento.find(
+                                pecaEquipamento =>
+                                  pecaEquipamento.id ===
+                                  formInspecao.getValues(
+                                    `inspecaoPeca.${index}.pecaEquipamentoId`
+                                  )
+                              )?.nome ?? ''
+                            } aprovado`}
+                          </FormLabel>
+                          <FormDescription>
+                            Se aprovado na inspeção, marque para aprovar
+                          </FormDescription>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
                 </div>
-              ))
-            }
+
+                <div>
+                  <FormField
+                    key={`${peca.id}.inspecao`}
+                    control={formInspecao.control}
+                    name={`inspecaoPeca.${index}.inspecionado`}
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center gap-4">
+                        <FormControl>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={(checked: boolean) => {
+                              field.onChange(checked)
+                              if (checked) {
+                                formInspecao.setValue(
+                                  `inspecaoPeca.${index}.inspecionadoEm`,
+                                  new Date()
+                                )
+                              } else {
+                                formInspecao.setValue(
+                                  `inspecaoPeca.${index}.inspecionadoEm`,
+                                  null
+                                )
+                                formInspecao.setValue(
+                                  `inspecaoPeca.${index}.aprovado`,
+                                  false
+                                )
+                                formInspecao.trigger(
+                                  `inspecaoPeca.${index}.aprovado`
+                                )
+                              }
+
+                              setarInspecionado(
+                                verificarTodosItensInspecionado()
+                              )
+                            }}
+                          />
+                        </FormControl>
+                        <div className="space-y-0.5 leading-none">
+                          <FormLabel className="text-base">
+                            Item inspecionado
+                          </FormLabel>
+                          <FormDescription>
+                            Se o item foi inspecionado marque para validar
+                          </FormDescription>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+            ))}
           </ScrollArea>
-          {
-            todosItensInspecionado && !todosItensAprovado && (
-              <FormField
-                control={formInspecao.control}
-                name="observacao"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Observação</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Estou enviando pelo o motivo de ..."
-                        className="resize-none"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      Mencione os motivos e problemas do equipamento para o setor de manutenção
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )
-          }
+          {todosItensInspecionado && !todosItensAprovado && (
+            <FormField
+              control={formInspecao.control}
+              name="observacao"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Observação</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Estou enviando pelo o motivo de ..."
+                      className="resize-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Mencione os motivos e problemas do equipamento para o setor
+                    de manutenção
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
         </div>
         <DialogFooter className="gap-2 md:gap-0">
           <Button
@@ -294,16 +340,16 @@ export function NovaInspecaoForm({
               <Button
                 className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600  hover:bg-sky-700"
                 type="button"
-                disabled={pecasEquipamento.length === 0 || !todosItensInspecionado}
+                disabled={
+                  pecasEquipamento.length === 0 || !todosItensInspecionado
+                }
               >
                 Encerrar inspeção
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>
-                  Salvar inspeção
-                </AlertDialogTitle>
+                <AlertDialogTitle>Salvar inspeção</AlertDialogTitle>
                 <AlertDialogDescription>
                   {verificaDadosInspecao()}
                 </AlertDialogDescription>
@@ -312,8 +358,10 @@ export function NovaInspecaoForm({
                 <AlertDialogCancel className="bg-red-200 text-red-700 hover:bg-red-300 shadow border-0">
                   Cancelar
                 </AlertDialogCancel>
-                <AlertDialogAction onClick={formInspecao.handleSubmit(encerrarInspecao)
-                } className="bg-emerald-200 text-emerald-700 hover:bg-emerald-300 shadow">
+                <AlertDialogAction
+                  onClick={formInspecao.handleSubmit(encerrarInspecao)}
+                  className="bg-emerald-200 text-emerald-700 hover:bg-emerald-300 shadow"
+                >
                   Encerrar
                 </AlertDialogAction>
               </AlertDialogFooter>

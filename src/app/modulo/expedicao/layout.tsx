@@ -5,7 +5,7 @@ import { Separator } from '@/components/ui/separator'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'ERP | Recebimentos',
+  title: 'ERP | Expedições de vendas',
 }
 
 export default function LayoutModuloManutencao({
@@ -17,10 +17,10 @@ export default function LayoutModuloManutencao({
       <main className="space-y-6 pb-16 md:block mt-4 px-6 lg:px-8">
         <section className="space-y-0.5">
           <h2 className="text-2xl font-bold tracking-tight">
-            Módulo de recebimentos
+            Módulo de expedição de vendas
           </h2>
           <p className="text-muted-foreground">
-            Gestão de recebimentos de compras da empresa
+            Expedição de vendas, gestão de entregas e logística.
           </p>
         </section>
         <Separator className="my-6" />

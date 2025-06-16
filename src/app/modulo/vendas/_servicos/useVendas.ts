@@ -26,3 +26,15 @@ export function useVendasByCliente(id: string) {
     initialData: []
   })
 }
+
+export function useVendasPendentes() {
+  return useQuery({
+    queryKey: ['vendas-pendentes-expedicao'],
+    queryFn: async () => {
+      const response = await axiosInstance.get<{ dados: Array<VendasCliente> }>('/vendas/pendentes/expedicao')
+      return response.data.dados
+    },
+    initialData: []
+  })
+}
+

@@ -23,7 +23,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-import { DadosEquipamentoType } from '../../../schemas/EquipamentoSchema'
+import type { DadosEquipamentoType } from '../../../schemas/EquipamentoSchema'
 import { gerarRelatorioEquipamentos } from '../../../utils/relatorio'
 import { NovoEquipamentoDialog } from '../../dialogs/(equipamento)/NovoEquipamentoDialog'
 
@@ -48,7 +48,7 @@ export function TabelaEquipamentos({
 
   const baixarRelatorioEquipamentos = async () => {
     const arquivo = await gerarRelatorioEquipamentos({
-      dados: tabela.getRowModel().rows.map((row) => {
+      dados: tabela.getRowModel().rows.map(row => {
         return {
           codigo: row.getValue('codigo'),
           nome: row.getValue('nome'),
@@ -102,7 +102,7 @@ export function TabelaEquipamentos({
             className="w-full md:w-64"
             disabled={data?.length === 0}
             value={(tabela.getColumn('nome')?.getFilterValue() as string) ?? ''}
-            onChange={(event) =>
+            onChange={event =>
               tabela.getColumn('nome')?.setFilterValue(event.target.value)
             }
           />
@@ -113,7 +113,7 @@ export function TabelaEquipamentos({
             value={
               (tabela.getColumn('codigo')?.getFilterValue() as string) ?? ''
             }
-            onChange={(event) =>
+            onChange={event =>
               tabela.getColumn('codigo')?.setFilterValue(event.target.value)
             }
           />
@@ -122,16 +122,16 @@ export function TabelaEquipamentos({
       <div className="rounded-md border shadow-md bg-gray-50">
         <Table>
           <TableHeader>
-            {tabela.getHeaderGroups().map((headerGroup) => (
+            {tabela.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
+                {headerGroup.headers.map(header => {
                   return (
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext(),
+                            header.getContext()
                           )}
                     </TableHead>
                   )
@@ -159,16 +159,16 @@ export function TabelaEquipamentos({
                 </TableRow>
               </>
             ) : tabela.getRowModel().rows?.length > 0 ? (
-              tabela.getRowModel().rows.map((row) => (
+              tabela.getRowModel().rows.map(row => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                 >
-                  {row.getVisibleCells().map((cell) => (
+                  {row.getVisibleCells().map(cell => (
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}

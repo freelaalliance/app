@@ -7,15 +7,15 @@ import {
 import { formatarDataBrasil } from '@/lib/utils'
 import type { ColumnDef } from '@tanstack/react-table'
 import type { VendasCliente } from '../../../_schemas/vendas.schema'
-import { MenuTabelaVendaCliente } from './menu-tabela-vendas-realizadas'
+import { MenuTabelaExpedicaoVenda } from './menu-tabela-vendas-realizadas-expedicao'
 
-export const columnsVendasCliente: ColumnDef<VendasCliente>[] = [
+export const columnsVendasPendenteExpediente: ColumnDef<VendasCliente>[] = [
   {
     id: 'acoes',
     enableHiding: false,
     cell: ({ row }) => (
       <div className="max-w-10">
-        <MenuTabelaVendaCliente dadosVenda={row.original} />
+        <MenuTabelaExpedicaoVenda dadosVenda={row.original}/>
       </div>
     ),
   },
@@ -49,15 +49,6 @@ export const columnsVendasCliente: ColumnDef<VendasCliente>[] = [
     cell: ({ row }) => (
       <div>{row.original.permiteEntregaParcial ? 'Sim' : 'Não'}</div>
     ),
-  },
-  {
-    accessorKey: 'expedido',
-    header: 'Expedido',
-    cell: ({ row }) => <div>{row.original.expedido ? 'Sim' : 'Não'}</div>,
-  },
-  {
-    accessorKey: 'qtdExpedicoes',
-    header: 'Expedições Realizadas',
   },
   {
     accessorKey: 'condicoes',

@@ -3,7 +3,7 @@ import type { ItemAvaliativoExpedicaoFormType } from '../vendas/components/forms
 import type { ItensAvaliativoExpedicaoFormType } from '../vendas/components/forms/cadastro-itens-avaliativos-expedicao'
 
 export interface ItemAvaliacaoExpedicao {
-  id: string
+  id: number
   pergunta: string
   empresaId: string
 }

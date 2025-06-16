@@ -1,7 +1,9 @@
 'use client'
 
+import { columnsVendasCliente } from '@/app/modulo/vendas/_components/vendas/tabelas/colunas-tabela-vendas-realizadas'
 import { TabelaVendasCliente } from '@/app/modulo/vendas/_components/vendas/tabelas/vendas-realizadas'
 import { useCliente } from '@/app/modulo/vendas/_servicos/useClientes'
+import { useVendasByCliente } from '@/app/modulo/vendas/_servicos/useVendas'
 import { EdicaoEnderecoDialog } from '@/components/dialogs/EdicaoEnderecoDialog'
 import { NovoEmailPessoaDialog } from '@/components/dialogs/NovoEmailDialog'
 import { NovoTelefonePessoaDialog } from '@/components/dialogs/NovoTelefoneDialog'
@@ -24,6 +26,10 @@ export default function ClienteDetalhesPage() {
   const { idCliente } = useParams<{ idCliente: string }>()
 
   const { data, isFetching } = useCliente(idCliente)
+  const { 
+    data: listaVendas, 
+    isFetching: carregandoVendasCliente 
+  } = useVendasByCliente(idCliente)
 
   if (isFetching) {
     return (
@@ -254,7 +260,13 @@ export default function ClienteDetalhesPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 pt-4">
-          <TabelaVendasCliente clienteId={idCliente} novaVenda={true}/>
+          <TabelaVendasCliente 
+            listaVendas={listaVendas} 
+            carregandoVendas={carregandoVendasCliente} 
+            colunasVenda={columnsVendasCliente} 
+            clienteId={idCliente} 
+            novaVenda={true}
+          />
         </CardContent>
       </Card>
     </div>

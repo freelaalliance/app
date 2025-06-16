@@ -5,7 +5,7 @@ import { Separator } from '@/components/ui/separator'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'ERP | Compras',
+  title: 'ERP | Vendas',
 }
 
 export default function LayoutModuloManutencao({
