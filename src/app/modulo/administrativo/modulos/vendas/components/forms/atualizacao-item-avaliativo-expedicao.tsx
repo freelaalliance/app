@@ -13,7 +13,7 @@ import { z } from 'zod'
 import { atualizarDescricaoItemAvaliativosExpedicao } from '../../../_api/AdmVendas'
 
 const schemaAtualizacaoItemAvaliativoExpedicao = z.object({
-  id: z.string().uuid(),
+  id: z.coerce.number(),
   pergunta: z.string({
     required_error: 'Obrigatório adicionar a descrição do item',
   }),
@@ -24,7 +24,7 @@ export type ItemAvaliativoExpedicaoFormType = z.infer<
 >
 
 export interface AtualizacaoItemAvaliativoExpedicaoFormProps {
-  id: string
+  id: number
   pergunta: string
 }
 
