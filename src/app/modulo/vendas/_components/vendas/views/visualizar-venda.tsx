@@ -141,11 +141,6 @@ export default function VisualizarFichaVenda({ id, venda }: VisualizarFichaVenda
                     </span>
                   </li>
                 </ul>
-                <Separator className="my-2" />
-                <article className='text-wrap grid space-y-4'>
-                  <h3>Observações do cliente</h3>
-                  <p className='text-justify'>{venda?.cliente.observacoes ?? 'Sem observações'}</p>
-                </article>
               </div>
 
               <div className="space-y-2 w-1/3">
@@ -172,6 +167,10 @@ export default function VisualizarFichaVenda({ id, venda }: VisualizarFichaVenda
                 </div>
               </div>
             </div>
+            <article className='text-wrap grid space-y-4'>
+              <h2 className='text-lg font-semibold'>Observações do cliente:</h2>
+              <p className='text-justify'>{venda?.cliente.observacoes || 'Sem observações'}</p>
+            </article>
           </section>
 
           <section className="p-4 bg-white shadow rounded space-y-2">
