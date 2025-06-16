@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-import { DadosEquipamentoType } from '../../../schemas/EquipamentoSchema'
+import type { DadosEquipamentoType } from '../../../schemas/EquipamentoSchema'
 import { EdicaoEquipamentoDialog } from '../../dialogs/(equipamento)/EdicaoEquipamentoDialog'
 import { ExclusaoEquipamentoDialog } from '../../dialogs/(equipamento)/ExclusaoEquipamentoDialog'
 import { NovaPecaEquipamentoDialog } from '../../dialogs/(equipamento)/NovaPecaEquipamentoDialog'
@@ -46,7 +46,7 @@ export function MenuTabelaEquipamento({ row }: MenuTabelaEquipamentoProps) {
         <Dialog>
           <DialogTrigger asChild>
             <DropdownMenuItem
-              onSelect={(e) => {
+              onSelect={e => {
                 e.preventDefault()
               }}
             >
@@ -65,7 +65,7 @@ export function MenuTabelaEquipamento({ row }: MenuTabelaEquipamentoProps) {
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <DropdownMenuItem
-              onSelect={(e) => {
+              onSelect={e => {
                 e.preventDefault()
               }}
             >
@@ -79,7 +79,7 @@ export function MenuTabelaEquipamento({ row }: MenuTabelaEquipamentoProps) {
         <Dialog>
           <DialogTrigger asChild>
             <DropdownMenuItem
-              onSelect={(e) => {
+              onSelect={e => {
                 e.preventDefault()
               }}
             >
@@ -91,7 +91,7 @@ export function MenuTabelaEquipamento({ row }: MenuTabelaEquipamentoProps) {
         <Dialog>
           <DialogTrigger asChild>
             <DropdownMenuItem
-              onSelect={(e) => {
+              onSelect={e => {
                 e.preventDefault()
               }}
             >

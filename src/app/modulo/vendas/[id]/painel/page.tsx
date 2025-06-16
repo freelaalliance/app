@@ -1,8 +1,8 @@
 'use client'
 
 import { Package, Star, UserCheck, Users } from 'lucide-react'
-import { DashboardCard } from '../../_components/painel/dashboard-card'
 import { useTopCliente, useTopProduto, useTotalClientes, useTotalProdutos } from '../../_servicos/useEstatisticas'
+import { IndicadorInformativo } from '@/components/IndicadorInfo'
 
 export default function PainelVendasPage() {
   const { data: topCliente, isFetching: loadingCliente } = useTopCliente()
@@ -11,48 +11,44 @@ export default function PainelVendasPage() {
   const { data: totalProdutos, isFetching: loadingTotalProdutos } = useTotalProdutos()
 
   return (
-    <section className="mx-auto py-6 space-y-8">
+    <div className="mx-auto py-6 space-y-8">
       <div>
         <h1 className="text-3xl font-bold text-padrao-gray-800">Dashboard de Vendas</h1>
         <p className="text-muted-foreground text-sm">Acompanhe os principais dados de desempenho da empresa.</p>
       </div>
 
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <DashboardCard
-          icon={<Users className="text-primary" size={28} />}
-          title="Clientes Cadastrados"
-          value={totalClientes?.toLocaleString() ?? 0}
-          loading={loadingTotalClientes}
+        <IndicadorInformativo
+          titulo="Clientes Cadastrados"
+          info={String(totalClientes?.toLocaleString() ?? 0)}
+          icon={Users}
+          carregandoInformacao={loadingTotalClientes}
         />
-        <DashboardCard
-          icon={<Package className="text-primary" size={28} />}
-          title="Produtos/Serviços"
-          value={totalProdutos?.toLocaleString() ?? 0}
-          loading={loadingTotalProdutos}
+        <IndicadorInformativo
+          titulo="Produtos Cadastrados"
+          info={String(totalProdutos?.toLocaleString() ?? 0)}
+          icon={Package}
+          carregandoInformacao={loadingTotalProdutos}
         />
-        <DashboardCard
-          icon={<UserCheck className="text-green-600" size={28} />}
-          title="Top Cliente"
-          value={
-            loadingCliente ? null :
+        <IndicadorInformativo
+          titulo={'Top Produto'}
+          subtitulo={`${topProduto?.totalVendido ?? 0} unidades vendidas`}
+          info={String(topProduto?.nome ?? '')}
+          icon={Star}
+          carregandoInformacao={loadingProduto}
+        />
+        <IndicadorInformativo
+          titulo={'Top Cliente'}
+          subtitulo={`${topCliente?.totalVendas ?? 0} vendas realizadas`}
+          info={
             topCliente
-              ? `${topCliente.cliente} (${topCliente.totalVendas} vendas)`
+              ? `${topCliente.cliente}`
               : 'Nenhum cliente encontrado'
           }
-          loading={loadingCliente}
-        />
-        <DashboardCard
-          icon={<Star className="text-yellow-500" size={28} />}
-          title="Produto Mais Vendido"
-          value={
-            loadingProduto ? null :
-            topProduto
-              ? `${topProduto.nome} (${topProduto.totalVendido} und.)`
-              : 'Nenhum produto vendido'
-          }
-          loading={loadingProduto}
+          icon={UserCheck}
+          carregandoInformacao={loadingCliente}
         />
       </section>
-    </section>
+    </div>
   )
 }

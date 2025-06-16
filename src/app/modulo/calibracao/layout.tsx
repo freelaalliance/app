@@ -15,7 +15,7 @@ export default function CalibracaoLayout({ children }: CalibracaoLayoutProps) {
   return (
     <>
       <HeaderApp />
-      <main className="space-y-6 pb-16 md:block container mt-4">
+      <main className="space-y-6 pb-16 md:block mt-4 px-6 lg:px-8">
         <section className="space-y-0.5">
           <h2 className="text-2xl font-bold tracking-tight">
             {'Módulo de calibração'}

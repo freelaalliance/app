@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,14 +9,15 @@ import {
 import { MoreVertical } from 'lucide-react'
 import Link from 'next/link'
 import type { VendasCliente } from '../../../_schemas/vendas.schema'
+import { ExpedicaoDialog } from '@/app/modulo/expedicao/_components/dialogs/expedicao-dialog'
 
-interface MenuTabelaVendaClienteProps {
+interface MenuTabelaExpedicaoVendaProps {
   dadosVenda: VendasCliente
 }
 
-export function MenuTabelaVendaCliente({
+export function MenuTabelaExpedicaoVenda({
   dadosVenda,
-}: MenuTabelaVendaClienteProps) {
+}: MenuTabelaExpedicaoVendaProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -28,6 +30,18 @@ export function MenuTabelaVendaCliente({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
+        <Dialog>
+          <DialogTrigger asChild>
+            <DropdownMenuItem
+              onSelect={e => {
+                e.preventDefault()
+              }}
+            >
+              Expedir venda
+            </DropdownMenuItem>
+          </DialogTrigger>
+          <ExpedicaoDialog dadosVenda={dadosVenda}/>
+        </Dialog>
         <DropdownMenuItem asChild>
           <Link href={`/modulo/vendas/visualizar/${dadosVenda.id}`}>
             Visualizar venda

@@ -1,6 +1,14 @@
 'use client'
 
+import { LeitorQrCode } from '@/components/qr-code'
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -9,52 +17,99 @@ import {
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
+  TableRow,
 } from '@/components/ui/table'
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import {
+  type ColumnDef,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
-  useReactTable
+  useReactTable,
 } from '@tanstack/react-table'
-import { useVendasByCliente } from '../../../_servicos/useVendas'
-import { columnsVendasCliente } from './colunas-tabela-vendas-realizadas'
+import { QrCode } from 'lucide-react'
 import Link from 'next/link'
+import { useState } from 'react'
+import type { VendasCliente } from '../../../_schemas/vendas.schema'
+import { columnsVendasCliente } from './colunas-tabela-vendas-realizadas'
 
-interface TabelaVendasClienteProps {
-  clienteId: string
-  novaVenda: boolean
+interface TabelaVendasProps {
+  clienteId?: string
+  listaVendas: Array<VendasCliente>
+  carregandoVendas: boolean
+  novaVenda?: boolean
+  colunasVenda: ColumnDef<VendasCliente>[]
 }
 
-export function TabelaVendasCliente({ clienteId, novaVenda }: TabelaVendasClienteProps) {
-  const { data: listaVendas = [], isFetching } = useVendasByCliente(clienteId)
+export function TabelaVendasCliente({
+  clienteId,
+  listaVendas,
+  novaVenda,
+  carregandoVendas,
+  colunasVenda,
+}: TabelaVendasProps) {
+  const [isQRScannerOpen, setIsQRScannerOpen] = useState<boolean>()
 
   const tabela = useReactTable({
     data: listaVendas,
-    columns: columnsVendasCliente,
+    columns: colunasVenda,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel()
+    getFilteredRowModel: getFilteredRowModel(),
   })
 
   return (
     <div className="space-y-2">
       <div className="flex flex-col items-center gap-2 py-4 md:flex-row md:justify-between">
-        <div className="flex flex-row gap-2 w-full md:w-64">
+        <div className="flex flex-row gap-2 w-full">
           <Input
-            disabled={listaVendas.length === 0 || isFetching}
-            placeholder="Filtrar por código"
+            disabled={listaVendas.length === 0 || carregandoVendas}
+            placeholder="Filtrar por código da venda"
             value={
               (tabela.getColumn('codigo')?.getFilterValue() as string) ?? ''
             }
-            onChange={(e) =>
+            onChange={e =>
               tabela.getColumn('codigo')?.setFilterValue(e.target.value)
             }
           />
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Dialog open={isQRScannerOpen}>
+                <DialogTrigger asChild>
+                  <Button disabled={listaVendas.length === 0 || carregandoVendas} className="shadow bg-padrao-gray-250 hover:bg-gray-900">
+                    <QrCode />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>QRCode Pedido</DialogTitle>
+                  </DialogHeader>
+                  <LeitorQrCode
+                    setDadosQrCode={(codigo: string) => {
+                      tabela
+                          .getColumn('codigo')
+                          ?.setFilterValue(codigo)
+                      setIsQRScannerOpen(false)
+                    }}
+                  />
+                </DialogContent>
+              </Dialog>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Ler QRCode da venda</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
         {novaVenda && (
-          <Button className="shadow bg-padrao-red hover:bg-red-800 flex md:justify-between justify-center md:gap-4 gap-2 w-full md:w-auto" asChild>
+          <Button
+            className="shadow bg-padrao-red hover:bg-red-800 flex md:justify-between justify-center md:gap-4 gap-2 w-full md:w-auto"
+            asChild
+          >
             <Link href={`../venda?cliente=${clienteId}`}>Nova venda</Link>
           </Button>
         )}
@@ -63,23 +118,23 @@ export function TabelaVendasCliente({ clienteId, novaVenda }: TabelaVendasClient
       <div className="rounded-md border shadow overflow-auto bg-gray-50">
         <Table>
           <TableHeader>
-            {tabela.getHeaderGroups().map((headerGroup) => (
+            {tabela.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
+                {headerGroup.headers.map(header => (
                   <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                   </TableHead>
                 ))}
               </TableRow>
             ))}
           </TableHeader>
           <TableBody>
-            {isFetching ? (
+            {carregandoVendas ? (
               Array.from({ length: 2 }).map((_, i) => (
                 // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                 <TableRow key={i}>
@@ -92,9 +147,9 @@ export function TabelaVendasCliente({ clienteId, novaVenda }: TabelaVendasClient
                 </TableRow>
               ))
             ) : tabela.getRowModel().rows.length > 0 ? (
-              tabela.getRowModel().rows.map((row) => (
+              tabela.getRowModel().rows.map(row => (
                 <TableRow key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
+                  {row.getVisibleCells().map(cell => (
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,

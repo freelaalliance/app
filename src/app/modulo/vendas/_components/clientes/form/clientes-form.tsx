@@ -5,6 +5,7 @@ import { DialogClose, DialogFooter } from '@/components/ui/dialog';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -28,6 +29,7 @@ import { useCreateCliente } from '../../../_servicos/useClientes';
 const clienteSchema = z.object({
   documento: z.string().min(11, 'Documento inválido'),
   nome: z.string().min(2, 'Nome obrigatório'),
+  observacoes: z.string(),
   endereco: z.object({
     logradouro: z.string(),
     bairro: z.string(),
@@ -79,6 +81,7 @@ export function FormualarioCliente() {
     defaultValues: {
       documento: '',
       nome: '',
+      observacoes: '',
       endereco: {
         logradouro: '',
         bairro: '',
@@ -217,6 +220,21 @@ export function FormualarioCliente() {
               <FormControl>
                 <Input {...field} placeholder="Nome do cliente" />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={formCliente.control}
+          name="observacoes"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Observações</FormLabel>
+              <FormControl>
+                <Textarea className="resize-none" {...field} placeholder="Observações sobre o cliente" />
+              </FormControl>
+              <FormDescription>Insira aqui observações relevantes sobre o cliente.</FormDescription>
               <FormMessage />
             </FormItem>
           )}

@@ -16,7 +16,7 @@ export default function AdmLayout({ children }: AdmLayoutProps) {
   return (
     <>
       <HeaderApp />
-      <main className="space-y-6 pb-16 md:block container mt-4">
+      <main className="space-y-6 pb-16 md:block mt-4 px-6 lg:px-8">
         <section className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
           <aside className="-mx-4 lg:w-48">
             <SidebarNav />

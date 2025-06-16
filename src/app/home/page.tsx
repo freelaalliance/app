@@ -44,7 +44,7 @@ export default function App() {
         <h4 className="leading-none text-base md:text-lg lg:text-3xl font-bold">{`Olá ${usuarioSessao?.nome}, bem vindo(a) de volta!`}</h4>
         <span>{'Aqui estão os modulos que você tem acesso'}</span>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mt-3 gap-2 lg:gap-8 px-2 pb-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mt-3 gap-4 px-2 pb-4">
         {isLoading ? (
           <>
             <LoadingCard />
@@ -57,7 +57,7 @@ export default function App() {
             return (
               <Card
                 key={modulo.idModulo}
-                className="shadow-md lg:w-[340px] border-l-4 border-l-padrao-red"
+                className="shadow-md border-l-4 border-l-padrao-red"
               >
                 <CardHeader className="flex flex-row items-center justify-between">
                   <CardTitle className="capitalize text-sm md:text-xl font-medium select-none">
