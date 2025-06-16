@@ -28,7 +28,7 @@ export type Pessoa = {
 export type Cliente = {
   id: string
   documento: string
-  observacoes: string
+  observacoes: string | null
   pessoa: Pessoa
 }
 

@@ -144,7 +144,7 @@ export default function VisualizarFichaVenda({ id, venda }: VisualizarFichaVenda
                 <Separator className="my-2" />
                 <article className='text-wrap grid space-y-4'>
                   <h3>Observações do cliente</h3>
-                  <p className='text-justify'>{venda?.cliente.observacoes}</p>
+                  <p className='text-justify'>{venda?.cliente.observacoes ?? 'Sem observações'}</p>
                 </article>
               </div>
 
