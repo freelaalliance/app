@@ -12,6 +12,7 @@ import { TabelaTelefonesPessoa } from '@/components/tables/telefones/tabela-tele
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
+import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
@@ -26,9 +27,9 @@ export default function ClienteDetalhesPage() {
   const { idCliente } = useParams<{ idCliente: string }>()
 
   const { data, isFetching } = useCliente(idCliente)
-  const { 
-    data: listaVendas, 
-    isFetching: carregandoVendasCliente 
+  const {
+    data: listaVendas,
+    isFetching: carregandoVendasCliente
   } = useVendasByCliente(idCliente)
 
   if (isFetching) {
@@ -74,12 +75,12 @@ export default function ClienteDetalhesPage() {
           <CardTitle>{`${data.pessoa.nome} - (${aplicarMascaraDocumento(data.documento)})`}</CardTitle>
           <CardDescription>Dados do Cliente</CardDescription>
         </CardHeader>
-        <CardContent className='space-y-2'>
-          <article className="text-wrap grid space-y-4">
-            <h3>Observações do cliente</h3>
-            <p className='text-justify'>{data.observacoes ?? 'Sem observações'}</p>
+        <CardContent className='space-y-4'>
+          <article className='text-wrap grid space-y-4'>
+            <h2 className='text-lg font-semibold'>Observações do cliente:</h2>
+            <p className='text-justify'>{data.observacoes || 'Sem observações'}</p>
           </article>
-
+          <Separator />
           <Tabs defaultValue="endereco">
             <TabsList className="flex flex-row justify-start overflow-auto md:justify-center">
               <TabsTrigger value="endereco">Endereço</TabsTrigger>
@@ -264,11 +265,11 @@ export default function ClienteDetalhesPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-2 pt-4">
-          <TabelaVendasCliente 
-            listaVendas={listaVendas} 
-            carregandoVendas={carregandoVendasCliente} 
-            colunasVenda={columnsVendasCliente} 
-            clienteId={idCliente} 
+          <TabelaVendasCliente
+            listaVendas={listaVendas}
+            carregandoVendas={carregandoVendasCliente}
+            colunasVenda={columnsVendasCliente}
+            clienteId={idCliente}
             novaVenda={true}
           />
         </CardContent>
