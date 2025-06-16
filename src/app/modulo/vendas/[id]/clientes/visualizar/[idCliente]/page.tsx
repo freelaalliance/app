@@ -74,7 +74,11 @@ export default function ClienteDetalhesPage() {
           <CardTitle>{`${data.pessoa.nome} - (${aplicarMascaraDocumento(data.documento)})`}</CardTitle>
           <CardDescription>Dados do Cliente</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className='space-y-2'>
+          <article className="text-wrap grid space-y-4">
+            <h3>Observações do cliente</h3>
+            <p className='text-justify'>{data.observacoes ?? 'Sem observações'}</p>
+          </article>
 
           <Tabs defaultValue="endereco">
             <TabsList className="flex flex-row justify-start overflow-auto md:justify-center">
