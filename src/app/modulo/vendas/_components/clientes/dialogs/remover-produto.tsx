@@ -17,7 +17,7 @@ export function ExcluirClienteDialog({ id, nome }: ExcluirClienteDialogProps) {
 
   const mutation = useMutation({
     mutationFn: async () => {
-      const { data } = await axiosInstance.delete(`/vendas/clientes/${id}`)
+      const { data } = await axiosInstance.delete(`/pessoa/clientes/${id}`)
       return data
     },
     onSuccess: () => {
