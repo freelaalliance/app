@@ -77,6 +77,9 @@ export function CadastroItensAvaliativoExpedicaoForm({
         queryKey: ['itensAvaliativoExpedicaoEmpresa', empresaId],
         exact: true,
       })
+
+      toast.success('Itens de avaliação do recebimento salvos com sucesso!')
+      formItensAvaliativosExpedicao.reset()
     },
   })
 
