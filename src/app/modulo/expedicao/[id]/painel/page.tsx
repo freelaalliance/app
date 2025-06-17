@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Blocks, Boxes, Package, PackageCheck, TrendingUp } from "lucide-react"
 import { useEstatisticasExpedicao, useMediaAvaliacaoExpedicao, useVendasExpedidas } from "../../_services/ServicoExpedicao"
 import { IndicadorInformativo } from "@/components/IndicadorInfo"
+import { formatarDataBrasil } from "@/lib/utils"
 
 
 export default function PainelExpedicaoPage() {
@@ -67,10 +68,11 @@ export default function PainelExpedicaoPage() {
                   <div key={order.id} className="flex items-center justify-between p-4 border rounded-lg bg-green-50">
                     <div className="flex items-center space-x-4">
                       <PackageCheck className="h-8 w-8 text-green-600" />
-                      <div>
+                      <div className="grid space-y-1">
                         <p className="font-medium">
                           {`#${order.venda.numeroVenda} - ${order.venda.cliente.nome}`}
                         </p>
+                        <span className="uppercase font-medium text-muted-foreground text-xs">{`Expedido por ${order.usuario} em ${formatarDataBrasil(new Date(order.expedidoEm), true, 'Pp')}`}</span>
                       </div>
                     </div>
                     <Badge variant="outline" className="text-green-600 border-green-600">

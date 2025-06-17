@@ -10,6 +10,8 @@ import {
 import { MoreVertical } from 'lucide-react'
 import type { ItemAvaliacaoExpedicaoType } from '../../../_api/AdmVendas'
 import { AlterarDescricaoItemAvaliativoExpedicaoDialog } from '../dialogs/alterar-descricao-item-expedicao'
+import { AlertDialog, AlertDialogTrigger } from '@/components/ui/alert-dialog'
+import { RemoverItemAvaliativoExpedicaoAlertDialog } from '../dialogs/alterar-status-item-avalitivo-expedicao'
 
 interface MenuTabelaItensAvaliativosExpedicaoProps {
   row: ItemAvaliacaoExpedicaoType
@@ -45,7 +47,20 @@ export function MenuTabelaItensAvaliacaoExpedicao({
             pergunta={row.pergunta}
           />
         </Dialog>
-
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <DropdownMenuItem
+              onSelect={e => {
+                e.preventDefault()
+              }}
+            >
+              Remover item
+            </DropdownMenuItem>
+          </AlertDialogTrigger>
+          <RemoverItemAvaliativoExpedicaoAlertDialog
+            id={row.id}
+          />
+        </AlertDialog>
       </DropdownMenuContent>
     </DropdownMenu>
   )

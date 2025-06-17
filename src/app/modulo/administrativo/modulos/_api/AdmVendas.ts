@@ -53,3 +53,9 @@ export async function atualizarDescricaoItemAvaliativosExpedicao({
     pergunta,
   })
 }
+
+export async function removerItemAvaliativosExpedicao({
+  id,
+}: AtualizarStatusItemAvaliacaoExpedicaoType) {
+  await axiosInstance.delete(`admin/vendas/expedicao/itens-avaliacao/${id}`)
+}
