@@ -17,7 +17,7 @@ import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { consultarCep } from '@/lib/ViacepLib';
-import { formatarNumeroTelefoneComDDD } from '@/lib/utils';
+import { formatarNumeroTelefoneComDDD, validarDocumento } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Trash } from 'lucide-react';
 import { useMemo } from 'react';
@@ -27,7 +27,9 @@ import { z } from 'zod';
 import { useCreateCliente } from '../../../_servicos/useClientes';
 
 const clienteSchema = z.object({
-  documento: z.string().min(11, 'Documento inválido'),
+  documento: z.string().min(11, 'Documento inválido').refine(validarDocumento, {
+        message: 'Documento do cliente inválido',
+      }),
   nome: z.string().min(2, 'Nome obrigatório'),
   observacoes: z.string(),
   endereco: z.object({
