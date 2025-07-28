@@ -67,9 +67,6 @@ export function TabelaCargos({
             className="max-w-sm"
           />
         </div>
-        <div className="text-sm text-gray-600">
-          {tabela.getFilteredRowModel().rows.length} de {listaCargos.length} cargo(s)
-        </div>
       </div>
 
       <div className="rounded-md border shadow overflow-auto bg-gray-50">
