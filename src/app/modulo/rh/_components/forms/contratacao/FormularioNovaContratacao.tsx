@@ -1,7 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Building, CalendarIcon, CheckCircle, FileText, Loader2, MapPin, Minus, Phone, Plus, Upload, User, X } from 'lucide-react'
+import { Building, CalendarIcon, CheckCircle, FileText, Loader2, Minus, Plus, Upload, User, X } from 'lucide-react'
 import { useCallback, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -42,14 +42,15 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { consultarCep } from '@/lib/ViacepLib'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { consultarCep } from '@/lib/ViacepLib'
+import { AlertTriangle } from 'lucide-react'
 import { toast } from 'sonner'
-import { useCriarContratacao } from '../../../_hooks/colaborador/useContratacaoColaborador'
 import { useCargos } from '../../../_hooks/cargos/useCargos'
+import { useCriarContratacao } from '../../../_hooks/colaborador/useContratacaoColaborador'
 
 interface FormularioNovaContratacaoProps {
   onSubmitCallback?: () => void
@@ -70,12 +71,31 @@ export function FormularioNovaContratacao({ onSubmitCallback }: FormularioNovaCo
   const criarContratacao = useCriarContratacao()
   const { data: cargos, isFetching: carregandoCargos } = useCargos()
 
-  // Watch para arrays dinâmicos
+  // Watch para arrays dinâmicos e campos de endereço
   const emails = form.watch('colaborador.pessoa.EmailPessoa') || []
   const telefones = form.watch('colaborador.pessoa.TelefonePessoa') || []
+  const endereco = form.watch('colaborador.pessoa.Endereco')
 
   // Função para gerar ID único
   const generateId = useCallback(() => Math.random().toString(36).substr(2, 9), [])
+
+  // Verificação de erros nas seções usando form.formState.errors
+  const errorsEndereco = form.formState.errors.colaborador?.pessoa?.Endereco
+  const errorsEmails = form.formState.errors.colaborador?.pessoa?.EmailPessoa
+  const errorsTelefones = form.formState.errors.colaborador?.pessoa?.TelefonePessoa
+
+  // Estados reativos para verificar se há erros nas seções
+  const temErroEndereco = useMemo(() => {
+    return !!(errorsEndereco)
+  }, [errorsEndereco])
+
+  const temErroEmails = useMemo(() => {
+    return !!(errorsEmails)
+  }, [errorsEmails])
+
+  const temErroTelefones = useMemo(() => {
+    return !!(errorsTelefones)
+  }, [errorsTelefones])
 
   // Funções para adicionar/remover emails
   const adicionarEmail = () => {
@@ -275,7 +295,6 @@ export function FormularioNovaContratacao({ onSubmitCallback }: FormularioNovaCo
     }
   }, [form.watch('colaborador.pessoa.Endereco.cep')])
 
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
@@ -366,11 +385,42 @@ export function FormularioNovaContratacao({ onSubmitCallback }: FormularioNovaCo
 
         <Tabs defaultValue="endereco" className="w-full space-y-2">
           <TabsList className="flex flex-row justify-center">
-            <TabsTrigger value='endereco'>Endereço</TabsTrigger>
-            <TabsTrigger value='telefone'>Telefones</TabsTrigger>
-            <TabsTrigger value="email">E-mails</TabsTrigger>
+            <TabsTrigger value='endereco' className="relative">
+              <span>Endereço</span>
+              {temErroEndereco && (
+                <AlertTriangle className="h-3 w-3 text-red-500 ml-1" />
+              )}
+            </TabsTrigger>
+            <TabsTrigger value='telefone' className="relative">
+              <span>Telefones</span>
+              {temErroTelefones && (
+                <AlertTriangle className="h-3 w-3 text-red-500 ml-1" />
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="email" className="relative">
+              <span>E-mails</span>
+              {temErroEmails && (
+                <AlertTriangle className="h-3 w-3 text-red-500 ml-1" />
+              )}
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="endereco">
+            {temErroEndereco && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4 text-red-500" />
+                  <span className="text-sm font-medium text-red-700">Erros no endereço:</span>
+                </div>
+                <ul className="mt-2 text-sm text-red-600 list-disc list-inside space-y-1">
+                  {errorsEndereco?.cep && <li>{errorsEndereco.cep.message}</li>}
+                  {errorsEndereco?.logradouro && <li>{errorsEndereco.logradouro.message}</li>}
+                  {errorsEndereco?.numero && <li>{errorsEndereco.numero.message}</li>}
+                  {errorsEndereco?.bairro && <li>{errorsEndereco.bairro.message}</li>}
+                  {errorsEndereco?.cidade && <li>{errorsEndereco.cidade.message}</li>}
+                  {errorsEndereco?.estado && <li>{errorsEndereco.estado.message}</li>}
+                </ul>
+              </div>
+            )}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <FormField
                 control={form.control}
@@ -472,6 +522,25 @@ export function FormularioNovaContratacao({ onSubmitCallback }: FormularioNovaCo
             </div>
           </TabsContent>
           <TabsContent value='email'>
+            {temErroEmails && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4 text-red-500" />
+                  <span className="text-sm font-medium text-red-700">Erros nos e-mails:</span>
+                </div>
+                <ul className="mt-2 text-sm text-red-600 list-disc list-inside space-y-1">
+                  {Array.isArray(errorsEmails) && errorsEmails.map((error, index) => {
+                    if (error?.email) {
+                      return <li key={`email-error-${Math.random()}`}>E-mail {index + 1}: {error.email.message}</li>
+                    }
+                    return null
+                  })}
+                  {!Array.isArray(errorsEmails) && errorsEmails?.message && (
+                    <li>{errorsEmails.message}</li>
+                  )}
+                </ul>
+              </div>
+            )}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <FormLabel>E-mails</FormLabel>
@@ -520,6 +589,32 @@ export function FormularioNovaContratacao({ onSubmitCallback }: FormularioNovaCo
             </div>
           </TabsContent>
           <TabsContent value='telefone'>
+            {temErroTelefones && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4 text-red-500" />
+                  <span className="text-sm font-medium text-red-700">Erros nos telefones:</span>
+                </div>
+                <ul className="mt-2 text-sm text-red-600 list-disc list-inside space-y-1">
+                  {Array.isArray(errorsTelefones) && errorsTelefones.map((error, index) => {
+                    const erros = []
+                    if (error?.codigoArea) {
+                      erros.push(`DDD: ${error.codigoArea.message}`)
+                    }
+                    if (error?.numero) {
+                      erros.push(`Número: ${error.numero.message}`)
+                    }
+                    if (erros.length > 0) {
+                      return <li key={`telefone-error-${Math.random()}`}>Telefone {index + 1}: {erros.join(', ')}</li>
+                    }
+                    return null
+                  })}
+                  {!Array.isArray(errorsTelefones) && errorsTelefones?.message && (
+                    <li>{errorsTelefones.message}</li>
+                  )}
+                </ul>
+              </div>
+            )}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <FormLabel>Telefones</FormLabel>

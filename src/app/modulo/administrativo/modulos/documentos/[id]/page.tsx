@@ -60,7 +60,7 @@ export default function AdmDocumentosPage() {
       </section>
       <Tabs defaultValue="documentos">
         <TabsList className="flex flex-row bg-transparent space-x-2 justify-between md:justify-start">
-          <TabsTrigger className="shadow-md bg-sky-400 text-white data-[state=active]:bg-sky-600 data-[state=active]:text-white hover:bg-sky-500 w-full" value="categorias">Categorias de documentos</TabsTrigger>
+<TabsTrigger className="shadow-md bg-sky-400 text-white data-[state=active]:bg-sky-600 data-[state=active]:text-white hover:bg-sky-500 w-full" value="categorias">Categorias de documentos</TabsTrigger>
           <TabsTrigger className="shadow-md bg-sky-400 text-white data-[state=active]:bg-sky-600 data-[state=active]:text-white hover:bg-sky-500 w-full" value="documentos">Documentos</TabsTrigger>
         </TabsList>
 
@@ -76,7 +76,10 @@ export default function AdmDocumentosPage() {
           <div className="flex-1 p-4 bg-white rounded-lg shadow-md">
             <Dialog>
               <DialogTrigger asChild >
-                <Button className="shadow bg-padrao-red hover:bg-red-800 flex md:justify-between justify-center md:gap-4 gap-2 w-full md:w-auto">
+                <Button 
+                  className="shadow bg-padrao-red hover:bg-red-800 flex md:justify-between justify-center md:gap-4 gap-2 w-full md:w-auto" 
+                  disabled={!empresaSelecionada.selected || carregandoUsuariosEmpresa}
+                >
                   Novo documento
                 </Button>
               </DialogTrigger>
