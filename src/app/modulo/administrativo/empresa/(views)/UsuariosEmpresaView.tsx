@@ -8,7 +8,7 @@ import type { EmpresaViewProps } from '../[id]/page'
 import { buscarUsuariosEmpresa } from '../api/Empresa'
 
 export default function UsuariosEmpresaView({ idEmpresa }: EmpresaViewProps) {
-  const { data: listaUsuarios, isLoading: carregandoUsuariosEmpresa } =
+  const { data: listaUsuarios, isFetching: carregandoUsuariosEmpresa } =
     useQuery({
       queryKey: ['listaUsuariosEmpresa', idEmpresa],
       queryFn: () => buscarUsuariosEmpresa(idEmpresa),

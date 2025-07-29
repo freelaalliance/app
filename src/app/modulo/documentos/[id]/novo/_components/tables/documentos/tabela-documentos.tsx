@@ -38,7 +38,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { Check, ChevronsUpDown, PlusCircle } from 'lucide-react'
+import { Check, PlusCircle } from 'lucide-react'
 import React from 'react'
 
 interface TabelaDocumentosProps {

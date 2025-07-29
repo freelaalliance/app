@@ -30,7 +30,7 @@ import {
 import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { addDays, format } from 'date-fns'
+import { addYears, format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { CalendarIcon, X } from 'lucide-react'
 import { useMemo, useState } from 'react'
@@ -65,7 +65,7 @@ const schemaNovoDocumentoForm = z.object({
   disposicao: z.string({
     required_error: 'Campo de disposição é obrigatório',
   }),
-  retencao: z.coerce.date().default(addDays(new Date(), 1)),
+  retencao: z.coerce.date(),
   uso: z.string({
     required_error: 'Campo uso é obrigatório',
   }),
@@ -84,6 +84,7 @@ const schemaNovoDocumentoForm = z.object({
     )
     .default([]),
   arquivo: z.string(),
+  empresaId: z.string().uuid().optional(),
 })
 
 export type NovoDocumentoFormType = z.infer<typeof schemaNovoDocumentoForm>
@@ -91,6 +92,7 @@ export type NovoDocumentoFormType = z.infer<typeof schemaNovoDocumentoForm>
 export interface NovoDocumentoFormProps {
   listaUsuarios: Omit<UsuarioType, 'perfil'>[]
   listaCategoriasDocumentos: Array<CategoriaDocumentoType>
+  empresaId?: string
 }
 
 const keyNovoArquivoDocumento = crypto.randomUUID()
@@ -98,6 +100,7 @@ const keyNovoArquivoDocumento = crypto.randomUUID()
 export function NovoDocumentoForm({
   listaUsuarios,
   listaCategoriasDocumentos,
+  empresaId,
 }: NovoDocumentoFormProps) {
 
   const queryClient = useQueryClient()
@@ -107,9 +110,10 @@ export function NovoDocumentoForm({
     resolver: zodResolver(schemaNovoDocumentoForm),
     defaultValues: {
       copias: 0,
-      retencao: addDays(new Date(), 1),
+      retencao: addYears(new Date(), 5),
       usuariosAcessos: [],
       arquivo: keyNovoArquivoDocumento,
+      empresaId,
     },
     mode: 'onChange',
   })
@@ -135,8 +139,8 @@ export function NovoDocumentoForm({
         toast.success('Documento cadastrado com sucesso!')
         formNovoDocumento.reset()
 
-        queryClient.refetchQueries({
-          queryKey: ['documentosEmpresa'],
+        queryClient.invalidateQueries({
+          queryKey: [['documentosEmpresa'], ['documentosEmpresaAdmin', empresaId]],
           exact: true,
         })
       } else {
@@ -251,6 +255,7 @@ export function NovoDocumentoForm({
                       <FormControl>
                         <Button
                           variant={'outline'}
+                          disabled
                           className={cn(
                             'w-full pl-3 text-left font-normal',
                             !field.value && 'text-muted-foreground'

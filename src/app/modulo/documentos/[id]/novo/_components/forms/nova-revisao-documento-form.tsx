@@ -4,15 +4,13 @@ import { DialogClose, DialogFooter } from "@/components/ui/dialog"
 import {
   Form
 } from '@/components/ui/form'
-import { Progress } from "@/components/ui/progress"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { CheckIcon } from "lucide-react"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
-import { deleteFile, uploadFile } from "../../_actions/upload-actions"
+import { deleteFile } from "../../_actions/upload-actions"
 import UploadForm from "../upload/upload-documentos"
 
 const schemaNovaRevisaoDocumentoForm = z.object({
