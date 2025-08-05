@@ -3,17 +3,22 @@
 import { downloadFile } from '@/app/modulo/documentos/[id]/novo/_actions/upload-actions'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Building,
   Calendar,
+  Clock,
   Download,
+  FileDown,
   FileText,
   GraduationCap,
+  History,
   Info,
   Mail,
   MapPin,
+  MoreVertical,
   Phone,
   Trash2,
   Upload,
@@ -22,9 +27,10 @@ import {
 
 import { aplicarMascaraDocumento } from '@/lib/utils'
 import type { EmailPessoa, TelefonePessoa } from '@/types/PessoaType'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import { Margin, Resolution, usePDF } from 'react-to-pdf'
 import { toast } from 'sonner'
-import { useContratacao, useDocumentosContrato } from '../../_hooks/colaborador/useContratacaoColaborador'
+import { useContratacao, useDocumentosContrato, useHistoricoContratacao } from '../../_hooks/colaborador/useContratacaoColaborador'
 import { useIniciarTreinamentosObrigatorios, useTreinamentosPorColaborador } from '../../_hooks/colaborador/useTreinamentosColaborador'
 import { useTreinamentosCapacitacao, useTreinamentosIntegracaoPorCargo } from '../../_hooks/treinamentos/useTreinamentos'
 import type { DocumentoContrato } from '../../_types/colaborador/ContratacaoType'
@@ -36,7 +42,9 @@ import { DialogEditarColaborador } from '../dialogs/colaborador/DialogEditarCola
 import { DialogTreinamentosNaoRealizados } from '../dialogs/colaborador/DialogTreinamentosNaoRealizados'
 import { PopoverAcoesColaborador } from '../dialogs/colaborador/PopoverAcoesColaborador'
 import { DocumentoSkeleton } from '../skeletons/DocumentoSkeleton'
+import { ColaboradorPDF } from './ColaboradorPDF'
 import { DialogUploadDocumento } from './DialogUploadDocumento'
+import { TimelineHistorico } from './TimelineHistorico'
 
 interface VisualizarColaboradorProps {
   contratacaoId: string
@@ -46,18 +54,31 @@ export function VisualizarColaborador({ contratacaoId }: VisualizarColaboradorPr
   const { data: contratacao, isFetching } = useContratacao(contratacaoId)
   const { data: documentosContrato, isFetching: isFetchingDocumentos } = useDocumentosContrato(contratacaoId)
   const { data: treinamentosRealizados, isFetching: isFetchingTreinamentos } = useTreinamentosPorColaborador(contratacaoId)
-  
+  const { data: historicoContratacao, isFetching: isFetchingHistorico } = useHistoricoContratacao(contratacaoId)
+
+  // Hook para geração do PDF - deve estar sempre no topo para evitar erro de hooks
+  const { toPDF, targetRef } = usePDF({
+    filename: `colaborador-${contratacao?.colaborador?.pessoa?.nome?.replace(/\s+/g, '-').toLowerCase() || 'colaborador'}-${new Date().toISOString().split('T')[0]}.pdf`,
+    resolution: Resolution.HIGH,
+    page: {
+      margin: Margin.MEDIUM,
+      format: 'A4',
+      orientation: 'portrait',
+    }
+  })
+
   // Buscar treinamentos disponíveis baseados no cargo do colaborador
   const { data: treinamentosIntegracao } = useTreinamentosIntegracaoPorCargo(
     contratacao?.cargo?.id || ''
   )
   const { data: treinamentosCapacitacao } = useTreinamentosCapacitacao()
-  
+
   const iniciarTreinamentosObrigatorios = useIniciarTreinamentosObrigatorios()
-  
+
   const [documentoParaUpload, setDocumentoParaUpload] = useState<DocumentoContrato | null>(null)
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false)
   const [treinamentosNaoRealizadosDialogOpen, setTreinamentosNaoRealizadosDialogOpen] = useState(false)
+  const editarColaboradorRef = useRef<HTMLButtonElement>(null)
 
   // Função para verificar se um treinamento já foi realizado
   const treinamentoJaRealizado = (treinamentoId: string) => {
@@ -75,14 +96,14 @@ export function VisualizarColaborador({ contratacaoId }: VisualizarColaboradorPr
   ) || []
 
   // Contar treinamentos em andamento (pendentes)
-  const treinamentosEmAndamento = treinamentosRealizados?.filter(tr => 
+  const treinamentosEmAndamento = treinamentosRealizados?.filter(tr =>
     tr.iniciadoEm && !tr.finalizadoEm
   ).length || 0
 
   // Total de itens para o badge: disponíveis + em andamento
-  const totalTreinamentosParaBadge = treinamentosIntegracaoDisponiveis.length + 
-                                     treinamentosCapacitacaoDisponiveis.length + 
-                                     treinamentosEmAndamento
+  const totalTreinamentosParaBadge = treinamentosIntegracaoDisponiveis.length +
+    treinamentosCapacitacaoDisponiveis.length +
+    treinamentosEmAndamento
 
   const handleIniciarTreinamentosObrigatorios = () => {
     iniciarTreinamentosObrigatorios.mutate(contratacaoId, {
@@ -135,9 +156,9 @@ export function VisualizarColaborador({ contratacaoId }: VisualizarColaboradorPr
       if (url) {
         // Criar link temporário para download
         const link = document.createElement('a')
-        link.href=url
-        link.download=nomeDocumento
-        link.target='_blank'
+        link.href = url
+        link.download = nomeDocumento
+        link.target = '_blank'
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
@@ -171,6 +192,20 @@ export function VisualizarColaborador({ contratacaoId }: VisualizarColaboradorPr
 
   const { colaborador, cargo, admitidoEm, demitidoEm } = contratacao
 
+  const handleExportarPDF = () => {
+    if (!contratacao) {
+      toast.error('Dados do colaborador não carregados')
+      return
+    }
+    
+    try {
+      toPDF()
+      toast.success('PDF gerado com sucesso!')
+    } catch (error) {
+      toast.error('Erro ao gerar PDF. Tente novamente.')
+    }
+  }
+
   return (
     <div className="space-y-6">
       <Card>
@@ -179,7 +214,23 @@ export function VisualizarColaborador({ contratacaoId }: VisualizarColaboradorPr
             <User className="h-5 w-5 text-primary" />
             <CardTitle>Dados Pessoais</CardTitle>
           </div>
-          <DialogEditarColaborador contratacao={contratacao} />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => editarColaboradorRef.current?.click()}>
+                <User className="h-4 w-4 mr-2" />
+                Editar Colaborador
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExportarPDF}>
+                <FileDown className="h-4 w-4 mr-2" />
+                Exportar PDF
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -288,9 +339,9 @@ export function VisualizarColaborador({ contratacaoId }: VisualizarColaboradorPr
         </CardContent>
       </Card>
 
-      {/* Tabs de Informações e Treinamentos */}
+      {/* Tabs de Informações, Treinamentos e Histórico */}
       <Tabs defaultValue="informacoes" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="informacoes" className="flex items-center gap-2">
             <Info className="h-4 w-4" />
             Informações
@@ -304,6 +355,10 @@ export function VisualizarColaborador({ contratacaoId }: VisualizarColaboradorPr
                 {totalTreinamentosParaBadge}
               </span>
             )}
+          </TabsTrigger>
+          <TabsTrigger value="historico" className="flex items-center gap-2">
+            <History className="h-4 w-4" />
+            Histórico
           </TabsTrigger>
         </TabsList>
 
@@ -344,6 +399,65 @@ export function VisualizarColaborador({ contratacaoId }: VisualizarColaboradorPr
                   </div>
                 )}
               </div>
+
+              {/* Informações adicionais do contrato */}
+              <Separator />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <span className="text-sm font-medium text-muted-foreground">Status</span>
+                  <div className="flex items-center gap-2 mt-1">
+                    <div className={`h-2 w-2 rounded-full ${demitidoEm ? 'bg-red-500' : 'bg-green-500'}`} />
+                    <p className="text-sm font-medium">
+                      {demitidoEm ? 'Inativo' : 'Ativo'}
+                    </p>
+                  </div>
+                </div>
+                {contratacao.responsavel && (
+                  <div>
+                    <span className="text-sm font-medium text-muted-foreground">Responsável pela Contratação</span>
+                    <div className="flex items-center gap-2 mt-1">
+                      <User className="h-4 w-4 text-muted-foreground" />
+                      <p className="text-sm">{contratacao.responsavel.nome}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Informações do cargo */}
+              {(cargo.atribuicoes || cargo.experienciaMinima || cargo.escolaridadeMinima) && (
+                <>
+                  <Separator />
+                  <div>
+                    <h4 className="font-medium mb-3">Detalhes do Cargo</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+                      {cargo.experienciaMinima && (
+                        <div>
+                          <span className="text-sm font-medium text-muted-foreground">Experiência Mínima</span>
+                          <p className="text-sm">{cargo.experienciaMinima}</p>
+                        </div>
+                      )}
+                      {cargo.escolaridadeMinima && (
+                        <div>
+                          <span className="text-sm font-medium text-muted-foreground">Escolaridade Mínima</span>
+                          <p className="text-sm">{cargo.escolaridadeMinima}</p>
+                        </div>
+                      )}
+                      {cargo.superior && (
+                        <div>
+                          <span className="text-sm font-medium text-muted-foreground">Cargo Superior</span>
+                          <p className="text-sm">{cargo.superior}</p>
+                        </div>
+                      )}
+                    </div>
+                    {cargo.atribuicoes && (
+                      <div className="mt-3">
+                        <span className="text-sm font-medium text-muted-foreground">Atribuições</span>
+                        <p className="text-sm mt-1 leading-relaxed">{cargo.atribuicoes}</p>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
             </CardContent>
           </Card>
 
@@ -433,7 +547,7 @@ export function VisualizarColaborador({ contratacaoId }: VisualizarColaboradorPr
               </p>
             </div>
             <div className="flex gap-2">
-              <Button 
+              <Button
                 variant="outline"
                 onClick={() => setTreinamentosNaoRealizadosDialogOpen(true)}
                 className="border-green-200 text-green-700 hover:bg-green-50"
@@ -442,7 +556,7 @@ export function VisualizarColaborador({ contratacaoId }: VisualizarColaboradorPr
                 Ver Treinamentos Disponíveis
               </Button>
               {treinamentosIntegracaoDisponiveis.length > 0 && (
-                <Button 
+                <Button
                   onClick={handleIniciarTreinamentosObrigatorios}
                   disabled={iniciarTreinamentosObrigatorios.isPending}
                   className="bg-blue-600 hover:bg-blue-700"
@@ -469,93 +583,123 @@ export function VisualizarColaborador({ contratacaoId }: VisualizarColaboradorPr
           ) : (
             <>
               {/* Treinamentos de Integração */}
-              {((treinamentosRealizados?.filter(t => t.treinamento.tipo === 'integracao').length ?? 0) > 0 || 
+              {((treinamentosRealizados?.filter(t => t.treinamento.tipo === 'integracao').length ?? 0) > 0 ||
                 treinamentosIntegracaoDisponiveis.length > 0) && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <GraduationCap className="h-5 w-5 text-blue-600" />
-                      Treinamentos de Integração
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {/* Treinamentos Realizados */}
-                      {treinamentosRealizados
-                        ?.filter(treinamento => treinamento.treinamento.tipo === 'integracao')
-                        .map((treinamento, index) => (
-                          <CardTreinamento
-                            key={`integracao-realizado-${treinamento.id || index}`}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <GraduationCap className="h-5 w-5 text-blue-600" />
+                        Treinamentos de Integração
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Treinamentos Realizados */}
+                        {treinamentosRealizados
+                          ?.filter(treinamento => treinamento.treinamento.tipo === 'integracao')
+                          .map((treinamento, index) => (
+                            <CardTreinamento
+                              key={`integracao-realizado-${treinamento.id || index}`}
+                              treinamento={treinamento}
+                            />
+                          ))}
+
+                        {/* Treinamentos Disponíveis */}
+                        {treinamentosIntegracaoDisponiveis.map((treinamento, index) => (
+                          <CardTreinamentoDisponivel
+                            key={`integracao-disponivel-${treinamento.id || index}`}
                             treinamento={treinamento}
+                            contratacaoId={contratacaoId}
                           />
                         ))}
-                      
-                      {/* Treinamentos Disponíveis */}
-                      {treinamentosIntegracaoDisponiveis.map((treinamento, index) => (
-                        <CardTreinamentoDisponivel
-                          key={`integracao-disponivel-${treinamento.id || index}`}
-                          treinamento={treinamento}
-                          contratacaoId={contratacaoId}
-                        />
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
 
               {/* Treinamentos de Capacitação */}
-              {((treinamentosRealizados?.filter(t => t.treinamento.tipo === 'capacitacao').length ?? 0) > 0 || 
+              {((treinamentosRealizados?.filter(t => t.treinamento.tipo === 'capacitacao').length ?? 0) > 0 ||
                 treinamentosCapacitacaoDisponiveis.length > 0) && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <GraduationCap className="h-5 w-5 text-purple-600" />
-                      Treinamentos de Capacitação
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {/* Treinamentos Realizados */}
-                      {treinamentosRealizados
-                        ?.filter(treinamento => treinamento.treinamento.tipo === 'capacitacao')
-                        .map((treinamento, index) => (
-                          <CardTreinamento
-                            key={`capacitacao-realizado-${treinamento.id || index}`}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <GraduationCap className="h-5 w-5 text-purple-600" />
+                        Treinamentos de Capacitação
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* Treinamentos Realizados */}
+                        {treinamentosRealizados
+                          ?.filter(treinamento => treinamento.treinamento.tipo === 'capacitacao')
+                          .map((treinamento, index) => (
+                            <CardTreinamento
+                              key={`capacitacao-realizado-${treinamento.id || index}`}
+                              treinamento={treinamento}
+                            />
+                          ))}
+
+                        {/* Treinamentos Disponíveis */}
+                        {treinamentosCapacitacaoDisponiveis.map((treinamento, index) => (
+                          <CardTreinamentoDisponivel
+                            key={`capacitacao-disponivel-${treinamento.id || index}`}
                             treinamento={treinamento}
+                            contratacaoId={contratacaoId}
                           />
                         ))}
-                      
-                      {/* Treinamentos Disponíveis */}
-                      {treinamentosCapacitacaoDisponiveis.map((treinamento, index) => (
-                        <CardTreinamentoDisponivel
-                          key={`capacitacao-disponivel-${treinamento.id || index}`}
-                          treinamento={treinamento}
-                          contratacaoId={contratacaoId}
-                        />
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
 
               {/* Mensagem quando não há treinamentos */}
-              {(!treinamentosRealizados || treinamentosRealizados.length === 0) && 
-               treinamentosIntegracaoDisponiveis.length === 0 && 
-               treinamentosCapacitacaoDisponiveis.length === 0 && (
-                <Card>
-                  <CardContent className="text-center p-8">
-                    <GraduationCap className="h-12 w-12 mx-auto mb-4 opacity-50 text-muted-foreground" />
-                    <h3 className="font-medium mb-2">Nenhum treinamento disponível</h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Não há treinamentos configurados para este cargo ou colaborador.
-                    </p>
-                  </CardContent>
-                </Card>
-              )}
+              {(!treinamentosRealizados || treinamentosRealizados.length === 0) &&
+                treinamentosIntegracaoDisponiveis.length === 0 &&
+                treinamentosCapacitacaoDisponiveis.length === 0 && (
+                  <Card>
+                    <CardContent className="text-center p-8">
+                      <GraduationCap className="h-12 w-12 mx-auto mb-4 opacity-50 text-muted-foreground" />
+                      <h3 className="font-medium mb-2">Nenhum treinamento disponível</h3>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        Não há treinamentos configurados para este cargo ou colaborador.
+                      </p>
+                    </CardContent>
+                  </Card>
+                )}
             </>
           )}
         </TabsContent>
+
+        <TabsContent value="historico" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Clock className="h-5 w-5 text-primary" />
+                <CardTitle>Histórico do Contrato</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <TimelineHistorico
+                historico={historicoContratacao || []}
+                isLoading={isFetchingHistorico}
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
+
+      {/* Componente PDF oculto para geração */}
+      <div style={{ position: 'absolute', left: '-9999px', top: '-9999px' }}>
+        <div ref={targetRef}>
+          {contratacao && (
+            <ColaboradorPDF
+              contratacao={contratacao}
+              historicoContratacao={historicoContratacao || []}
+              treinamentosRealizados={treinamentosRealizados || []}
+            />
+          )}
+        </div>
+      </div>
 
       <DialogUploadDocumento
         open={uploadDialogOpen}
@@ -563,6 +707,11 @@ export function VisualizarColaborador({ contratacaoId }: VisualizarColaboradorPr
         documento={documentoParaUpload}
         contratacaoId={contratacaoId}
       />
+
+      {/* Dialog de editar colaborador com trigger oculto */}
+      <DialogEditarColaborador contratacao={contratacao}>
+        <Button ref={editarColaboradorRef} style={{ display: 'none' }} />
+      </DialogEditarColaborador>
 
       <DialogTreinamentosNaoRealizados
         open={treinamentosNaoRealizadosDialogOpen}

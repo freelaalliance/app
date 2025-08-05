@@ -60,7 +60,7 @@ export default function AdmDocumentosPage() {
       </section>
       <Tabs defaultValue="documentos">
         <TabsList className="flex flex-row bg-transparent space-x-2 justify-between md:justify-start">
-<TabsTrigger className="shadow-md bg-sky-400 text-white data-[state=active]:bg-sky-600 data-[state=active]:text-white hover:bg-sky-500 w-full" value="categorias">Categorias de documentos</TabsTrigger>
+          <TabsTrigger className="shadow-md bg-sky-400 text-white data-[state=active]:bg-sky-600 data-[state=active]:text-white hover:bg-sky-500 w-full" value="categorias">Categorias de documentos</TabsTrigger>
           <TabsTrigger className="shadow-md bg-sky-400 text-white data-[state=active]:bg-sky-600 data-[state=active]:text-white hover:bg-sky-500 w-full" value="documentos">Documentos</TabsTrigger>
         </TabsList>
 

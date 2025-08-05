@@ -6,6 +6,7 @@ import type {
   CriarContratacaoRequest,
   DemitirColaboradorRequest,
   DocumentoContrato,
+  HistoricoContratacao,
   TransferirColaboradorRequest,
 } from '../../_types/colaborador/ContratacaoType'
 import type { ApiResponse } from '../rhService'
@@ -52,4 +53,7 @@ export const contratacaoApi = {
     axiosInstance.patch<ApiResponse<DocumentoContrato>>(`/rh/contratacoes/documentos/${documentoId}/arquivo`, {
       chaveArquivo,
     }),
+
+  listarHistorico: (id: string) =>
+    axiosInstance.get<ApiResponse<HistoricoContratacao[]>>(`/rh/contratacoes/${id}/historico`),
 }

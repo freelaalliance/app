@@ -168,3 +168,14 @@ export const useAtualizarArquivoDocumento = () => {
     },
   })
 }
+
+export const useHistoricoContratacao = (contratacaoId: string) => {
+  return useQuery({
+    queryKey: ['contratacoes', contratacaoId, 'historico'],
+    queryFn: async () => {
+      const { data } = await contratacaoApi.listarHistorico(contratacaoId)
+      return data.dados || []
+    },
+    enabled: !!contratacaoId,
+  })
+}

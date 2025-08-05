@@ -82,3 +82,9 @@ export interface AtualizarTreinamentoRealizadoRequest {
   finalizadoEm?: string
   certificado?: string
 }
+
+export interface HistoricoContratacao {
+  id: string
+  data: string
+  descricao: string
+}

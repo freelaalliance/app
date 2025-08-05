@@ -6,7 +6,7 @@ import { ArrowLeft, Loader2 } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { useSearchParams } from 'next/navigation'
 
-import { eventoCalendario } from '@/components/calendario/CalendarioEventos'
+import type { eventoCalendario } from '@/components/calendario/CalendarioEventos'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -35,7 +35,7 @@ const InspecoesEquipamentoView = dynamic(
       )
     },
     ssr: true,
-  },
+  }
 )
 
 const ManutencoesEquipamentoView = dynamic(
@@ -49,7 +49,7 @@ const ManutencoesEquipamentoView = dynamic(
       )
     },
     ssr: true,
-  },
+  }
 )
 
 const MetricasManutencaoView = dynamic(
@@ -63,7 +63,7 @@ const MetricasManutencaoView = dynamic(
       )
     },
     ssr: true,
-  },
+  }
 )
 
 export default function PageInformacoesEquipamento() {
@@ -75,7 +75,7 @@ export default function PageInformacoesEquipamento() {
     queryKey: ['listaInspecoesEquipamento', idEquipamento],
     queryFn: () =>
       buscarInspecoesEquipamento({ equipamentoId: idEquipamento ?? '' }),
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   const metricasManutencoesEquipamento = useQuery({
@@ -84,14 +84,14 @@ export default function PageInformacoesEquipamento() {
       buscarDuracaoManutencoesEquipamento({
         equipamentoId: idEquipamento ?? '',
       }),
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   const listaManutencoesEquipamento = useQuery({
     queryKey: ['manutencoesEquipamento', idEquipamento],
     queryFn: () =>
       buscarManutencoesEquipamento({ equipamentoId: idEquipamento ?? '' }),
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   const estatisticasManutencaoMTTReMTBFEquipamento = useQuery({
@@ -100,18 +100,18 @@ export default function PageInformacoesEquipamento() {
       consultaIndicadoresManutencaoEquipamento({
         equipamentoId: idEquipamento,
       }),
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   const agendaEquipamento = useQuery({
     queryKey: ['agendaInspecaoEquipamento', idEquipamento],
     queryFn: () =>
       buscarAgendamentosEquipamento({ idEquipamento: idEquipamento ?? '' }),
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   const eventos: eventoCalendario =
-    agendaEquipamento.data?.map((agendamento) => {
+    agendaEquipamento.data?.map(agendamento => {
       const dataAgendamento = new Date(agendamento.agendadoPara)
       const dataAtual = new Date()
 
@@ -119,13 +119,13 @@ export default function PageInformacoesEquipamento() {
         new Date(
           dataAgendamento.getFullYear(),
           dataAgendamento.getMonth(),
-          dataAgendamento.getDate(),
+          dataAgendamento.getDate()
         ),
         new Date(
           dataAtual.getFullYear(),
           dataAtual.getMonth(),
-          dataAtual.getDate(),
-        ),
+          dataAtual.getDate()
+        )
       )
 
       if (agendamento.inspecaoRealizada) {

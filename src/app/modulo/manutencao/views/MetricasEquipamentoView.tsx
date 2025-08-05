@@ -1,8 +1,8 @@
 import { ArrowBigDownDash } from 'lucide-react'
-import generatePDF, { Margin, Options, Resolution } from 'react-to-pdf'
+import generatePDF, { Margin, type Options, Resolution } from 'react-to-pdf'
 
 import CalendarioEventos, {
-  eventoCalendario,
+  type eventoCalendario,
 } from '@/components/calendario/CalendarioEventos'
 import { Button } from '@/components/ui/button'
 import {
@@ -26,11 +26,11 @@ import IndicadoresMediaDuracaoManutencoesEquipamento from '../components/charts/
 import IndicadoresMediaEquipamentoParado from '../components/charts/IndicadorMediaEquipamentoParado'
 import RankingDurancaoManutencaoEquipamento from '../components/charts/IndicadorTempoManutencaoEquipamento'
 import { ListaInspecoesAberto } from '../components/lists/ListaInspecoesAberto'
-import { DadosInspecoesEquipamentoType } from '../schemas/EquipamentoSchema'
-import {
-  dadosIndicadoresManutencaoEquipamentoType,
+import type { DadosInspecoesEquipamentoType } from '../schemas/EquipamentoSchema'
+import type {
   DadosManutencaoEquipamentoType,
   DuracaoManutencoesEquipamentoType,
+  dadosIndicadoresManutencaoEquipamentoType,
   indicadoresFalhasEquipamentoType,
 } from '../schemas/ManutencaoSchema'
 import { calculaMtbf, calculaMttr } from '../utils/indicadores'
@@ -112,7 +112,7 @@ export default function MetricasEquipamentoView({
         <div
           className={cn(
             'grid grid-cols-1',
-            agendaEquipamento && 'md:grid-cols-3 gap-y-2 md:gap-2',
+            agendaEquipamento && 'md:grid-cols-3 gap-y-2 md:gap-2'
           )}
         >
           <div className="col-span-2">
@@ -144,7 +144,7 @@ export default function MetricasEquipamentoView({
                         carregandoInspecoes={inspecoes.carregandoInspecoes}
                         listaInspecoes={
                           inspecoes.dados.filter(
-                            (inspecoes) => !inspecoes.finalizadoEm,
+                            inspecoes => !inspecoes.finalizadoEm
                           ) ?? []
                         }
                       />
@@ -167,17 +167,17 @@ export default function MetricasEquipamentoView({
                         <IndicadoresInspecaoEquipamento
                           inspecoes={{
                             aberta: inspecoes.dados.filter(
-                              (inspecoes) => !inspecoes.finalizadoEm,
+                              inspecoes => !inspecoes.finalizadoEm
                             ).length,
                             aprovada: inspecoes.dados.filter(
-                              (inspecoes) =>
+                              inspecoes =>
                                 inspecoes.statusInspecao === 'aprovado' &&
-                                inspecoes.finalizadoEm,
+                                inspecoes.finalizadoEm
                             ).length,
                             reprovada: inspecoes.dados.filter(
-                              (inspecoes) =>
+                              inspecoes =>
                                 inspecoes.statusInspecao === 'reprovado' &&
-                                inspecoes.finalizadoEm,
+                                inspecoes.finalizadoEm
                             ).length,
                             total: inspecoes.dados.length,
                           }}
