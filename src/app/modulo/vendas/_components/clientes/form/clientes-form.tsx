@@ -31,7 +31,7 @@ const clienteSchema = z.object({
         message: 'Documento do cliente inválido',
       }),
   nome: z.string().min(2, 'Nome obrigatório'),
-  observacoes: z.string(),
+  observacoes: z.string().optional(),
   endereco: z.object({
     logradouro: z.string(),
     bairro: z.string(),
@@ -43,7 +43,7 @@ const clienteSchema = z.object({
   }),
   telefones: z.array(
     z.object({
-      numero: z.string().min(11, 'Número inválido'),
+      numero: z.string().max(12, 'Número inválido'),
     })
   ),
   emails: z.array(
