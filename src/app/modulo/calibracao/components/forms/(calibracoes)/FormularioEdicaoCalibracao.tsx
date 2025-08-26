@@ -33,12 +33,12 @@ import { Upload } from '@/components/upload/upload'
 import { cn, encodeFileToBase64 } from '@/lib/utils'
 
 import {
-  CalibracoesInstrumentosEmpresaType,
-  EdicaoCalibracaoPropsInterface,
+  type CalibracoesInstrumentosEmpresaType,
+  type EdicaoCalibracaoPropsInterface,
   salvarEdicaoCalibracao,
 } from '../../../api/Calibracao'
 import {
-  EditCalibracaoFormType,
+  type EditCalibracaoFormType,
   formValoresPadrao,
   schemaFormEditCalibracao,
 } from '../../../schemas/(calibracoes)/SchemaEdicaoCalibracao'
@@ -93,7 +93,7 @@ export function FormaularioEdicaoCalibracao({
       if (context?.listaAntigaCalibracoes) {
         queryClient.setQueryData(
           ['listaCalibracoes'],
-          context.listaAntigaCalibracoes,
+          context.listaAntigaCalibracoes
         )
       }
     },
@@ -102,7 +102,7 @@ export function FormaularioEdicaoCalibracao({
   const statusCalibracao = (
     incertezaTendenciaEncontrado: number,
     erroEncontrado: number,
-    tolerancia: number,
+    tolerancia: number
   ): 'aprovado' | 'reprovado' => {
     return incertezaTendenciaEncontrado + erroEncontrado <= tolerancia
       ? 'aprovado'
@@ -124,7 +124,7 @@ export function FormaularioEdicaoCalibracao({
 
     queryClient.setQueryData(
       ['calibracoes'],
-      cacheCalibracoes?.map((calibracao) => {
+      cacheCalibracoes?.map(calibracao => {
         if (calibracao.calibracao.id === id) {
           return {
             ...calibracao,
@@ -140,14 +140,14 @@ export function FormaularioEdicaoCalibracao({
               status: statusCalibracao(
                 Number(incertezaTendenciaEncontrado),
                 Number(erroEncontrado),
-                Number(toleranciaEstabelicida),
+                Number(toleranciaEstabelicida)
               ),
               usuarioId: calibracao.calibracao.usuarioId,
             },
           }
         }
         return calibracao
-      }),
+      })
     )
 
     return { cacheCalibracoes }
@@ -162,16 +162,16 @@ export function FormaularioEdicaoCalibracao({
       if (!base64) {
         toast.error('Não foi possível converter o arquivo, tente novamente!')
         return
-      } else {
-        certificado = base64
       }
+      
+      certificado = base64
     }
 
     if (!certificado) {
       const cacheCalibracoes: CalibracoesInstrumentosEmpresaType | undefined =
         queryClient.getQueryData(['calibracoes'])
 
-      const dadosCalibracao = cacheCalibracoes?.filter((dados) => {
+      const dadosCalibracao = cacheCalibracoes?.filter(dados => {
         return dados.calibracao.id === idCalibracao
       })
 
@@ -206,39 +206,40 @@ export function FormaularioEdicaoCalibracao({
     }
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const listaCalibracoesEmpresaCache:
       | CalibracoesInstrumentosEmpresaType
       | undefined = queryClient.getQueryData(['calibracoes'])
 
-    const dadosCalibracao = listaCalibracoesEmpresaCache?.filter((dados) => {
+    const dadosCalibracao = listaCalibracoesEmpresaCache?.filter(dados => {
       return dados.calibracao.id === idCalibracao
     })
 
     if (dadosCalibracao && dadosCalibracao.length === 1) {
       form.setValue(
         'numeroCertificado',
-        dadosCalibracao[0].calibracao.numeroCertificado,
+        dadosCalibracao[0].calibracao.numeroCertificado
       )
       form.setValue(
         'dataCalibracao',
-        new Date(dadosCalibracao[0].calibracao.realizadoEm),
+        new Date(dadosCalibracao[0].calibracao.realizadoEm)
       )
       form.setValue(
         'erroEncontrado',
-        Number(dadosCalibracao[0].calibracao.erroEncontrado),
+        Number(dadosCalibracao[0].calibracao.erroEncontrado)
       )
       form.setValue(
         'incertezaTendenciaEncontrado',
-        Number(dadosCalibracao[0].calibracao.incertezaTendenciaEncontrado),
+        Number(dadosCalibracao[0].calibracao.incertezaTendenciaEncontrado)
       )
       form.setValue(
         'tolerancia',
-        Number(dadosCalibracao[0].calibracao.toleranciaEstabelicida),
+        Number(dadosCalibracao[0].calibracao.toleranciaEstabelicida)
       )
       form.setValue(
         'observacaoCalibracao',
-        dadosCalibracao[0].calibracao.observacao,
+        dadosCalibracao[0].calibracao.observacao
       )
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -285,7 +286,7 @@ export function FormaularioEdicaoCalibracao({
                         variant={'outline'}
                         className={cn(
                           'w-full pl-3 text-left font-normal',
-                          !field.value && 'text-muted-foreground',
+                          !field.value && 'text-muted-foreground'
                         )}
                       >
                         {field.value ? (

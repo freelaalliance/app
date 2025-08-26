@@ -75,19 +75,19 @@ const calibracaoFormSchema = z.object({
       required_error: 'Obrigatório informar o erro encontrado!',
       invalid_type_error: 'Tipo inserido inválido, informe apenas numero!',
     })
-    .transform((val) => parseFloat(val.replace(',', '.')))
-    .refine((val) => !isNaN(val), {
+    .transform((val) => Number.parseFloat(val.replace(',', '.')))
+    .refine((val) => !Number.isNaN(val), {
       message: 'Deve ser um número válido',
     })
-    .refine((val) => val > 0, {
-      message: 'Deve ser maior que zero',
+    .refine((val) => val < 0, {
+      message: 'O Erro encontrado deve ser maior ou igual a zero',
     }),
   incertezaTendenciaEncontrado: z.coerce
     .string({
       required_error: 'Obrigatório informar a incerteza/tendência encontrado!',
       invalid_type_error: 'Tipo inserido inválido, informe apenas numero!',
     })
-    .transform((val) => parseFloat(val.replace(',', '.')))
+    .transform((val) => Number.parseFloat(val.replace(',', '.')))
     .refine((val) => val > 0, {
       message: 'Deve ser maior que zero',
     }),
@@ -96,8 +96,8 @@ const calibracaoFormSchema = z.object({
       required_error: 'Obrigatório informar a tolerância!',
       invalid_type_error: 'Tipo inserido inválido, informe apenas numero!',
     })
-    .transform((val) => parseFloat(val.replace(',', '.')))
-    .refine((val) => !isNaN(val), {
+    .transform((val) => Number.parseFloat(val.replace(',', '.')))
+    .refine((val) => !Number.isNaN(val), {
       message: 'Deve ser um número válido',
     })
     .refine((val) => val > 0, {

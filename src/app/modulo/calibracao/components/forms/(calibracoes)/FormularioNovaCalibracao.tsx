@@ -32,13 +32,13 @@ import { Upload } from '@/components/upload/upload'
 import { cn } from '@/lib/utils'
 
 import {
+  type DadosInstrumentoType,
   consultarCodigoInstrumento,
-  DadosInstrumentoType,
   salvarCalibracao,
 } from '../../../api/CalibracaoInstrumento'
 import {
+  type CalibracaoInstrumentoValores,
   calibracaoFormSchema,
-  CalibracaoInstrumentoValores,
   valoresPadroes,
 } from '../../../schemas/(calibracoes)/SchemaNovaCalibracao'
 
@@ -64,7 +64,7 @@ export function NovaCalibracaoForm() {
     } else {
       const respostaRequisicao = await salvarCalibracao(
         data,
-        listaArquivoSelecionado[0],
+        listaArquivoSelecionado[0]
       )
 
       if (respostaRequisicao.status) {
@@ -101,6 +101,7 @@ export function NovaCalibracaoForm() {
     }
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (form.watch('codigoInstrumento') !== '') {
       verificarExisteInstrumento(form.watch('codigoInstrumento'))
@@ -212,7 +213,7 @@ export function NovaCalibracaoForm() {
                         variant={'outline'}
                         className={cn(
                           'w-full pl-3 text-left font-normal',
-                          !field.value && 'text-muted-foreground',
+                          !field.value && 'text-muted-foreground'
                         )}
                       >
                         {field.value ? (
