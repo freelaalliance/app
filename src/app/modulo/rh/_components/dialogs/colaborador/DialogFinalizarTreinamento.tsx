@@ -22,7 +22,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
@@ -37,10 +36,13 @@ import { useFinalizarTreinamento } from '../../../_hooks/colaborador/useTreiname
 import type { TreinamentoRealizado } from '../../../_types/colaborador/ContratacaoType'
 
 const finalizarTreinamentoSchema = z.object({
-  finalizadoEm: z.date({
+  finalizadoEm: z.coerce.date({
     required_error: 'Data de finalização é obrigatória',
   }),
   certificado: z.string(),
+  iniciadoEmConfirmado: z.coerce.date({
+    required_error: 'Confirme a data de início do treinamento',
+  }),
 })
 
 type FinalizarTreinamentoFormData = z.infer<typeof finalizarTreinamentoSchema>
@@ -67,6 +69,7 @@ export function DialogFinalizarTreinamento({
     defaultValues: {
       finalizadoEm: new Date(),
       certificado: '',
+      iniciadoEmConfirmado: treinamento?.iniciadoEm ? new Date(treinamento.iniciadoEm) : new Date(),
     },
   })
 
@@ -136,8 +139,9 @@ export function DialogFinalizarTreinamento({
       {
         id: treinamento.id,
         data: {
-          finalizadoEm: data.finalizadoEm.toISOString(),
+          finalizadoEm: data.finalizadoEm,
           certificado: certificadoUrl || undefined,
+          iniciadoEmConfirmado: data.iniciadoEmConfirmado
         },
       },
       {
@@ -181,6 +185,49 @@ export function DialogFinalizarTreinamento({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="iniciadoEmConfirmado"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Confirme a Data de Início</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            'w-full pl-3 text-left font-normal',
+                            !field.value && 'text-muted-foreground'
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, 'PPP', { locale: ptBR })
+                          ) : (
+                            <span>Selecione uma data</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) =>
+                          date > new Date() || date < new Date('1900-01-01')
+                        }
+                        initialFocus
+                        locale={ptBR}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="finalizadoEm"

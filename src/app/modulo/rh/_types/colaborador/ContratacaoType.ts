@@ -73,8 +73,9 @@ export interface IniciarTreinamentoRequest {
 }
 
 export interface FinalizarTreinamentoRequest {
-  finalizadoEm: string
+  finalizadoEm: Date
   certificado?: string
+  iniciadoEmConfirmado: Date
 }
 
 export interface AtualizarTreinamentoRealizadoRequest {
