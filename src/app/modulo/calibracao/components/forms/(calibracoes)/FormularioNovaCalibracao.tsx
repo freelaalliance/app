@@ -29,7 +29,7 @@ import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { ListaArquivo } from '@/components/upload/lista-arquivo'
 import { Upload } from '@/components/upload/upload'
-import { cn } from '@/lib/utils'
+import { cn, useDecimalInput } from '@/lib/utils'
 
 import {
   type DadosInstrumentoType,
@@ -285,55 +285,61 @@ export function NovaCalibracaoForm() {
           <FormField
             control={form.control}
             name="erroEncontrado"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Maior erro encontrado</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Maior erro encontrado"
-                    itemType="number"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            render={({ field }) => {
+              const decimalField = useDecimalInput(field)
+              return (
+                <FormItem>
+                  <FormLabel>Maior erro encontrado</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Maior erro encontrado"
+                      {...decimalField}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )
+            }}
           />
 
           <FormField
             control={form.control}
             name="incertezaTendenciaEncontrado"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Incerteza ou tendência encontrado</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Incerteza ou tendencia encontrado"
-                    itemType="number"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            render={({ field }) => {
+              const decimalField = useDecimalInput(field)
+              return (
+                <FormItem>
+                  <FormLabel>Incerteza ou tendência encontrado</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Incerteza ou tendencia encontrado"
+                      {...decimalField}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )
+            }}
           />
 
           <FormField
             control={form.control}
             name="tolerancia"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Tolerância estabelecida pela empresa</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Tolerância"
-                    itemType="number"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            render={({ field }) => {
+              const decimalField = useDecimalInput(field)
+              return (
+                <FormItem>
+                  <FormLabel>Tolerância estabelecida pela empresa</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Tolerância"
+                      {...decimalField}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )
+            }}
           />
         </div>
 

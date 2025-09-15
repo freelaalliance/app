@@ -256,7 +256,7 @@ export function formatarValorMoeda(valor: number): string {
 }
 
 export function formatarNumeroTelefone(telefone: string): string {
-  
+
   if (telefone.length === 9) {
     return telefone.replace(/(\d{1})(\d{4})(\d{4})/, '$1 $2-$3')
   }
@@ -265,7 +265,7 @@ export function formatarNumeroTelefone(telefone: string): string {
 }
 
 export function formatarNumeroTelefoneComDDD(telefone: string): string {
-  
+
   if (telefone.length === 11) {
     return telefone.replace(/(\d{2})(\d{1})(\d{4})(\d{4})/, '($1) $2 $3-$4')
   }
@@ -275,4 +275,34 @@ export function formatarNumeroTelefoneComDDD(telefone: string): string {
 
 export function removerCaracteresEspecial(informacao: string) {
   return informacao.replace(/[^a-zA-Z0-9 ]/g, '')
+}
+
+// Função para formatear números decimais (vírgula -> ponto)
+export function formatDecimalInput(value: string): string {
+  // Remove caracteres não numéricos exceto vírgula e ponto
+  let cleaned = value.replace(/[^\d,.-]/g, '')
+
+  // Substitui vírgula por ponto
+  cleaned = cleaned.replace(/,/g, '.')
+
+  // Remove pontos extras (mantém apenas o primeiro)
+  const parts = cleaned.split('.')
+  if (parts.length > 2) {
+    cleaned = `${parts[0]}.${parts.slice(1).join('')}`
+  }
+
+  return cleaned
+}
+
+// Hook personalizado para campos numéricos decimais
+export function useDecimalInput(field: { onChange: (value: string) => void; value: string }) {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formattedValue = formatDecimalInput(e.target.value)
+    field.onChange(formattedValue)
+  }
+
+  return {
+    ...field,
+    onChange: handleChange,
+  }
 }
