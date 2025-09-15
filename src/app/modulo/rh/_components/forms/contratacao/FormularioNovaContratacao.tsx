@@ -369,7 +369,7 @@ export function FormularioNovaContratacao({ onSubmitCallback }: FormularioNovaCo
                           onSelect={field.onChange}
                           disabled={date => date <= new Date(date.getDate(), date.getMonth(), date.getFullYear() - 1)}
                           locale={ptBR}
-                          initialFocus
+                          captionLayout="dropdown"
                         />
                       </PopoverContent>
                     </Popover>

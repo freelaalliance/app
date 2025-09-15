@@ -135,7 +135,7 @@ export function FormularioExpedicao({ dadosVenda, itensAvaliacaoExpedicao }: For
                     onSelect={field.onChange}
                     disabled={dataExpedicao}
                     locale={ptBR}
-                    initialFocus
+                    captionLayout="dropdown"
                   />
                 </PopoverContent>
               </Popover>

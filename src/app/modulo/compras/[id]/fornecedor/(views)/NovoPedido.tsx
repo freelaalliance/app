@@ -180,7 +180,7 @@ export default function NovoPedidoView({ fornecedorId }: NovoPedidoProps) {
                         onSelect={field.onChange}
                         disabled={date => date <= new Date()}
                         locale={ptBR}
-                        initialFocus
+                        captionLayout="dropdown"
                       />
                     </PopoverContent>
                   </Popover>

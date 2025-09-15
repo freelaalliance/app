@@ -11,18 +11,12 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { Separator } from '@/components/ui/separator'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { consultarCep } from '@/lib/ViacepLib'
 import type { EmailPessoa, TelefonePessoa } from '@/types/PessoaType'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2, Plus, Trash2 } from 'lucide-react'
-import { useEffect, useMemo } from 'react'
+import { Plus, Trash2 } from 'lucide-react'
+import { useMemo } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { useAtualizarDadosColaborador } from '../../../_hooks/colaborador/useContratacaoColaborador'
@@ -31,8 +25,6 @@ import {
   schemaEditarColaborador,
 } from '../../../_schemas/colaborador/EditarColaboradorSchemas'
 import type { Contratacao } from '../../../_types/colaborador/ContratacaoType'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { consultarCep } from '@/lib/ViacepLib'
 
 interface FormularioEditarColaboradorProps {
   contratacao: Contratacao

@@ -210,7 +210,7 @@ export default function NovaAvaliacaoCriticoView({
                         onSelect={field.onChange}
                         disabled={(date: Date) => date <= new Date()}
                         locale={ptBR}
-                        initialFocus
+                        captionLayout="dropdown"
                       />
                     </PopoverContent>
                   </Popover>

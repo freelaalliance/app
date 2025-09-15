@@ -233,7 +233,7 @@ export function NovaCalibracaoForm() {
                       selected={field.value}
                       onSelect={field.onChange}
                       locale={ptBR}
-                      initialFocus
+                      captionLayout="dropdown"
                     />
                   </PopoverContent>
                 </Popover>

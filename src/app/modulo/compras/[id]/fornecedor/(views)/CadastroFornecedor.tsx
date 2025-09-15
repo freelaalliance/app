@@ -407,7 +407,7 @@ export default function CadastroFornecedorView() {
                             onSelect={field.onChange}
                             disabled={date => date < new Date()}
                             locale={ptBR}
-                            initialFocus
+                            captionLayout="dropdown"
                           />
                         </PopoverContent>
                       </Popover>

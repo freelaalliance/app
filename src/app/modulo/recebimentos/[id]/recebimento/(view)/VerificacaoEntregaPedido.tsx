@@ -210,7 +210,7 @@ export default function VerificaEntregaPedido({
                           onSelect={field.onChange}
                           disabled={limiteDataRecebimento}
                           locale={ptBR}
-                          initialFocus
+                          captionLayout="dropdown"
                         />
                       </PopoverContent>
                     </Popover>

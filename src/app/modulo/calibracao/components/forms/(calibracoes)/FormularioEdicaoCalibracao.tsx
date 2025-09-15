@@ -306,7 +306,7 @@ export function FormaularioEdicaoCalibracao({
                       selected={field.value}
                       onSelect={field.onChange}
                       locale={ptBR}
-                      initialFocus
+                      captionLayout="dropdown"
                     />
                   </PopoverContent>
                 </Popover>

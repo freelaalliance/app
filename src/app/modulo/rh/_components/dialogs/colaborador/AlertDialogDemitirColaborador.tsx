@@ -154,7 +154,7 @@ export function AlertDialogDemitirColaborador({
                         disabled={(date) =>
                           date < new Date(contratacao.admitidoEm) || date > new Date()
                         }
-                        initialFocus
+                        captionLayout="dropdown"
                       />
                     </PopoverContent>
                   </Popover>

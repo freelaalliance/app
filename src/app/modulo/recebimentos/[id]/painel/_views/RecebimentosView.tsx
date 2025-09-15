@@ -158,7 +158,7 @@ export default function PainelRecebimentos() {
               <PopoverContent className="w-full overflow-auto h-[300px] md:h-auto">
                 <Calendar
                   className="border rounded-sm"
-                  initialFocus
+                  captionLayout="dropdown"
                   mode="range"
                   defaultMonth={date?.from}
                   selected={date}
