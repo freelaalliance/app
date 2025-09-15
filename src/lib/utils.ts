@@ -186,21 +186,21 @@ export function formatarDataBrasil(
   formato = 'PPPP'
 ): string {
   if (horas) {
-    data = new Date(
+    const dataComHoras = new Date(
       data.getFullYear(),
       data.getMonth(),
       data.getDate(),
       data.getHours(),
       data.getMinutes()
     )
-    return format(data, 'dd/MM/yyyy HH:mm', {
+    return format(dataComHoras, 'dd/MM/yyyy HH:mm', {
       locale: ptBR,
     })
   }
 
-  data = new Date(data.getFullYear(), data.getMonth(), data.getDate() + 1)
+  const dataFormatada = new Date(data.getFullYear(), data.getMonth(), data.getDate() + 1)
 
-  return format(data, formato, {
+  return format(dataFormatada, formato, {
     locale: ptBR,
   })
 }
@@ -295,14 +295,17 @@ export function formatDecimalInput(value: string): string {
 }
 
 // Hook personalizado para campos numéricos decimais
-export function useDecimalInput(field: { onChange: (value: string) => void; value: string }) {
+export function useDecimalInput(field: { onChange: (value: number) => void; value: number }) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formattedValue = formatDecimalInput(e.target.value)
-    field.onChange(formattedValue)
+    // Converte o valor formatado para number antes de enviar para o form
+    const numericValue = formattedValue === '' ? 0 : Number.parseFloat(formattedValue)
+    field.onChange(numericValue)
   }
 
   return {
     ...field,
+    value: field.value?.toString() || '', // Converte number para string para exibição
     onChange: handleChange,
   }
 }

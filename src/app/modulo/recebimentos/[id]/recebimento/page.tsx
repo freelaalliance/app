@@ -12,22 +12,32 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { buscarPedidosPorStatusEmpresa } from '@/app/modulo/compras/[id]/fornecedor/(api)/ComprasApi'
-import { TabelaPedidos } from '@/app/modulo/compras/[id]/fornecedor/components/tabelas/pedidos/tabela-pedidos'
 import { ColunasPedidosEmpresaRecebimento } from '@/app/modulo/compras/[id]/fornecedor/components/tabelas/pedidos/colunas-tabela-pedidos-recebimento'
+import { TabelaPedidos } from '@/app/modulo/compras/[id]/fornecedor/components/tabelas/pedidos/tabela-pedidos'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export default function RecebimentoPedidos() {
   const listaPedidosPendentesEmpresa = useQuery({
     queryKey: ['pedidosPendenteFornecedor'],
     queryFn: () => buscarPedidosPorStatusEmpresa('pendentes'),
     staleTime: 60 * 60 * 24,
+    initialData: { 
+      dados: [],
+      status: false,
+      msg: ''
+     }
   })
 
   const listaPedidosRecebidosEmpresa = useQuery({
     queryKey: ['pedidosRecebidosFornecedor'],
     queryFn: () => buscarPedidosPorStatusEmpresa('recebidos'),
     staleTime: 60 * 60 * 24,
+    initialData: { 
+      dados: [],
+      status: false,
+      msg: ''
+     }
   })
 
   return (
@@ -42,18 +52,18 @@ export default function RecebimentoPedidos() {
         <section className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <IndicadorInformativo
-              carregandoInformacao={listaPedidosPendentesEmpresa.isLoading}
+              carregandoInformacao={listaPedidosPendentesEmpresa.isFetching}
               titulo={'Compras Pendentes'}
               info={String(
-                listaPedidosPendentesEmpresa.data?.dados?.length
+                listaPedidosPendentesEmpresa.data?.dados?.length ?? 0
               )}
               icon={CalendarClock}
             />
             <IndicadorInformativo
-              carregandoInformacao={listaPedidosPendentesEmpresa.isLoading}
+              carregandoInformacao={listaPedidosPendentesEmpresa.isFetching}
               titulo={'Compras Recebidas'}
               info={String(
-                listaPedidosRecebidosEmpresa.data?.dados?.length
+                listaPedidosRecebidosEmpresa.data?.dados?.length ?? 0
               )}
               icon={PackageOpen}
             />
@@ -68,7 +78,7 @@ export default function RecebimentoPedidos() {
                 <TabsContent value="pendentes">
                   <TabelaPedidos
                     novoPedido={false}
-                    carregandoPedidos={listaPedidosPendentesEmpresa.isLoading}
+                    carregandoPedidos={listaPedidosPendentesEmpresa.isFetching}
                     listaPedidos={
                       listaPedidosPendentesEmpresa.data?.dados ?? []
                     }
@@ -78,7 +88,7 @@ export default function RecebimentoPedidos() {
                 <TabsContent value="recebidos">
                   <TabelaPedidos
                     novoPedido={false}
-                    carregandoPedidos={listaPedidosRecebidosEmpresa.isLoading}
+                    carregandoPedidos={listaPedidosRecebidosEmpresa.isFetching}
                     listaPedidos={
                       listaPedidosRecebidosEmpresa.data?.dados ?? []
                     }

@@ -1,7 +1,7 @@
-import { axiosInstance, RespostaType } from '@/lib/AxiosLib'
+import { type RespostaType, axiosInstance } from '@/lib/AxiosLib'
 import { encodeFileToBase64 } from '@/lib/utils'
 
-import { CalibracaoInstrumentoValores } from '../schemas/(calibracoes)/SchemaNovaCalibracao'
+import type { CalibracaoInstrumentoValores } from '../schemas/(calibracoes)/SchemaNovaCalibracao'
 
 export type DadosInstrumentoType = {
   id: string
@@ -30,7 +30,7 @@ export async function salvarCalibracao(
     tolerancia,
     observacaoCalibracao,
   }: CalibracaoInstrumentoValores,
-  certificado: File,
+  certificado: File
 ): Promise<RespostaType> {
   const certificadoBase64: string = await encodeFileToBase64(certificado)
 
@@ -62,19 +62,21 @@ export async function salvarCalibracao(
       },
       {
         responseType: 'json',
-      },
+      }
     )
-    .then((resp) => {
+    .then(resp => {
       return resp.data
     })
-    .catch((error) => {
+    .catch(error => {
       if (error.response) {
         return error.response.data as RespostaType
+      // biome-ignore lint/style/noUselessElse: <explanation>
       } else if (error.request) {
         return {
           status: false,
           msg: error.request || 'Não foi possível salvar calibração!',
         }
+      // biome-ignore lint/style/noUselessElse: <explanation>
       } else {
         return {
           status: false,
@@ -85,16 +87,16 @@ export async function salvarCalibracao(
 }
 
 export function consultarCodigoInstrumento(
-  codigo: string,
+  codigo: string
 ): Promise<DadosInstrumentoType | null> {
   return axiosInstance
-    .get<DadosInstrumentoType | null>(`instrumentos`, {
+    .get<DadosInstrumentoType | null>('instrumentos', {
       params: {
         codigo,
       },
       responseType: 'json',
     })
-    .then((resp) => {
+    .then(resp => {
       return resp.data
     })
     .catch(() => {

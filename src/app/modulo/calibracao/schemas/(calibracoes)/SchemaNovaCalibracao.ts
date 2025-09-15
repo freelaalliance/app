@@ -75,33 +75,24 @@ const calibracaoFormSchema = z.object({
       required_error: 'Obrigatório informar o erro encontrado!',
       invalid_type_error: 'Tipo inserido inválido, informe apenas numero!',
     })
-    .transform((val) => Number.parseFloat(val.replace(',', '.')))
+    .transform((val) => val.replace(',', '.'))
     .refine((val) => !Number.isNaN(val), {
       message: 'Deve ser um número válido',
-    })
-    .refine((val) => val < 0, {
-      message: 'O Erro encontrado deve ser maior ou igual a zero',
     }),
   incertezaTendenciaEncontrado: z.coerce
     .string({
       required_error: 'Obrigatório informar a incerteza/tendência encontrado!',
       invalid_type_error: 'Tipo inserido inválido, informe apenas numero!',
     })
-    .transform((val) => Number.parseFloat(val.replace(',', '.')))
-    .refine((val) => val > 0, {
-      message: 'Deve ser maior que zero',
-    }),
+    .transform((val) => (val.replace(',', '.'))),
   tolerancia: z.coerce
     .string({
       required_error: 'Obrigatório informar a tolerância!',
       invalid_type_error: 'Tipo inserido inválido, informe apenas numero!',
     })
-    .transform((val) => Number.parseFloat(val.replace(',', '.')))
+    .transform((val) => val.replace(',', '.'))
     .refine((val) => !Number.isNaN(val), {
       message: 'Deve ser um número válido',
-    })
-    .refine((val) => val > 0, {
-      message: 'Deve ser maior que zero',
     }),
   observacaoCalibracao: z.optional(z.string()),
 })
@@ -119,9 +110,9 @@ const valoresPadroes: Partial<CalibracaoInstrumentoValores> = {
   dataCalibracao: new Date(),
   frequenciaCalibracao: 1,
   repeticaoCalibracao: 0,
-  erroEncontrado: 0,
-  incertezaTendenciaEncontrado: 0,
-  tolerancia: 0,
+  erroEncontrado: "0",
+  incertezaTendenciaEncontrado: "0",
+  tolerancia: "0",
 }
 
 export { valoresPadroes, calibracaoFormSchema }

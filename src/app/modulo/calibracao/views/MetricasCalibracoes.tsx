@@ -5,13 +5,13 @@ import {
   DownloadCloud,
   SmartphoneNfc,
 } from 'lucide-react'
-import generatePDF, { Margin, Options, Resolution } from 'react-to-pdf'
+import generatePDF, { Margin, type Options, Resolution } from 'react-to-pdf'
 import { toast } from 'sonner'
 
-import CalendarioEventos, {
-  eventoCalendario,
-} from '@/components/calendario/CalendarioEventos'
 import { IndicadorInformativo } from '@/components/IndicadorInfo'
+import CalendarioEventos, {
+  type eventoCalendario,
+} from '@/components/calendario/CalendarioEventos'
 import {
   Accordion,
   AccordionContent,
@@ -36,11 +36,11 @@ import {
 import { formatarDataBrasil, handleDownloadFile } from '@/lib/utils'
 
 import {
-  AgendaCalibracaoEmpresaType,
+  type AgendaCalibracaoEmpresaType,
   recuperaCorVencimentoCalibracoesAgenda,
 } from '../api/AgendaCalibracoes'
-import { CalibracoesInstrumentosEmpresaType } from '../api/Calibracao'
-import { EstatisticasCalibracaoInstrumentoGeral } from '../api/EstatisticasCalibracao'
+import type { CalibracoesInstrumentosEmpresaType } from '../api/Calibracao'
+import type { EstatisticasCalibracaoInstrumentoGeral } from '../api/EstatisticasCalibracao'
 
 const getMetricaCalibracaoRelatorio = () =>
   document.getElementById('metricasCalibracao')
@@ -75,7 +75,7 @@ export default function MetricasCalibracaoView({
   agenda,
   historicoCalibracoes,
 }: MetricasCalibracaoProps) {
-  const agendaCalibracoes: eventoCalendario = agenda.eventos.map((dados) => {
+  const agendaCalibracoes: eventoCalendario = agenda.eventos.map(dados => {
     return {
       id: dados.id,
       allDay: true,
@@ -83,10 +83,10 @@ export default function MetricasCalibracaoView({
       start: dados.agendadoPara,
       end: dados.agendadoPara,
       backgroundColor: recuperaCorVencimentoCalibracoesAgenda(
-        new Date(dados.agendadoPara),
+        new Date(dados.agendadoPara)
       ).bgCalendario,
       borderColor: recuperaCorVencimentoCalibracoesAgenda(
-        new Date(dados.agendadoPara),
+        new Date(dados.agendadoPara)
       ).bgCalendario,
       textColor: '#fff',
       display: 'block',
@@ -148,7 +148,7 @@ export default function MetricasCalibracaoView({
                 <CardHeader>
                   <CardTitle>Históricos de calibrações</CardTitle>
                   <CardDescription>
-                    {`Calibrações realizadas recentemente`}
+                    {'Calibrações realizadas recentemente'}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -158,7 +158,7 @@ export default function MetricasCalibracaoView({
                     className="w-full md:h-[400px]"
                   >
                     <ScrollArea className="max-h-[350px] overflow-auto">
-                      {historicoCalibracoes.dados.map((historico) => {
+                      {historicoCalibracoes.dados.map(historico => {
                         return (
                           <AccordionItem
                             key={historico.calibracao.id}
@@ -185,11 +185,11 @@ export default function MetricasCalibracaoView({
                                     if (historico.calibracao.certificado) {
                                       await handleDownloadFile(
                                         historico.calibracao.certificado,
-                                        historico.calibracao.id,
+                                        historico.calibracao.id
                                       )
                                     } else {
                                       toast.warning(
-                                        'Certificado não encontrado!',
+                                        'Certificado não encontrado!'
                                       )
                                     }
                                   }}

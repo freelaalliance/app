@@ -29,7 +29,7 @@ import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { ListaArquivo } from '@/components/upload/lista-arquivo'
 import { Upload } from '@/components/upload/upload'
-import { cn, useDecimalInput } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 
 import {
   type DadosInstrumentoType,
@@ -286,14 +286,13 @@ export function NovaCalibracaoForm() {
             control={form.control}
             name="erroEncontrado"
             render={({ field }) => {
-              const decimalField = useDecimalInput(field)
               return (
                 <FormItem>
                   <FormLabel>Maior erro encontrado</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Maior erro encontrado"
-                      {...decimalField}
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
@@ -306,14 +305,13 @@ export function NovaCalibracaoForm() {
             control={form.control}
             name="incertezaTendenciaEncontrado"
             render={({ field }) => {
-              const decimalField = useDecimalInput(field)
               return (
                 <FormItem>
                   <FormLabel>Incerteza ou tendência encontrado</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Incerteza ou tendencia encontrado"
-                      {...decimalField}
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
@@ -326,14 +324,13 @@ export function NovaCalibracaoForm() {
             control={form.control}
             name="tolerancia"
             render={({ field }) => {
-              const decimalField = useDecimalInput(field)
               return (
                 <FormItem>
                   <FormLabel>Tolerância estabelecida pela empresa</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Tolerância"
-                      {...decimalField}
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
