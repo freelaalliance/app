@@ -41,10 +41,13 @@ import {
   calibracaoFormSchema,
   valoresPadroes,
 } from '../../../schemas/(calibracoes)/SchemaNovaCalibracao'
+import { useQueryClient } from '@tanstack/react-query'
 
 export function NovaCalibracaoForm() {
   const [idInstrumento, setarIdInstrumento] = useState<string | null>(null)
   const [listaArquivoSelecionado, adicionaArquivo] = useState<Array<File>>([])
+
+  const queryClient = useQueryClient()
 
   const form = useForm<CalibracaoInstrumentoValores>({
     resolver: zodResolver(calibracaoFormSchema),
@@ -70,6 +73,12 @@ export function NovaCalibracaoForm() {
       if (respostaRequisicao.status) {
         toast.success(respostaRequisicao.msg)
         resetarFormulario()
+        queryClient.invalidateQueries({ queryKey: ['historicoCalibracoes'] })
+        queryClient.invalidateQueries({ queryKey: ['agendaCalibracoes'] })
+        queryClient.invalidateQueries({
+          queryKey: ['estatisticasCalibracaoes'],
+        })
+        queryClient.invalidateQueries({ queryKey: ['listaCalibracoes'] })
       } else {
         toast.error(respostaRequisicao.msg)
       }

@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { addDays, format } from 'date-fns'
+import { addDays, addMonths, format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { CalendarIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
@@ -211,6 +211,7 @@ export default function NovaAvaliacaoCriticoView({
                         disabled={(date: Date) => date <= new Date()}
                         locale={ptBR}
                         captionLayout="dropdown"
+                        endMonth={addMonths(new Date(), 100)}
                       />
                     </PopoverContent>
                   </Popover>
