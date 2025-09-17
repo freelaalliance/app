@@ -1,7 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { format } from 'date-fns'
+import { addMonths, format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { CalendarIcon, Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -243,6 +243,7 @@ export function NovaCalibracaoForm() {
                       onSelect={field.onChange}
                       locale={ptBR}
                       captionLayout="dropdown"
+                      endMonth={addMonths(new Date(), 100)}
                     />
                   </PopoverContent>
                 </Popover>
