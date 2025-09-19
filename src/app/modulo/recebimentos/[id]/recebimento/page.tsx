@@ -21,6 +21,7 @@ export default function RecebimentoPedidos() {
   const listaPedidosPendentesEmpresa = useQuery({
     queryKey: ['pedidosPendenteFornecedor'],
     queryFn: () => buscarPedidosPorStatusEmpresa('pendentes'),
+    refetchInterval: 60 * 60 * 24,
     initialData: { 
       dados: [],
       status: false,
@@ -35,7 +36,8 @@ export default function RecebimentoPedidos() {
       dados: [],
       status: false,
       msg: ''
-     }
+     },
+    refetchInterval: 60 * 60 * 24
   })
 
   return (
@@ -53,15 +55,15 @@ export default function RecebimentoPedidos() {
               carregandoInformacao={listaPedidosPendentesEmpresa.isFetching}
               titulo={'Compras Pendentes'}
               info={String(
-                listaPedidosPendentesEmpresa.data?.dados?.length ?? 0
+                listaPedidosPendentesEmpresa.data?.dados ? listaPedidosPendentesEmpresa.data?.dados.length : 0
               )}
               icon={CalendarClock}
             />
             <IndicadorInformativo
-              carregandoInformacao={listaPedidosPendentesEmpresa.isFetching}
+              carregandoInformacao={listaPedidosRecebidosEmpresa.isFetching}
               titulo={'Compras Recebidas'}
               info={String(
-                listaPedidosRecebidosEmpresa.data?.dados?.length ?? 0
+                listaPedidosRecebidosEmpresa.data?.dados ? listaPedidosRecebidosEmpresa.data?.dados.length : 0
               )}
               icon={PackageOpen}
             />
@@ -78,7 +80,7 @@ export default function RecebimentoPedidos() {
                     novoPedido={false}
                     carregandoPedidos={listaPedidosPendentesEmpresa.isFetching}
                     listaPedidos={
-                      listaPedidosPendentesEmpresa.data?.dados ?? []
+                      listaPedidosPendentesEmpresa.data?.dados || []
                     }
                     colunasTabela={ColunasPedidosEmpresaRecebimento}
                   />
@@ -88,7 +90,7 @@ export default function RecebimentoPedidos() {
                     novoPedido={false}
                     carregandoPedidos={listaPedidosRecebidosEmpresa.isFetching}
                     listaPedidos={
-                      listaPedidosRecebidosEmpresa.data?.dados ?? []
+                      listaPedidosRecebidosEmpresa.data?.dados || []
                     }
                     colunasTabela={ColunasPedidosEmpresaRecebimento}
                   />
