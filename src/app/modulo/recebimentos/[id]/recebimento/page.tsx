@@ -21,7 +21,6 @@ export default function RecebimentoPedidos() {
   const listaPedidosPendentesEmpresa = useQuery({
     queryKey: ['pedidosPendenteFornecedor'],
     queryFn: () => buscarPedidosPorStatusEmpresa('pendentes'),
-    staleTime: 60 * 60 * 24,
     initialData: { 
       dados: [],
       status: false,
@@ -32,7 +31,6 @@ export default function RecebimentoPedidos() {
   const listaPedidosRecebidosEmpresa = useQuery({
     queryKey: ['pedidosRecebidosFornecedor'],
     queryFn: () => buscarPedidosPorStatusEmpresa('recebidos'),
-    staleTime: 60 * 60 * 24,
     initialData: { 
       dados: [],
       status: false,
