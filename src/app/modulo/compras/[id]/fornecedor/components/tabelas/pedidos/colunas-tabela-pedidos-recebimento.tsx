@@ -106,13 +106,15 @@ export const ColunasPedidosEmpresaRecebimento: Array<
       enableColumnFilter: true,
       cell: ({ row }) => {
         const getDataEntrega = () => {
-          if (!row.original.recebimento || row.original.recebimento.length === 0) return null
+          if (row.original.recebimento && row.original.recebimento.length > 0){
+            if (row.original.permiteEntregaParcial) {
+              return row.original.recebimento[row.original.recebimento.length - 1].dataRecebimento
+            }
 
-          if (row.original.recebimento[0]?.dataRecebimento) return null
+            return row.original.recebimento[0].dataRecebimento
+          }
 
-          return row.original.permiteEntregaParcial
-            ? (row.original.recebimento[(row.original.recebimento?.length > 0 ? row.original.recebimento.length - 1 : 0)]?.dataRecebimento || null)
-            : row.original.recebimento[0]?.dataRecebimento
+          return null
         }
 
         const dataEntrega = getDataEntrega()

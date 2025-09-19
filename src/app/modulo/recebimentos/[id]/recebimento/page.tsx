@@ -70,7 +70,7 @@ export default function RecebimentoPedidos() {
                     novoPedido={false}
                     carregandoPedidos={listaPedidosPendentesEmpresa.isFetching}
                     listaPedidos={
-                      listaPedidosPendentesEmpresa.data?.dados || []
+                      listaPedidosPendentesEmpresa.data?.dados ?? []
                     }
                     colunasTabela={ColunasPedidosEmpresaRecebimento}
                   />
@@ -80,7 +80,7 @@ export default function RecebimentoPedidos() {
                     novoPedido={false}
                     carregandoPedidos={listaPedidosRecebidosEmpresa.isFetching}
                     listaPedidos={
-                      listaPedidosRecebidosEmpresa.data?.dados || []
+                      listaPedidosRecebidosEmpresa.data?.dados ?? []
                     }
                     colunasTabela={ColunasPedidosEmpresaRecebimento}
                   />
