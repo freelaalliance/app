@@ -105,19 +105,21 @@ export const ColunasPedidosEmpresaRecebimento: Array<
     enableHiding: false,
     enableColumnFilter: true,
     cell: ({ row }) => {
-      const dataEntrega = row.original.permiteEntregaParcial
-        ? row.original.recebimento
-          ? row.original.recebimento[row.original.recebimento.length - 1]?.dataRecebimento
-          : null
-        : row.original.recebimento
-          ? row.original.recebimento[0]?.dataRecebimento
-          : null
+      const getDataEntrega = () => {
+        if (!row.original.recebimento) return null
+        
+        return row.original.permiteEntregaParcial
+          ? (row.original.recebimento[(row.original.recebimento?.length ?? 0) - 1]?.dataRecebimento || null)
+          : row.original.recebimento[0]?.dataRecebimento
+      }
+
+      const dataEntrega = getDataEntrega()
 
       return (
         <div className="capitalize">
           {dataEntrega
-            ? formatarDataBrasil(new Date(dataEntrega), false, 'PP')
-            : '--'}
+        ? formatarDataBrasil(new Date(dataEntrega), false, 'PP')
+        : '--'}
         </div>
       )
     },
