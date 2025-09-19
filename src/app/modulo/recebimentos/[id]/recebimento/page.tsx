@@ -17,17 +17,19 @@ import { ColunasPedidosEmpresaRecebimento } from '@/app/modulo/compras/[id]/forn
 import { TabelaPedidos } from '@/app/modulo/compras/[id]/fornecedor/components/tabelas/pedidos/tabela-pedidos'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
+const INTERVALO_REVALIDACAO_HORA = 60 * 60 * 3600
+
 export default function RecebimentoPedidos() {
   const listaPedidosPendentesEmpresa = useQuery({
     queryKey: ['pedidosPendenteFornecedor'],
     queryFn: () => buscarPedidosPorStatusEmpresa('pendentes'),
-    staleTime: 60 * 60 * 24
+    refetchInterval: INTERVALO_REVALIDACAO_HORA
   })
 
   const listaPedidosRecebidosEmpresa = useQuery({
     queryKey: ['pedidosRecebidosFornecedor'],
     queryFn: () => buscarPedidosPorStatusEmpresa('recebidos'),
-    staleTime: 60 * 60 * 24
+    refetchInterval: INTERVALO_REVALIDACAO_HORA
   })
 
   return (
