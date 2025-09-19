@@ -106,7 +106,7 @@ export const ColunasPedidosEmpresaRecebimento: Array<
     enableColumnFilter: true,
     cell: ({ row }) => {
       const getDataEntrega = () => {
-        if (!row.original.recebimento) return null
+        if (!row.original.recebimento || row.original.recebimento.length === 0) return null
         
         return row.original.permiteEntregaParcial
           ? (row.original.recebimento[(row.original.recebimento?.length ?? 0) - 1]?.dataRecebimento || null)
