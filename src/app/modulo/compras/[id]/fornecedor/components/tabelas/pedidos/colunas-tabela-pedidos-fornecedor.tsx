@@ -58,9 +58,8 @@ export const ColunasPedidosFornecedor: Array<ColumnDef<PedidosFornecedorType>> =
       cell: ({ row }) => {
         if (row.original.recebimento && row.original.recebimento.length > 0) {
           const dataEntrega = row.original.permiteEntregaParcial
-            ? row.original.recebimento[row.original.recebimento.length - 1]
-                .dataRecebimento
-            : row.original.recebimento[0].dataRecebimento
+            ? row.original.recebimento[row.original.recebimento.length - 1]?.dataRecebimento
+            : row.original.recebimento[0]?.dataRecebimento
 
           return (
             <div className="capitalize">
@@ -70,7 +69,7 @@ export const ColunasPedidosFornecedor: Array<ColumnDef<PedidosFornecedorType>> =
             </div>
           )
         }
-        return <div>--</div>
+        return '--'
       },
     },
     {

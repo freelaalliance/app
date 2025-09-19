@@ -100,11 +100,11 @@ export function TabelaPedidos({
                     </DialogHeader>
                     <LeitorQrCode
                       setDadosQrCode={(codigo: string) => {
-                        codigo = codigo.split('-')[0]
+                        const codigoPedido = codigo.split('-')[0]
 
                         tabelaPedidosFornecedor
                           .getColumn('numPedido')
-                          ?.setFilterValue(codigo)
+                          ?.setFilterValue(codigoPedido)
 
                         setEstadoDialogLeitor(false)
                       }}

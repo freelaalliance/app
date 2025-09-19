@@ -107,8 +107,7 @@ export const ColunasPedidosEmpresaRecebimento: Array<
     cell: ({ row }) => {
       const dataEntrega = row.original.permiteEntregaParcial
         ? row.original.recebimento
-          ? row.original.recebimento[row.original.recebimento.length - 1]
-              .dataRecebimento
+          ? row.original.recebimento[row.original.recebimento.length - 1]?.dataRecebimento
           : null
         : row.original.recebimento
           ? row.original.recebimento[0]?.dataRecebimento
