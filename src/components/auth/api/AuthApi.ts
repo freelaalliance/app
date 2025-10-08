@@ -1,4 +1,4 @@
-import {
+import type {
   AuthPropsInterface,
   UsuarioType,
 } from '@/components/auth/schema/SchemaUsuario'

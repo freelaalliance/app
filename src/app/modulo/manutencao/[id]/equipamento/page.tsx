@@ -140,7 +140,8 @@ export default function PageInformacoesEquipamento() {
           borderColor: '#168821',
           color: '#168821',
         }
-      } else if (
+      }
+      if (
         !agendamento.inspecaoRealizada &&
         diferencaDias < 30 &&
         diferencaDias > 0
@@ -156,7 +157,8 @@ export default function PageInformacoesEquipamento() {
           borderColor: '#ffcd07',
           color: '#fff',
         }
-      } else if (!agendamento.inspecaoRealizada && diferencaDias >= 30) {
+      }
+      if (!agendamento.inspecaoRealizada && diferencaDias >= 30) {
         return {
           id: String(agendamento.id),
           allDay: true,
@@ -168,18 +170,17 @@ export default function PageInformacoesEquipamento() {
           borderColor: '#155BCB',
           color: '#155BCB',
         }
-      } else {
-        return {
-          id: String(agendamento.id),
-          allDay: true,
-          start: new Date(agendamento.agendadoPara),
-          title: 'Inspeção atrasada',
-          display: 'auto',
-          backgroundColor: '#E52207',
-          textColor: '#fff',
-          borderColor: '#E52207',
-          color: '#E52207',
-        }
+      }
+      return {
+        id: String(agendamento.id),
+        allDay: true,
+        start: new Date(agendamento.agendadoPara),
+        title: 'Inspeção atrasada',
+        display: 'auto',
+        backgroundColor: '#E52207',
+        textColor: '#fff',
+        borderColor: '#E52207',
+        color: '#E52207',
       }
     }) ?? []
 

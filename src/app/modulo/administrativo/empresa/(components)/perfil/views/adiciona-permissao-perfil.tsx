@@ -13,11 +13,11 @@ import {
   listarFuncoesModulo,
   listarModulosEmpresa,
 } from '../../../api/Permissao'
-import {
+import type {
   PermissaoPerfilType,
   PermissaoVinculadoPerfilType,
 } from '../../../schemas/SchemaModulo'
-import { PermissaoPerfilProps } from '../components/dialogs/DialogPermissoesPerfil'
+import type { PermissaoPerfilProps } from '../components/dialogs/DialogPermissoesPerfil'
 import { ListaFuncoes } from '../components/selects/lista-funcoes'
 import { ListaModulos } from '../components/selects/lista-modulos'
 import { DataTablePermissoesVinculadasPerfil } from '../components/tabela/permissoes-vinvulado-perfil/tabela-permissoes-vinculados'
@@ -34,7 +34,7 @@ export default function AdicionarPermissaoPerfil({
   const { data: listaModulos, isLoading: carregandoDados } = useQuery({
     queryKey: ['listaModulosEmpresa', idEmpresa],
     queryFn: () => listarModulosEmpresa(idEmpresa),
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   const idModulo = moduloSelecionado.selected
@@ -42,17 +42,17 @@ export default function AdicionarPermissaoPerfil({
   const { data: funcoesModulo, isLoading: buscandoFuncoes } = useQuery({
     queryKey: ['listaFuncoesModulo', idModulo],
     queryFn: () => listarFuncoesModulo(idModulo),
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
   const queryClient = useQueryClient()
   const listaPermissoesPerfil: Array<PermissaoPerfilType> | undefined =
     queryClient.getQueryData(['listaPermissoesPerfil', idPerfil])
 
   const funcoesNaoVinculados =
-    funcoesModulo?.filter((funcao) => {
+    funcoesModulo?.filter(funcao => {
       if (listaPermissoesPerfil) {
         const verificaPermissaoExistente = listaPermissoesPerfil.some(
-          (permissao) => permissao.id === funcao.id,
+          permissao => permissao.id === funcao.id
         )
 
         return !verificaPermissaoExistente
@@ -62,18 +62,16 @@ export default function AdicionarPermissaoPerfil({
 
   const vincularPermissao = () => {
     const funcao = funcoesModulo?.find(
-      (funcao) => funcao.id === funcaoSelecionado.selected,
+      funcao => funcao.id === funcaoSelecionado.selected
     )
 
     const modulo = listaModulos?.find(
-      (modulo) => modulo.id === moduloSelecionado.selected,
+      modulo => modulo.id === moduloSelecionado.selected
     )
 
     if (funcao && modulo) {
       if (
-        permissoesVinculadasPerfil.find(
-          (permissao) => permissao.id === funcao.id,
-        )
+        permissoesVinculadasPerfil.find(permissao => permissao.id === funcao.id)
       ) {
         toast.info('Essa função já foi vinculado as permissões deste perfil')
       } else {
@@ -88,7 +86,7 @@ export default function AdicionarPermissaoPerfil({
       }
     } else {
       toast.warning(
-        'Necessário selecionar o módulo e a função antes de vincular',
+        'Necessário selecionar o módulo e a função antes de vincular'
       )
     }
   }
@@ -120,11 +118,11 @@ export default function AdicionarPermissaoPerfil({
           data={permissoesVinculadasPerfil}
           idPerfil={idPerfil}
           removerPermissoes={(ids: Array<string>) => {
-            ids.forEach((id) => {
+            ids.forEach(id => {
               setarPermissoesVinculadasPerfil(
                 permissoesVinculadasPerfil.filter(
-                  (permissao) => permissao.id !== id,
-                ),
+                  permissao => permissao.id !== id
+                )
               )
             })
           }}
