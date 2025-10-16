@@ -131,7 +131,7 @@ export function FormularioEditarColaborador({
   useMemo(() => {
     const cep = form.getValues('endereco.cep')
 
-    if (cep.length >= 8) {
+    if (cep && cep.length >= 8) {
       buscarEnderecoCep(cep)
     }
   }, [form.watch('endereco.cep')])
