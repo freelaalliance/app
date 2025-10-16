@@ -15,7 +15,7 @@ export default function Auth() {
 							<Building2 className="w-6 h-6 text-primary-foreground" />
 						</div>
 						<div>
-							<h1 className="text-2xl font-bold">Alliance ERP Admin</h1>
+							<h1 className="text-2xl font-bold">Alliance ERP</h1>
 							<p className="text-primary-foreground/80 text-sm">
 								Sistema de Gestão Empresarial
 							</p>
@@ -45,7 +45,7 @@ export default function Auth() {
 			</div>
 
 			{/* Right Panel - Login Form */}
-			<div className="flex-1 flex items-center bg-gray-200 justify-center p-8">
+			<div className="flex-1 flex items-center bg-gray-50 justify-center p-8">
 				<div className="w-full max-w-md">
 					{/* Mobile Header */}
 					<div className="lg:hidden text-center mb-8">
