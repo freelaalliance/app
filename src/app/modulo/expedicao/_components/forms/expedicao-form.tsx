@@ -6,19 +6,20 @@ import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { DialogClose, DialogFooter } from '@/components/ui/dialog'
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
 } from '@/components/ui/popover'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -29,7 +30,6 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { enviarExpedicao } from '../../_api/expedicao'
-import { ScrollArea } from '@/components/ui/scroll-area'
 
 export interface FormularioExpedicaoProps {
   dadosVenda: VendasCliente
@@ -180,7 +180,7 @@ export function FormularioExpedicao({ dadosVenda, itensAvaliacaoExpedicao }: For
           </DialogClose>
           <Button
             type="submit"
-            className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600 hover:bg-sky-700"
+            className="shadow-md text-sm uppercase leading-none rounded "
             disabled={form.formState.isSubmitting}
           >
             {form.formState.isSubmitting ? 'Salvando...' : 'Salvar'}

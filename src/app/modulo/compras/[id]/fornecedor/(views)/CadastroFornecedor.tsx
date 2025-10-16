@@ -15,19 +15,19 @@ import { Calendar } from '@/components/ui/calendar'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DialogClose, DialogFooter } from '@/components/ui/dialog'
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
 } from '@/components/ui/popover'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
@@ -37,16 +37,16 @@ import { ListaArquivo } from '@/components/upload/lista-arquivo'
 import { Upload } from '@/components/upload/upload'
 import { consultarCep } from '@/lib/ViacepLib'
 import {
-  cn,
-  encodeFileToBase64,
-  formatarDocumento,
-  formatarNumeroTelefone,
-  removerCaracteresEspecial,
+    cn,
+    encodeFileToBase64,
+    formatarDocumento,
+    formatarNumeroTelefone,
+    removerCaracteresEspecial,
 } from '@/lib/utils'
 
 import {
-  type FornecedoresEmpresaType,
-  salvarNovoFornecedor,
+    type FornecedoresEmpresaType,
+    salvarNovoFornecedor,
 } from '../(api)/FornecedorApi'
 import { schemaCadastroFornecedorForm } from '../../../(schemas)/fornecedores/schema-fornecedor'
 
@@ -716,7 +716,7 @@ export default function CadastroFornecedorView() {
             </DialogClose>
             <Button
               type="submit"
-              className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600 hover:bg-sky-700"
+              className="shadow-md text-sm uppercase leading-none rounded "
               disabled={formNovoFornecedor.formState.isSubmitting}
             >
               {formNovoFornecedor.formState.isSubmitting

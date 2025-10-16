@@ -39,8 +39,8 @@ export default function App() {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex-1 justify-center md:justify-start pt-4 text-center md:text-start">
+    <div className="space-y-6">
+      <div className="flex-1 justify-center md:justify-start px-2 pt-4 text-center md:text-start">
         <h4 className="leading-none text-base md:text-lg lg:text-3xl font-bold">{`Olá ${usuarioSessao?.nome}, bem vindo(a) de volta!`}</h4>
         <span>{'Aqui estão os modulos que você tem acesso'}</span>
       </div>
@@ -57,7 +57,7 @@ export default function App() {
             return (
               <Card
                 key={modulo.idModulo}
-                className="shadow-md border-l-4 border-l-padrao-red"
+                className="shadow-md border-l-4 border-l-primary"
               >
                 <CardHeader className="flex flex-row items-center justify-between">
                   <CardTitle className="capitalize text-sm md:text-xl font-medium select-none">
@@ -67,7 +67,7 @@ export default function App() {
                 </CardHeader>
                 <CardFooter>
                   <Button
-                    className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600 hover:bg-sky-700 w-full"
+                    className="shadow-md text-sm uppercase leading-none rounded w-full"
                     onClick={() => {
                       acessarModulo(modulo.idModulo, modulo.urlModulo)
                     }}

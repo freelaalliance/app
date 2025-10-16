@@ -7,12 +7,12 @@ import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { DialogClose, DialogFooter } from '@/components/ui/dialog'
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -20,12 +20,12 @@ import { consultarCep } from '@/lib/ViacepLib'
 import { queryClient } from '@/lib/react-query'
 
 import {
-  type ResponseFornecedorType,
-  salvarModificacaoEndereco,
+    type ResponseFornecedorType,
+    salvarModificacaoEndereco,
 } from '../(api)/FornecedorApi'
 import {
-  type EnderecoFornecedorType,
-  schemaEnderecoForm,
+    type EnderecoFornecedorType,
+    schemaEnderecoForm,
 } from '../../../(schemas)/fornecedores/schema-fornecedor'
 import type { EdicaoEnderecoFornecedorProps } from '../components/dialogs/EdicaoEnderecoFornecedorDialog'
 
@@ -246,7 +246,7 @@ export default function EdicaoEnderecoFornecedorView({
             </DialogClose>
             <Button
               type="submit"
-              className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600 hover:bg-sky-700"
+              className="shadow-md text-sm uppercase leading-none rounded "
               disabled={formEdicaoEndereco.formState.isSubmitting}
             >
               {formEdicaoEndereco.formState.isSubmitting

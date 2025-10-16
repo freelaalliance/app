@@ -94,7 +94,7 @@ export function AtualizacaoItemAvaliativoExpedicaoForm({
           </DialogClose>
           <Button
             type="submit"
-            className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600 hover:bg-sky-700"
+            className="shadow-md text-sm uppercase leading-none rounded "
             disabled={formItemAvaliativosExpedicao.formState.isSubmitting}
           >
             {formItemAvaliativosExpedicao.formState.isSubmitting ? 'Salvando...' : 'Salvar'}

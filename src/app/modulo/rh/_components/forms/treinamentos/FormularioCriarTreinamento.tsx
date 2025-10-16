@@ -2,41 +2,41 @@
 
 import { Button } from '@/components/ui/button'
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from '@/components/ui/dialog'
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@/components/ui/select'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Plus, Trash2, X } from 'lucide-react'
+import { Plus, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { useCriarTreinamento } from '../../../_hooks/treinamentos/useTreinamentos'
 import {
-  type CriarTreinamentoFormData,
-  criarTreinamentoSchema,
+    type CriarTreinamentoFormData,
+    criarTreinamentoSchema,
 } from '../../../_schemas/treinamentos/criarTreinamento.schema'
 
 interface FormularioCriarTreinamentoProps {
@@ -223,7 +223,7 @@ export function FormularioCriarTreinamento({
               </DialogClose>
               <Button
                 type="submit"
-                className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600 hover:bg-sky-700"
+                className="shadow-md text-sm uppercase leading-none rounded "
                 disabled={isPending}
               >
                 {isPending ? 'Criando...' : 'Criar Treinamento'}

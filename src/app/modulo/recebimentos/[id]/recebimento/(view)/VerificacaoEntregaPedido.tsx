@@ -13,38 +13,38 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
 } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from '@/components/ui/table'
 import { cn, formatarDataBrasil } from '@/lib/utils'
 
 import type { ItemAvaliacaoType } from '@/app/modulo/administrativo/modulos/_api/AdmCompras'
+import { consultarPedido } from '@/app/modulo/compras/[id]/fornecedor/(api)/ComprasApi'
+import { Textarea } from '@/components/ui/textarea'
 import { ScrollArea } from '@radix-ui/react-scroll-area'
 import { useRouter } from 'next/navigation'
-import { consultarPedido } from '@/app/modulo/compras/[id]/fornecedor/(api)/ComprasApi'
 import { inserirRecebimento } from '../../../_api/RelatorioRecebimentos'
-import { Textarea } from '@/components/ui/textarea'
 
 const schemaVerificacaoEntrega = z.object({
   numeroCertificado: z.string().optional(),
@@ -313,7 +313,7 @@ export default function VerificaEntregaPedido({
               <div className="grid">
                 <Button
                   type="submit"
-                  className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600 hover:bg-sky-700"
+                  className="shadow-md text-sm uppercase leading-none rounded "
                   disabled={formularioVerificacaoEntrega.formState.isSubmitting}
                 >
                   {formularioVerificacaoEntrega.formState.isSubmitting

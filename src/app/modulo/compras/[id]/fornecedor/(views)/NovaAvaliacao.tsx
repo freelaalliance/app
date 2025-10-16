@@ -12,26 +12,26 @@ import { Calendar } from '@/components/ui/calendar'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DialogClose, DialogFooter } from '@/components/ui/dialog'
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
 } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 
 import {
-  type FornecedoresEmpresaType,
-  salvarNovaAvaliacao,
+    type FornecedoresEmpresaType,
+    salvarNovaAvaliacao,
 } from '../(api)/FornecedorApi'
 import { schemaAvaliacaoFornecedor } from '../../../(schemas)/fornecedores/schema-fornecedor'
 import type { NovaAvaliacaoCriticoProps } from '../components/dialogs/NovaAvaliacaoCriticoDialog'
@@ -235,7 +235,7 @@ export default function NovaAvaliacaoCriticoView({
             </DialogClose>
             <Button
               type="submit"
-              className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600 hover:bg-sky-700"
+              className="shadow-md text-sm uppercase leading-none rounded "
               disabled={formNovaAvaliacao.formState.isSubmitting}
             >
               {formNovaAvaliacao.formState.isSubmitting

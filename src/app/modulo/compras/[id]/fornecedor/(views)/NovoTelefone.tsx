@@ -9,19 +9,19 @@ import type { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { DialogClose, DialogFooter } from '@/components/ui/dialog'
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 
 import {
-  type ResponseFornecedorType,
-  salvarNovoTelefone,
+    type ResponseFornecedorType,
+    salvarNovoTelefone,
 } from '../(api)/FornecedorApi'
 import { schemaTelefoneForm } from '../../../(schemas)/fornecedores/schema-fornecedor'
 import type { NovoTelefoneProps } from '../components/dialogs/NovoTelefoneFornecedorDialog'
@@ -138,7 +138,7 @@ export default function NovoTelefoneView({ idFornecedor }: NovoTelefoneProps) {
             </DialogClose>
             <Button
               type="submit"
-              className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600 hover:bg-sky-700"
+              className="shadow-md text-sm uppercase leading-none rounded "
               disabled={formNovoTelefone.formState.isSubmitting}
             >
               {formNovoTelefone.formState.isSubmitting

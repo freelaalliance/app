@@ -4,22 +4,23 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import { getNumOrder } from '@/app/modulo/compras/[id]/fornecedor/utils/pedido-util'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { DialogClose, DialogFooter } from '@/components/ui/dialog'
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from '@/components/ui/form'
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
 } from '@/components/ui/popover'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
@@ -29,10 +30,9 @@ import { useMutation } from '@tanstack/react-query'
 import { addDays, format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { CalendarIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import type { ItemCarrinhoType } from '../../../_types/venda'
-import { getNumOrder } from '@/app/modulo/compras/[id]/fornecedor/utils/pedido-util'
-import { useRouter } from 'next/navigation'
 
 const expeditionSchema = z.object({
   id: z.string().uuid(),
@@ -213,7 +213,7 @@ export function FormularioVendaCliente({
           </DialogClose>
           <Button
             type="submit"
-            className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600 hover:bg-sky-700"
+            className="shadow-md text-sm uppercase leading-none rounded "
             disabled={formVenda.formState.isSubmitting}
           >
             {formVenda.formState.isSubmitting ? 'Salvando...' : 'Salvar'}

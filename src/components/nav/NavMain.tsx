@@ -1,9 +1,9 @@
-import { PropsWithChildren } from 'react'
-import { v4 as uuidv4 } from 'uuid'
+import type { PropsWithChildren } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
-import { itensNav, NavMainItem } from './NavMainItens'
+import { NavMainItem, type itensNav } from './NavMainItens';
 
 export function NavMain({
   listaItensMenu,
@@ -14,11 +14,11 @@ export function NavMain({
     <nav
       className={cn(
         'flex items-center space-x-2 md:space-x-4 lg:space-x-6',
-        className,
+        className
       )}
       {...props}
     >
-      {listaItensMenu.map((itemNav) => {
+      {listaItensMenu.map(itemNav => {
         return (
           <NavMainItem
             key={uuidv4()}

@@ -3,13 +3,13 @@
 import { Button } from '@/components/ui/button';
 import { DialogClose, DialogFooter } from '@/components/ui/dialog';
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -499,7 +499,7 @@ export function FormualarioCliente() {
           </DialogClose>
           <Button
             type="submit"
-            className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600 hover:bg-sky-700"
+            className="shadow-md text-sm uppercase leading-none rounded "
             disabled={formCliente.formState.isSubmitting}
           >
             {formCliente.formState.isSubmitting

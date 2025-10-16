@@ -6,40 +6,40 @@ import { useCallback, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import {
-  type CriarContratacaoFormType,
-  schemaCriarContratacao,
-  valoresFormPadrao
+    type CriarContratacaoFormType,
+    schemaCriarContratacao,
+    valoresFormPadrao
 } from '@/app/modulo/rh/_schemas/contratacao/ContratacaoSchemas'
 import {
-  type DocumentoUpload,
-  gerarIdDocumento,
-  removerDocumento,
-  uploadDocumento
+    type DocumentoUpload,
+    gerarIdDocumento,
+    removerDocumento,
+    uploadDocumento
 } from '@/app/modulo/rh/_utils/uploadDocumentos'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { DialogClose, DialogFooter } from '@/components/ui/dialog'
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
 } from '@/components/ui/popover'
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -859,7 +859,7 @@ export function FormularioNovaContratacao({ onSubmitCallback }: FormularioNovaCo
           </DialogClose>
           <Button
             type="submit"
-            className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600 hover:bg-sky-700"
+            className="shadow-md text-sm uppercase leading-none rounded "
             disabled={form.formState.isSubmitting}
           >
             {form.formState.isSubmitting ? 'Salvando...' : 'Salvar Contratação'}

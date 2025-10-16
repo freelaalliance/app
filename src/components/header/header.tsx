@@ -11,35 +11,33 @@ export function HeaderApp() {
   const { data, isLoading } = useQuery({
     queryKey: ['dadosUsuario'],
     queryFn: recuperarDadosUsuarioSessao,
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   return (
-    <header>
+    <header className="sticky top-0 z-50 w-full rounded-t-lg bg-white/60 backdrop-blur-sm shadow-lg">
       <div className="flex-col w-full">
-        <div className="border-b">
-          <div className="flex itens-center px-4 h-16 md:h-24">
-            <Image
-              className="invisible md:visible my-2 rounded-sm"
-              loading="lazy"
-              alt="Alliance Sistemas de Gestão"
-              width={160}
-              height={160}
-              src="/logo_alliance.png"
-            />
-            <div className="ml-auto flex items-center space-x-4">
-              <UserNav
-                usuario={
-                  data ?? {
-                    id: 'naoinformado',
-                    email: 'email@email.com',
-                    nome: 'Usuário Teste',
-                    perfil: 'perfil teste',
-                  }
+        <div className="flex justify-between items-center px-4 h-16 md:h-24">
+          <Image
+            className="invisible md:visible my-2 rounded-sm ml-6"
+            loading="lazy"
+            alt="Alliance Sistemas de Gestão"
+            width={150}
+            height={150}
+            src="/logo_alliance_colorido.png"
+          />
+          <div className="flex items-center mr-6">
+            <UserNav
+              usuario={
+                data ?? {
+                  id: 'naoinformado',
+                  email: 'email@email.com',
+                  nome: 'Usuário Teste',
+                  perfil: 'perfil teste',
                 }
-                carregandoDados={isLoading}
-              />
-            </div>
+              }
+              carregandoDados={isLoading}
+            />
           </div>
         </div>
       </div>

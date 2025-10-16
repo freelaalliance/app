@@ -2,7 +2,7 @@ import { cadastrarNovaRevisaoDocumento } from "@/app/modulo/documentos/_api/docu
 import { Button } from '@/components/ui/button'
 import { DialogClose, DialogFooter } from "@/components/ui/dialog"
 import {
-  Form
+    Form
 } from '@/components/ui/form'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -94,7 +94,7 @@ export function NovaRevisaoDocumentoForm({ idDocumento }: NovaRevisaoDocumentoFo
           </DialogClose>
           <Button
             type="submit"
-            className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600 hover:bg-sky-700"
+            className="shadow-md text-sm uppercase leading-none rounded "
             disabled={formNovaRevisaoDocumento.formState.isSubmitting}
           >
             {formNovaRevisaoDocumento.formState.isSubmitting ? 'Salvando revisão...' : 'Salvar'}

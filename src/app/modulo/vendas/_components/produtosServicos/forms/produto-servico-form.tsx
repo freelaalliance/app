@@ -4,12 +4,12 @@
 import { Button } from '@/components/ui/button'
 import { DialogClose, DialogFooter } from '@/components/ui/dialog'
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -18,8 +18,8 @@ import { toast } from 'sonner'
 import type { z } from 'zod'
 import { produtoServicoSchema } from '../../../_schemas/produtoServico.schema'
 import {
-  useCriarProdutoServico,
-  useEditarProdutoServico,
+    useCriarProdutoServico,
+    useEditarProdutoServico,
 } from '../../../_servicos/useProdutoServico'
 
 export type ProdutoServicoInput = z.infer<typeof produtoServicoSchema>
@@ -136,7 +136,7 @@ export function FormularioProdutoServico({ defaultValues, id }: Props) {
           </DialogClose>
           <Button
             type="submit"
-            className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600 hover:bg-sky-700"
+            className="shadow-md text-sm uppercase leading-none rounded "
             disabled={mutation.isPending}
           >
             {mutation.isPending ? 'Salvando...' : 'Salvar'}

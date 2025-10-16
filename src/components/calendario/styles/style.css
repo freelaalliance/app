@@ -5,18 +5,18 @@
 }
 
 .fc .fc-button {    
-    background-color: #0ea5e9 !important;
-    border-color: #0ea5e9 !important;
+    background-color: #C1272D !important;
+    border-color: #C1272D !important;
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
 }
 
 .fc .fc-button:hover {
-    background-color: #0284c7 !important;
-    border-color: #0284c7 !important;
+    background-color: #A62328 !important;
+    border-color: #A62328 !important;
 }
 
 .fc-day-today {
-    background-color: #9e9ea0 !important;
+    background-color: #4A4A4A !important;
     color: hsl(0, 0%, 99%) !important;
 }
 

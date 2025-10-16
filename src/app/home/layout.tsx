@@ -14,7 +14,7 @@ export default function HomeLayout({ children }: HomeLayoutProps) {
   return (
     <>
       <HeaderApp />
-      <main className='space-y-6 pb-16 md:block mt-4 px-6 lg:px-8'>{children}</main>
+      <main className='space-y-6 pb-16 md:block mt-8 px-6 lg:px-8'>{children}</main>
     </>
   )
 }

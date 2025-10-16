@@ -9,19 +9,19 @@ import type { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { DialogClose, DialogFooter } from '@/components/ui/dialog'
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 
 import {
-  type ResponseFornecedorType,
-  salvarNovoEmail,
+    type ResponseFornecedorType,
+    salvarNovoEmail,
 } from '../(api)/FornecedorApi'
 import { schemaEmailForm } from '../../../(schemas)/fornecedores/schema-fornecedor'
 import type { NovoEmailProps } from '../components/dialogs/NovoEmailFornecedorDialog'
@@ -115,7 +115,7 @@ export default function NovoEmailView({ idFornecedor }: NovoEmailProps) {
             </DialogClose>
             <Button
               type="submit"
-              className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600 hover:bg-sky-700"
+              className="shadow-md text-sm uppercase leading-none rounded "
               disabled={formEmail.formState.isSubmitting}
             >
               {formEmail.formState.isSubmitting ? 'Salvando...' : 'Salvar'}

@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 import { closeSession } from '../auth/api/SessaoUsuario'
-import { UsuarioType } from '../auth/schema/SchemaUsuario'
+import type { UsuarioType } from '../auth/schema/SchemaUsuario'
 import { Avatar, AvatarFallback } from '../ui/avatar'
 import { Button } from '../ui/button'
 import { Dialog, DialogTrigger } from '../ui/dialog'
@@ -30,7 +30,7 @@ export function UserNav({ usuario, carregandoDados }: UserNavProps) {
   const capturarIniciaisNome = (nomeUsuario: string) => {
     const parts = nomeUsuario.split(' ')
     const initials = parts.map((part: string) =>
-      part.substring(0, 1).toUpperCase(),
+      part.substring(0, 1).toUpperCase()
     )
     return initials.join('')
   }
@@ -42,13 +42,13 @@ export function UserNav({ usuario, carregandoDados }: UserNavProps) {
           <Button
             disabled={carregandoDados}
             variant="ghost"
-            className="relative h-10 w-10 rounded-full border-0 hover:shadow-lg p-1"
+            className="relative h-10 w-10 rounded-full border-0 p-1"
           >
             {carregandoDados ? (
               <Loader2 className="animate-spin" />
             ) : (
-              <Avatar className="h-10 w-10">
-                <AvatarFallback>
+              <Avatar className="size-12 text-primary-foreground shadow-lg">
+                <AvatarFallback className='bg-primary'>
                   {capturarIniciaisNome(usuario.nome ?? 'Alliance Sistemas')}
                 </AvatarFallback>
               </Avatar>

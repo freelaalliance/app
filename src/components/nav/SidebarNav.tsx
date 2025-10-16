@@ -28,22 +28,22 @@ export function SidebarNav({
     useQuery({
       queryKey: ['permissoesModuloPerfil', idModulo],
       queryFn: () => listarPermissoesModuloPerfil(idModulo),
-      staleTime: Infinity,
+      staleTime: Number.POSITIVE_INFINITY,
     })
 
   const sidebarNavItems = listaPermissoesPerfil
-    ? listaPermissoesPerfil?.map((funcao) => {
+    ? listaPermissoesPerfil?.map(funcao => {
         if (idModulo) {
           if (regexIdModulo.test(funcao.url)) {
             return {
               href: funcao.url.replace(regexIdModulo, idModulo),
               title: funcao.nome,
             }
-          } else {
-            return {
-              href: funcao.url + '/' + idModulo,
-              title: funcao.nome,
-            }
+          } 
+
+          return {
+            href: `${funcao.url}/${idModulo}`,
+            title: funcao.nome,
           }
         }
 
@@ -58,7 +58,7 @@ export function SidebarNav({
     <nav
       className={cn(
         'flex space-x-2 overflow-x-auto lg:flex-col lg:space-x-0 lg:space-y-1 container',
-        className,
+        className
       )}
       {...props}
     >
@@ -70,7 +70,7 @@ export function SidebarNav({
         href={'/home'}
         className={cn(
           buttonVariants({ variant: 'ghost' }),
-          'bg-padrao-gray-200 hover:bg-padrao-gray-250 justify-center lg:justify-between shadow-md text-padrao-white hover:text-white capitalize inline-flex',
+          'bg-foreground hover:bg-black justify-center lg:justify-between shadow-md text-white hover:text-white capitalize inline-flex'
         )}
       >
         <ChevronLeft className="hidden lg:flex" />
@@ -85,7 +85,7 @@ export function SidebarNav({
           <Skeleton className="w-auto h-10 rounded shadow" />
         </>
       ) : (
-        sidebarNavItems.map((item) => {
+        sidebarNavItems.map(item => {
           return (
             <Link
               key={item.href}
@@ -93,9 +93,8 @@ export function SidebarNav({
               className={cn(
                 buttonVariants({ variant: 'ghost' }),
                 pathname.includes(item.href)
-                  ? 'bg-sky-600  hover:bg-sky-700 '
-                  : 'bg-sky-400 hover:bg-sky-500',
-                'lg:justify-between shadow-md text-padrao-white justify-center hover:text-white capitalize inline-flex min-w-[90px]',
+                  ? ('bg-primary  hover:bg-red-900') : ('bg-red-700/60 hover:bg-primary'),
+                  'lg:justify-between shadow-md text-padrao-white justify-center hover:text-white capitalize inline-flex min-w-[90px]'
               )}
             >
               {item.title}

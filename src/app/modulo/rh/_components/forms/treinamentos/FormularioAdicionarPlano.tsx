@@ -2,21 +2,21 @@
 
 import { Button } from '@/components/ui/button'
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
 } from '@/components/ui/dialog'
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -24,8 +24,8 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { useCriarPlanoTreinamento } from '../../../_hooks/treinamentos/useTreinamentos'
 import {
-  type CriarPlanoTreinamentoFormData,
-  criarPlanoTreinamentoSchema,
+    type CriarPlanoTreinamentoFormData,
+    criarPlanoTreinamentoSchema,
 } from '../../../_schemas/treinamentos/criarPlanoTreinamento.schema'
 import type { TreinamentosType } from '../../../_types/treinamentos/TreinamentoType'
 
@@ -132,7 +132,7 @@ export function FormularioAdicionarPlano({
               </DialogClose>
               <Button
                 type="submit"
-                className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600 hover:bg-sky-700"
+                className="shadow-md text-sm uppercase leading-none rounded "
                 disabled={isPending}
               >
                 {isPending ? 'Adicionando...' : 'Adicionar Plano'}
