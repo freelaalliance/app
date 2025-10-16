@@ -27,8 +27,7 @@ export default function Auth() {
 					</h2>
 
 					<p className="text-primary-foreground/90 mb-8 leading-relaxed">
-						Plataforma completa para controle administrativo, gestão de módulos, usuários e
-						permissões empresariais.
+						Plataforma completa para controle e gestão de processos empresariais.
 					</p>
 
 					<div className="space-y-4">
