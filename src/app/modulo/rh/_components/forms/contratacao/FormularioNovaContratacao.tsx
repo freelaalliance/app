@@ -290,7 +290,7 @@ export function FormularioNovaContratacao({ onSubmitCallback }: FormularioNovaCo
   useMemo(() => {
     const cep = form.getValues('colaborador.pessoa.Endereco.cep')
 
-    if (cep.length >= 8) {
+    if (cep && cep.length >= 8) {
       buscarEnderecoCep(cep)
     }
   }, [form.watch('colaborador.pessoa.Endereco.cep')])

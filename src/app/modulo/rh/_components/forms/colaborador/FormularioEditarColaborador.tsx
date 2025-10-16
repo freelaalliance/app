@@ -3,12 +3,12 @@
 import { Button } from '@/components/ui/button'
 import { DialogClose, DialogFooter } from '@/components/ui/dialog'
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -21,8 +21,8 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { useAtualizarDadosColaborador } from '../../../_hooks/colaborador/useContratacaoColaborador'
 import {
-    type EditarColaboradorData,
-    schemaEditarColaborador,
+  type EditarColaboradorData,
+  schemaEditarColaborador,
 } from '../../../_schemas/colaborador/EditarColaboradorSchemas'
 import type { Contratacao } from '../../../_types/colaborador/ContratacaoType'
 
@@ -131,7 +131,7 @@ export function FormularioEditarColaborador({
   useMemo(() => {
     const cep = form.getValues('endereco.cep')
 
-    if (cep && cep.length >= 8) {
+    if (cep && cep && cep.length >= 8) {
       buscarEnderecoCep(cep)
     }
   }, [form.watch('endereco.cep')])

@@ -191,7 +191,7 @@ export function FormualarioCliente() {
   useMemo(() => {
     const cep = formCliente.getValues('endereco.cep')
 
-    if (cep.length >= 8) {
+    if (cep && cep.length >= 8) {
       buscarEnderecoCep(cep)
     }
   }, [formCliente.watch('endereco.cep')])

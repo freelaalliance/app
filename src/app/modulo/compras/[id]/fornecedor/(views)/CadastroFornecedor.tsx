@@ -247,7 +247,7 @@ export default function CadastroFornecedorView() {
   useMemo(() => {
     const cep = formNovoFornecedor.getValues('cep')
 
-    if (cep.length >= 8) {
+    if (cep && cep.length >= 8) {
       buscarEnderecoCep(cep)
     }
   }, [formNovoFornecedor.watch('cep')])
