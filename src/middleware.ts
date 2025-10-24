@@ -2,11 +2,24 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-  if (!request.cookies.has('sessionUser')) {
-    return NextResponse.redirect(new URL('/', request.url))
+  const sessionCookie = request.cookies.get('sessionUser')
+  const pathname = request.nextUrl.pathname
+
+  // Se não tem cookie de sessão e não está na página de login, redireciona para login
+  if (!sessionCookie?.value && pathname !== '/') {
+    return NextResponse.redirect(new URL('/login', request.url))
   }
+
+  // Se tem cookie de sessão e está na página de login, redireciona para dashboard
+  if (sessionCookie?.value && pathname === '/login') {
+    return NextResponse.redirect(new URL('/home', request.url))
+  }
+
+  return NextResponse.next()
 }
 
 export const config = {
-  matcher: '/modulo/:path*',
-}
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.png$|.*\\.jpg$|.*\\.jpeg$|.*\\.svg$).*)',
+  ],
+};
