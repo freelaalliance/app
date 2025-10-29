@@ -29,31 +29,31 @@ export default function Equipamentos() {
     useQuery({
       queryKey: ['listaEquipamentosEmpresa'],
       queryFn: listarEquipamentos,
-      staleTime: Infinity,
+      staleTime: Number.POSITIVE_INFINITY,
     })
 
   const agendaInspecoes = useQuery({
     queryKey: ['agendaInspecoesEmpresa'],
     queryFn: buscarAgendaInspecoesEmpresa,
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   const estatisticasEquipamento = useQuery({
     queryKey: ['estatisticasEquipamentos'],
     queryFn: consultaEstatatisticaEquipamento,
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   const estatisticasManutencao = useQuery({
     queryKey: ['estatisticasManutencao'],
     queryFn: consultaEstatatisticaManutencao,
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   const estatisticasManutencaoMTTReMTBF = useQuery({
     queryKey: ['estatisticasManutencaoMTTRMTBFEmpresa'],
     queryFn: consultaIndicadoresManutencaoEquipamentosEmpresa,
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   return (
