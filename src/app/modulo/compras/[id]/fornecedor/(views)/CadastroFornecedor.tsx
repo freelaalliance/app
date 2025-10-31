@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { format } from 'date-fns'
+import { addMonths, format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { CalendarIcon, Trash } from 'lucide-react'
 import { useMemo, useState } from 'react'
@@ -408,6 +408,7 @@ export default function CadastroFornecedorView() {
                             disabled={date => date < new Date()}
                             locale={ptBR}
                             captionLayout="dropdown"
+                            endMonth={addMonths(new Date(), 100)}
                           />
                         </PopoverContent>
                       </Popover>
