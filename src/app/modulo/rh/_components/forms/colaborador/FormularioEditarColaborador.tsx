@@ -25,6 +25,7 @@ import {
   schemaEditarColaborador,
 } from '../../../_schemas/colaborador/EditarColaboradorSchemas'
 import type { Contratacao } from '../../../_types/colaborador/ContratacaoType'
+import { removerCaracteresEspecial } from '@/lib/utils'
 
 interface FormularioEditarColaboradorProps {
   contratacao: Contratacao
@@ -94,8 +95,9 @@ export function FormularioEditarColaborador({
       const telefonesValidos = data.telefones?.filter((tel: { numero: string }) => tel.numero.trim() !== '')
       const emailsValidos = data.emails?.filter((email: { email: string }) => email.email.trim() !== '')
 
-      const dadosFormatados = {
+      const dadosFormatados: EditarColaboradorData = {
         ...data,
+        documento: removerCaracteresEspecial(data.documento),
         telefones: telefonesValidos?.length ? telefonesValidos : undefined,
         emails: emailsValidos?.length ? emailsValidos : undefined,
       }

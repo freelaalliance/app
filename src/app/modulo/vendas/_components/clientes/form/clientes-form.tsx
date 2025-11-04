@@ -17,7 +17,7 @@ import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { consultarCep } from '@/lib/ViacepLib';
-import { formatarNumeroTelefoneComDDD, validarDocumento } from '@/lib/utils';
+import { formatarNumeroTelefoneComDDD, removerCaracteresEspecial, validarDocumento } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Trash } from 'lucide-react';
 import { useMemo } from 'react';
@@ -175,7 +175,10 @@ export function FormualarioCliente() {
   const onSubmit = async (data: ClienteFormData) => {
     try {
       
-      await createCliente.mutateAsync(data);
+      await createCliente.mutateAsync({
+        ...data,
+        documento: removerCaracteresEspecial(data.documento),
+      });
 
       toast.success('Cliente criado com sucesso!');      
 

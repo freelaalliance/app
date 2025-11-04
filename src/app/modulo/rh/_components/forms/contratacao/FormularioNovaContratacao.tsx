@@ -44,7 +44,7 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { consultarCep } from '@/lib/ViacepLib'
-import { cn } from '@/lib/utils'
+import { cn, removerCaracteresEspecial } from '@/lib/utils'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { AlertTriangle } from 'lucide-react'
@@ -251,7 +251,7 @@ export function FormularioNovaContratacao({ onSubmitCallback }: FormularioNovaCo
         admitidoEm: data.admitidoEm,
         cargoId: data.cargoId,
         colaborador: {
-          documento: data.colaborador.documento,
+          documento: removerCaracteresEspecial(data.colaborador.documento),
           pessoa: {
             id: '', // Será gerado pelo backend
             nome: data.colaborador.pessoa.nome,
