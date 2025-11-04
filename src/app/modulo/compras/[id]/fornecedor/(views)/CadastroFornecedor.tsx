@@ -15,19 +15,19 @@ import { Calendar } from '@/components/ui/calendar'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DialogClose, DialogFooter } from '@/components/ui/dialog'
 import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from '@/components/ui/popover'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
@@ -37,16 +37,16 @@ import { ListaArquivo } from '@/components/upload/lista-arquivo'
 import { Upload } from '@/components/upload/upload'
 import { consultarCep } from '@/lib/ViacepLib'
 import {
-    cn,
-    encodeFileToBase64,
-    formatarDocumento,
-    formatarNumeroTelefone,
-    removerCaracteresEspecial,
+  cn,
+  encodeFileToBase64,
+  formatarDocumento,
+  formatarNumeroTelefone,
+  removerCaracteresEspecial,
 } from '@/lib/utils'
 
 import {
-    type FornecedoresEmpresaType,
-    salvarNovoFornecedor,
+  type FornecedoresEmpresaType,
+  salvarNovoFornecedor,
 } from '../(api)/FornecedorApi'
 import { schemaCadastroFornecedorForm } from '../../../(schemas)/fornecedores/schema-fornecedor'
 
@@ -153,7 +153,7 @@ export default function CadastroFornecedorView() {
   async function buscarEnderecoCep(cep: string) {
     const dadosCep = await consultarCep({ cep })
 
-    if(dadosCep.erro) {
+    if (dadosCep.erro) {
       toast.error(dadosCep.msg)
     }
 
@@ -456,7 +456,7 @@ export default function CadastroFornecedorView() {
                         <FormLabel>Logradouro</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="Logradouro da empresa"
+                            placeholder="Logradouro"
                             {...field}
                           />
                         </FormControl>
@@ -469,40 +469,12 @@ export default function CadastroFornecedorView() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 <FormField
                   control={formNovoFornecedor.control}
-                  name="cidade"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Cidade</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Cidade da empresa" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={formNovoFornecedor.control}
-                  name="estado"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>UF</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Estado da cidade" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                <FormField
-                  control={formNovoFornecedor.control}
                   name="bairro"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Bairro</FormLabel>
                       <FormControl>
-                        <Input placeholder="Bairro da empresa" {...field} />
+                        <Input placeholder="Bairro" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -515,7 +487,35 @@ export default function CadastroFornecedorView() {
                     <FormItem>
                       <FormLabel>Número</FormLabel>
                       <FormControl>
-                        <Input placeholder="Num. da empresa" {...field} />
+                        <Input placeholder="Número" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <FormField
+                  control={formNovoFornecedor.control}
+                  name="cidade"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Cidade</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Cidade" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={formNovoFornecedor.control}
+                  name="estado"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>UF</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Estado" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -531,7 +531,7 @@ export default function CadastroFornecedorView() {
                       <FormLabel>Complemento</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Complemento do endereço da empresa"
+                          placeholder="Complemento do endereço"
                           className="resize-none"
                           {...field}
                         />

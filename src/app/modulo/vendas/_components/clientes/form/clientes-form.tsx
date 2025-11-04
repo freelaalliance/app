@@ -277,7 +277,7 @@ export function FormualarioCliente() {
                       <FormLabel>Logradouro</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Logradouro da empresa"
+                          placeholder="Logradouro"
                           {...field}
                         />
                       </FormControl>
@@ -287,34 +287,7 @@ export function FormualarioCliente() {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <FormField
-                control={formCliente.control}
-                name="endereco.cidade"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Cidade</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Cidade da empresa" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={formCliente.control}
-                name="endereco.estado"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>UF</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Estado da cidade" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               <FormField
                 control={formCliente.control}
@@ -323,7 +296,7 @@ export function FormualarioCliente() {
                   <FormItem>
                     <FormLabel>Bairro</FormLabel>
                     <FormControl>
-                      <Input placeholder="Bairro da empresa" {...field} />
+                      <Input placeholder="Bairro" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -337,6 +310,34 @@ export function FormualarioCliente() {
                     <FormLabel>Número</FormLabel>
                     <FormControl>
                       <Input placeholder="Número" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <FormField
+                control={formCliente.control}
+                name="endereco.cidade"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Cidade</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Cidade" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={formCliente.control}
+                name="endereco.estado"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>UF</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Estado" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

@@ -163,34 +163,7 @@ export default function EdicaoEnderecoView({
               />
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            <FormField
-              control={formEdicaoEndereco.control}
-              name="cidade"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Cidade</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Cidade" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={formEdicaoEndereco.control}
-              name="estado"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>UF</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Estado da cidade" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <FormField
               control={formEdicaoEndereco.control}
@@ -213,6 +186,34 @@ export default function EdicaoEnderecoView({
                   <FormLabel>Número</FormLabel>
                   <FormControl>
                     <Input placeholder="Número" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <FormField
+              control={formEdicaoEndereco.control}
+              name="cidade"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Cidade</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Cidade" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={formEdicaoEndereco.control}
+              name="estado"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>UF</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Estado da cidade" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

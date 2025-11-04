@@ -149,7 +149,7 @@ export default function EdicaoEnderecoFornecedorView({
                   <FormItem>
                     <FormLabel>Logradouro</FormLabel>
                     <FormControl>
-                      <Input placeholder="Logradouro da empresa" {...field} />
+                      <Input placeholder="Logradouro" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -160,40 +160,12 @@ export default function EdicaoEnderecoFornecedorView({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <FormField
               control={formEdicaoEndereco.control}
-              name="cidade"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Cidade</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Cidade da empresa" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={formEdicaoEndereco.control}
-              name="estado"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>UF</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Estado da cidade" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            <FormField
-              control={formEdicaoEndereco.control}
               name="bairro"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Bairro</FormLabel>
                   <FormControl>
-                    <Input placeholder="Bairro da empresa" {...field} />
+                    <Input placeholder="Bairro" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -206,13 +178,42 @@ export default function EdicaoEnderecoFornecedorView({
                 <FormItem>
                   <FormLabel>Número</FormLabel>
                   <FormControl>
-                    <Input placeholder="Num. da empresa" {...field} />
+                    <Input placeholder="Número" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <FormField
+              control={formEdicaoEndereco.control}
+              name="cidade"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Cidade</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Cidade" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={formEdicaoEndereco.control}
+              name="estado"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>UF</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Estado" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          
           <div className="grid grid-cols-1">
             <FormField
               control={formEdicaoEndereco.control}
