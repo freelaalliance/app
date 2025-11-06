@@ -1,7 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { addDays, format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { CalendarIcon, Minus, Plus } from 'lucide-react'
@@ -82,6 +82,7 @@ export interface NovoPedidoProps {
 
 export default function NovoPedidoView({ fornecedorId }: NovoPedidoProps) {
   const router = useRouter()
+  const queryClient = useQueryClient()
   const formPedido = useForm<formNovoPedidoType>({
     resolver: zodResolver(schemaFormNovoPedido),
     defaultValues: {
@@ -118,11 +119,14 @@ export default function NovoPedidoView({ fornecedorId }: NovoPedidoProps) {
     },
     onSuccess: data => {
       if (data.status) {
+        queryClient.invalidateQueries({
+          queryKey: ['pedidosFornecedor', fornecedorId],
+        })
         toast.success(data.msg, {
           action: {
             onClick: () => {
               router.push(
-                `fornecedor/pedido/${data.dados?.id}/visualizar?codigo=${data.dados?.codigo}`
+                `pedido/${data.dados?.id}/visualizar?codigo=${data.dados?.codigo}`
               )
             },
             label: 'Visualizar pedido',
