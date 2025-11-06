@@ -7,11 +7,11 @@ export function middleware(request: NextRequest) {
 
   // Se não tem cookie de sessão e não está na página de login, redireciona para login
   if (!sessionCookie?.value && pathname !== '/') {
-    return NextResponse.redirect(new URL('/login', request.url))
+    return NextResponse.redirect(new URL('/', request.url))
   }
 
   // Se tem cookie de sessão e está na página de login, redireciona para dashboard
-  if (sessionCookie?.value && pathname === '/login') {
+  if (sessionCookie?.value) {
     return NextResponse.redirect(new URL('/home', request.url))
   }
 

@@ -63,7 +63,7 @@ export function MenuTabelaPedidosFornecedor({
             />
           </AlertDialog>
         )}
-        {!pedido.recebido && !pedido.cancelado && (
+        {/* {!pedido.recebido && !pedido.cancelado && (
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <DropdownMenuItem
@@ -79,7 +79,7 @@ export function MenuTabelaPedidosFornecedor({
               idPedido={pedido.id}
             />
           </AlertDialog>
-        )}
+        )} */}
       </DropdownMenuContent>
     </DropdownMenu>
   )
