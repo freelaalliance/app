@@ -31,6 +31,7 @@ import { ListaArquivo } from '@/components/upload/lista-arquivo'
 import { Upload } from '@/components/upload/upload'
 import { cn } from '@/lib/utils'
 
+import { useQueryClient } from '@tanstack/react-query'
 import {
   type DadosInstrumentoType,
   consultarCodigoInstrumento,
@@ -41,7 +42,6 @@ import {
   calibracaoFormSchema,
   valoresPadroes,
 } from '../../../schemas/(calibracoes)/SchemaNovaCalibracao'
-import { useQueryClient } from '@tanstack/react-query'
 
 export function NovaCalibracaoForm() {
   const [idInstrumento, setarIdInstrumento] = useState<string | null>(null)
@@ -62,6 +62,21 @@ export function NovaCalibracaoForm() {
   }
 
   async function onSubmit(data: CalibracaoInstrumentoValores) {
+    if(Number.isNaN(Number(data.incertezaTendenciaEncontrado))){
+      toast.warning('O campo Incerteza ou tendência encontrado deve ser um número válido!')
+      return
+    }
+
+    if(Number.isNaN(Number(data.erroEncontrado))){
+      toast.warning('O campo erro encontrado deve ser um número válido!')
+      return
+    }
+
+    if(Number.isNaN(Number(data.tolerancia))){
+      toast.warning('O campo tolerância deve ser um número válido!')
+      return
+    }
+
     if (listaArquivoSelecionado.length === 0) {
       toast.warning('Necessário adicionar o certificado da calibração!')
     } else {
@@ -400,14 +415,14 @@ export function NovaCalibracaoForm() {
               type="button"
               variant={'destructive'}
               onClick={() => form.reset()}
-              className="shadow-md text-sm uppercase leading-none bg-padrao-red rounded text-white hover:bg-red-800"
+              className="shadow-md text-sm uppercase leading-none rounded"
             >
               Cancelar
             </Button>
           </DialogClose>
           {form.formState.isSubmitting ? (
             <Button
-              className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600  hover:bg-sky-700"
+              className="shadow-md text-sm uppercase leading-none rounded "
               disabled
             >
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -415,7 +430,7 @@ export function NovaCalibracaoForm() {
             </Button>
           ) : (
             <Button
-              className="shadow-md text-sm uppercase leading-none rounded text-white bg-sky-600  hover:bg-sky-700"
+              className="shadow-md text-sm uppercase leading-none rounded"
               type="submit"
             >
               Salvar calibração
