@@ -91,7 +91,7 @@ export function FormularioVendaCliente({
         action: {
           onClick: () => {
             router.push(
-              `/modulos/vendas/visualizar/${dados?.id}`
+              `/modulo/vendas/visualizar/${dados?.id}`
             )
           },
           label: 'Visualizar pedido',
