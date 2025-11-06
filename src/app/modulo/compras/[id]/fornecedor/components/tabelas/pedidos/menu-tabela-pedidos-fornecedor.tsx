@@ -1,6 +1,6 @@
 import { MoreVertical } from 'lucide-react'
 
-import { PedidosFornecedorType } from '@/app/modulo/compras/(schemas)/compras/schema-compras'
+import type { PedidosFornecedorType } from '@/app/modulo/compras/(schemas)/compras/schema-compras'
 import { AlertDialog, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
@@ -37,7 +37,7 @@ export function MenuTabelaPedidosFornecedor({
         <Dialog>
           <DialogTrigger asChild>
             <DropdownMenuItem
-              onSelect={(e) => {
+              onSelect={e => {
                 e.preventDefault()
               }}
             >
@@ -50,7 +50,7 @@ export function MenuTabelaPedidosFornecedor({
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <DropdownMenuItem
-                onSelect={(e) => {
+                onSelect={e => {
                   e.preventDefault()
                 }}
               >
@@ -67,7 +67,7 @@ export function MenuTabelaPedidosFornecedor({
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <DropdownMenuItem
-                onSelect={(e) => {
+                onSelect={e => {
                   e.preventDefault()
                 }}
               >

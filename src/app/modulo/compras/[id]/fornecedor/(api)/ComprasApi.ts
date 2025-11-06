@@ -146,7 +146,7 @@ export async function cancelarPedido({ idPedido }: AlteraPedidoProps) {
 
 export async function excluirPedido({ idPedido }: AlteraPedidoProps) {
   return await axiosInstance
-    .patch<{
+    .delete<{
       status: boolean
       msg: string
       dados: {
