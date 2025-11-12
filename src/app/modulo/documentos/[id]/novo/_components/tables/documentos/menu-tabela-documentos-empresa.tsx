@@ -4,9 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { MoreVertical } from 'lucide-react';
+import { toast } from 'sonner';
 import { downloadFile } from '../../../_actions/upload-actions';
-import { NovaRevisaoDocumentoDialog } from '../../dialogs/nova-revisao-documento-dialog';
 import { DadosDocumentoDialog } from '../../dialogs/documento-dialog';
+import { NovaRevisaoDocumentoDialog } from '../../dialogs/nova-revisao-documento-dialog';
 
 interface MenuTabelaDocumentosEmpresaProps {
   documento: DocumentoType
@@ -15,15 +16,21 @@ interface MenuTabelaDocumentosEmpresaProps {
 export function MenuTabelaDocumentosEmpresa({ documento }: MenuTabelaDocumentosEmpresaProps) {
 
   const handleDownload = async (arquivo: string) => {
-    const url = await downloadFile(arquivo);
+    try {
+      const result = await downloadFile(arquivo)
 
-    if (url) {
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', arquivo);
-      link.setAttribute('target', '_blank');
-      document.body.appendChild(link);
-      link.click();
+      if (!result.success) {
+        toast.error(result.message || 'Erro ao baixar arquivo')
+        return
+      }
+
+      // Abre o arquivo em uma nova aba para visualização (bom para PDFs)
+      window.open(result.url, '_blank')
+
+      toast.success('Download iniciado!')
+    } catch (error) {
+      console.error('Erro ao baixar arquivo:', error)
+      toast.error('Erro ao baixar arquivo. Tente novamente.')
     }
   }
 

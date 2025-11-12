@@ -2,7 +2,7 @@ import { cadastrarNovaRevisaoDocumento } from "@/app/modulo/documentos/_api/docu
 import { Button } from '@/components/ui/button'
 import { DialogClose, DialogFooter } from "@/components/ui/dialog"
 import {
-    Form
+  Form
 } from '@/components/ui/form'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -15,7 +15,7 @@ import UploadForm from "../upload/upload-documentos"
 
 const schemaNovaRevisaoDocumentoForm = z.object({
   id: z.string().uuid(),
-  arquivo: z.string(),
+  arquivo: z.string().min(1, "Arquivo é obrigatório"),
 })
 
 export type NovaRevisaoDocumentoFormType = z.infer<typeof schemaNovaRevisaoDocumentoForm>
@@ -23,8 +23,6 @@ export type NovaRevisaoDocumentoFormType = z.infer<typeof schemaNovaRevisaoDocum
 export interface NovaRevisaoDocumentoFormProps {
   idDocumento: string
 }
-
-const keyNovoArquivoDocumento = crypto.randomUUID()
 
 export function NovaRevisaoDocumentoForm({ idDocumento }: NovaRevisaoDocumentoFormProps) {
   const [arquivoSelecionado, selecionarArquivo] = useState<boolean>(false)
@@ -34,7 +32,7 @@ export function NovaRevisaoDocumentoForm({ idDocumento }: NovaRevisaoDocumentoFo
     resolver: zodResolver(schemaNovaRevisaoDocumentoForm),
     defaultValues: {
       id: idDocumento,
-      arquivo: keyNovoArquivoDocumento,
+      arquivo: '',
     },
     mode: 'onChange',
   })
@@ -71,15 +69,28 @@ export function NovaRevisaoDocumentoForm({ idDocumento }: NovaRevisaoDocumentoFo
   }
 
   const cancelar = async () => {
-    if(arquivoSelecionado) await deleteFile(keyNovoArquivoDocumento)
+    const arquivoKey = formNovaRevisaoDocumento.getValues('arquivo')
+    if (arquivoKey) {
+      await deleteFile(arquivoKey)
+    }
     formNovaRevisaoDocumento.reset()
+  }
+
+  // Callback executado quando upload é concluído
+  const handleUploadSuccess = (uuid: string, keyCompleta: string) => {
+    // Salva a keyCompleta (caminho completo com extensão) no formulário
+    formNovaRevisaoDocumento.setValue('arquivo', keyCompleta)
   }
 
   return (
     <Form {...formNovaRevisaoDocumento}>
       <form className="space-y-4" onSubmit={formNovaRevisaoDocumento.handleSubmit(handleSubmit)}>
         <div className="grid space-y-2">
-          <UploadForm keyArquivo={keyNovoArquivoDocumento} arquivoSelecionado={selecionarArquivo} />
+          <UploadForm 
+            prefixo={`documentos/${idDocumento}/revisoes`}
+            onUploadSuccess={handleUploadSuccess}
+            arquivoSelecionado={selecionarArquivo} 
+          />
         </div>
 
         <DialogFooter className='gap-2'>

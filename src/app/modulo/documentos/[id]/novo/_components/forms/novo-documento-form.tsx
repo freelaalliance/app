@@ -7,25 +7,25 @@ import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { DialogClose, DialogFooter } from '@/components/ui/dialog'
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from '@/components/ui/popover'
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -83,7 +83,7 @@ const schemaNovoDocumentoForm = z.object({
       })
     )
     .default([]),
-  arquivo: z.string(),
+  arquivo: z.string().min(1, "Arquivo é obrigatório"),
   empresaId: z.string().uuid().optional(),
 })
 
@@ -94,8 +94,6 @@ export interface NovoDocumentoFormProps {
   listaCategoriasDocumentos: Array<CategoriaDocumentoType>
   empresaId?: string
 }
-
-const keyNovoArquivoDocumento = crypto.randomUUID()
 
 export function NovoDocumentoForm({
   listaUsuarios,
@@ -112,7 +110,7 @@ export function NovoDocumentoForm({
       copias: 0,
       retencao: addYears(new Date(), 5),
       usuariosAcessos: [],
-      arquivo: keyNovoArquivoDocumento,
+      arquivo: '',
       empresaId,
     },
     mode: 'onChange',
@@ -150,7 +148,10 @@ export function NovoDocumentoForm({
   })
 
   const cancelar = async () => {
-    if(arquivoSelecionado) await deleteFile(keyNovoArquivoDocumento)
+    const arquivoKey = formNovoDocumento.getValues('arquivo')
+    if (arquivoKey) {
+      await deleteFile(arquivoKey)
+    }
     formNovoDocumento.reset()
   }
 
@@ -161,6 +162,12 @@ export function NovoDocumentoForm({
     }
 
     await salvarDocumentos(data)
+  }
+
+  // Callback executado quando upload é concluído
+  const handleUploadSuccess = (uuid: string, keyCompleta: string) => {
+    // Salva a keyCompleta (caminho completo com extensão) no formulário
+    formNovoDocumento.setValue('arquivo', keyCompleta)
   }
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -434,7 +441,11 @@ export function NovoDocumentoForm({
               )}
             </div>
           </div>
-          <UploadForm keyArquivo={keyNovoArquivoDocumento} arquivoSelecionado={selecionarArquivo} />
+          <UploadForm 
+            prefixo={empresaId ? `documentos/${empresaId}` : 'documentos'}
+            onUploadSuccess={handleUploadSuccess}
+            arquivoSelecionado={selecionarArquivo} 
+          />
         </div>
         <DialogFooter className='gap-2'>
           <DialogClose asChild>

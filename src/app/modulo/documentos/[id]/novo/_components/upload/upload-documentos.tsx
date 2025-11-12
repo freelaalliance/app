@@ -2,25 +2,24 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { CheckIcon, FileIcon, Loader2, UploadIcon, X } from "lucide-react"
-import Image from "next/image"
+import { FileIcon, Loader2, UploadIcon, X } from "lucide-react"
 import { type ChangeEvent, type DragEvent, useRef, useState } from "react"
 import { toast } from "sonner"
 import { deleteFile, uploadFile } from "../../_actions/upload-actions"
-import { Progress } from "@/components/ui/progress"
 
 interface UploadFormProps {
-  keyArquivo: string
+  prefixo?: string // Prefixo/pasta opcional (ex: "documentos/empresa-123")
+  onUploadSuccess?: (uuid: string, keyCompleta: string) => void // Callback com UUID e caminho completo
   arquivoSelecionado: (selecionado: boolean) => void
 }
 
-export default function UploadForm({ keyArquivo, arquivoSelecionado }: UploadFormProps) {
+export default function UploadForm({ prefixo, onUploadSuccess, arquivoSelecionado }: UploadFormProps) {
   const [isDragging, setIsDragging] = useState(false)
-  const [preview, setPreview] = useState<string | null>(null)
   const [removendoArquivo, setRemovendoArquivo] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [uploadComplete, setUploadComplete] = useState(false)
   const [file, setFile] = useState<File | null>(null)
+  const [fileKey, setFileKey] = useState<string | null>(null) // Armazena a key completa para delete
 
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -53,56 +52,70 @@ export default function UploadForm({ keyArquivo, arquivoSelecionado }: UploadFor
   }
 
   const resetForm = async () => {
+    if (!fileKey) return
+    
     setRemovendoArquivo(true)
 
-    const removeArquivo = await deleteFile(keyArquivo)
-    if (!removeArquivo) {
-      toast.error('Erro ao remover o arquivo. Tente novamente.')
+    const result = await deleteFile(fileKey)
+
+    if (!result.success) {
+      toast.error(result.message || 'Erro ao remover o arquivo. Tente novamente.')
+      setRemovendoArquivo(false)
       return
     }
 
     setRemovendoArquivo(false)
     setFile(null)
-    setPreview(null)
+    setFileKey(null)
     setUploading(false)
     setUploadComplete(false)
-    arquivoSelecionado(!!file)
+    arquivoSelecionado(false)
+
     if (fileInputRef.current) {
       fileInputRef.current.value = ""
     }
   }
 
   const handleUploadFile = async (selectedFile: File) => {
-    setPreview(null)
     setFile(selectedFile)
     setUploading(true)
-    arquivoSelecionado(!!selectedFile)
+    arquivoSelecionado(true)
 
     try {
       const formData = new FormData()
       formData.append('file', selectedFile)
-      formData.append('keyArquivo', keyArquivo)
+      if (prefixo) {
+        formData.append('prefixo', prefixo)
+      }
 
       const result = await uploadFile(formData)
 
-      setUploadComplete(true)
-
       if (!result.success) {
-        toast.error('Erro ao fazer upload do arquivo. Tente novamente.')
-        console.log(result.error)
+        toast.error(result.message || 'Erro ao fazer upload do arquivo. Tente novamente.')
+        setFile(null)
+        setUploading(false)
+        arquivoSelecionado(false)
         return
       }
 
-      if (uploadComplete && result.success && result.key) {
-
-        setUploading(false)
-        toast.success('Upload realizado com sucesso!')
+      // Armazena a key completa para possível remoção
+      setFileKey(result.keyCompleta)
+      
+      setUploadComplete(true)
+      setUploading(false)
+      toast.success(result.message || 'Upload realizado com sucesso!')
+      
+      // Chama o callback com o UUID e key completa
+      if (onUploadSuccess) {
+        onUploadSuccess(result.key, result.keyCompleta)
       }
     } catch (err) {
-      toast.error('Erro ao fazer upload do arquivo. Tente novamente.')
-      console.error(err)
-    } finally {
+      const errorMessage = err instanceof Error ? err.message : 'Erro desconhecido'
+      toast.error(`Erro ao fazer upload: ${errorMessage}`)
+      console.error("Erro no upload:", err)
+      setFile(null)
       setUploading(false)
+      arquivoSelecionado(false)
     }
   }
 
