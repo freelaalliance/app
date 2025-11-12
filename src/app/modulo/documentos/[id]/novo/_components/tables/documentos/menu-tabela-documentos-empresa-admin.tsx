@@ -9,6 +9,7 @@ import { NovaRevisaoDocumentoDialog } from '../../dialogs/nova-revisao-documento
 import { DadosDocumentoDialog } from '../../dialogs/documento-dialog';
 import { AlertDialog, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { RemoverDocumentoAlertDialog } from '@/app/modulo/administrativo/modulos/documentos/_components/dialogs/remover-documento-empresa-dialog';
+import { toast } from 'sonner';
 
 interface MenuTabelaDocumentosEmpresaProps {
   documento: DocumentoType
@@ -17,15 +18,21 @@ interface MenuTabelaDocumentosEmpresaProps {
 export function MenuTabelaDocumentosEmpresaAdmin({ documento }: MenuTabelaDocumentosEmpresaProps) {
 
   const handleDownload = async (arquivo: string) => {
-    const url = await downloadFile(arquivo);
+    try {
+      const result = await downloadFile(arquivo)
 
-    if (url) {
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', arquivo);
-      link.setAttribute('target', '_blank');
-      document.body.appendChild(link);
-      link.click();
+      if (!result.success) {
+        toast.error(result.message || 'Erro ao baixar arquivo')
+        return
+      }
+
+      // Abre o arquivo em uma nova aba para visualização (bom para PDFs)
+      window.open(result.url, '_blank')
+
+      toast.success('Download iniciado!')
+    } catch (error) {
+      console.error('Erro ao baixar arquivo:', error)
+      toast.error('Erro ao baixar arquivo. Tente novamente.')
     }
   }
 

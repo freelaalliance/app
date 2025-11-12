@@ -1,6 +1,5 @@
 'use client'
 
-import { uploadFile } from '@/app/modulo/documentos/[id]/novo/_actions/upload-actions'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -15,6 +14,7 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { useAtualizarArquivoDocumento } from '../../_hooks/colaborador/useContratacaoColaborador'
 import type { DocumentoContrato } from '../../_types/colaborador/ContratacaoType'
+import { uploadDocumento } from '../../_utils/uploadDocumentos'
 
 interface DialogUploadDocumentoProps {
   open: boolean
@@ -47,33 +47,26 @@ export function DialogUploadDocumento({
 
     setUploading(true)
     try {
-      // Gerar nome único para o arquivo
-      const nomeArquivo = `contratacao-${contratacaoId}-doc-${documento.id}-${Date.now()}-${arquivo.name}`
+      // Usa o prefixo "contratacao/documentos" para organizar no bucket
+      const resultado = await uploadDocumento(arquivo, 'contratacao/documentos')
       
-      // Fazer upload para Cloudflare S3
-      const formData = new FormData()
-      formData.append('file', arquivo)
-      formData.append('keyArquivo', nomeArquivo)
-
-      const uploadResult = await uploadFile(formData)
-      
-      if (uploadResult?.success) {
-        // Atualizar documento no banco com a chave do arquivo
-        await atualizarArquivoDocumento({
-          documentoId: documento.id,
-          chaveArquivo: nomeArquivo,
-        })
-        
-        setUploadSucesso(true)
-        toast.success('Arquivo enviado e vinculado com sucesso!')
-        
-        setTimeout(() => {
-          onOpenChange(false)
-          resetDialog()
-        }, 1500)
-      } else {
-        throw new Error(uploadResult?.error || 'Erro no upload do arquivo')
+      if (!resultado.success || !resultado.keyCompleta) {
+        throw new Error(resultado.error || 'Erro no upload do arquivo')
       }
+
+      // Atualizar documento no banco com a keyCompleta
+      await atualizarArquivoDocumento({
+        documentoId: documento.id,
+        chaveArquivo: resultado.keyCompleta, // Salva o caminho completo
+      })
+      
+      setUploadSucesso(true)
+      toast.success(resultado.message || 'Arquivo enviado e vinculado com sucesso!')
+      
+      setTimeout(() => {
+        onOpenChange(false)
+        resetDialog()
+      }, 1500)
     } catch (error) {
       console.error('Erro no upload:', error)
       toast.error(error instanceof Error ? error.message : 'Erro inesperado no upload')

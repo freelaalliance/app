@@ -6,40 +6,40 @@ import { useCallback, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import {
-    type CriarContratacaoFormType,
-    schemaCriarContratacao,
-    valoresFormPadrao
+  type CriarContratacaoFormType,
+  schemaCriarContratacao,
+  valoresFormPadrao
 } from '@/app/modulo/rh/_schemas/contratacao/ContratacaoSchemas'
 import {
-    type DocumentoUpload,
-    gerarIdDocumento,
-    removerDocumento,
-    uploadDocumento
+  type DocumentoUpload,
+  gerarIdDocumento,
+  removerDocumento,
+  uploadDocumento
 } from '@/app/modulo/rh/_utils/uploadDocumentos'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { DialogClose, DialogFooter } from '@/components/ui/dialog'
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from '@/components/ui/popover'
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -142,8 +142,8 @@ export function FormularioNovaContratacao({ onSubmitCallback }: FormularioNovaCo
     const documento = documentosUpload[index]
 
     // Se o documento tem arquivo no S3, remove primeiro
-    if (documento?.chaveArquivo) {
-      await removerDocumento(documento.chaveArquivo)
+    if (documento?.keyCompleta) {
+      await removerDocumento(documento.keyCompleta)
     }
 
     setDocumentosUpload(prev => prev.filter((_, i) => i !== index))
@@ -158,17 +158,18 @@ export function FormularioNovaContratacao({ onSubmitCallback }: FormularioNovaCo
     ))
 
     try {
-      const documento = documentosUpload[index]
-      const resultado = await uploadDocumento(arquivo, documento.id)
+      // Usa o prefixo "contratacao/documentos" para organizar no bucket
+      const resultado = await uploadDocumento(arquivo, 'contratacao/documentos')
 
       if (resultado.success) {
         setDocumentosUpload(prev => prev.map((doc, i) =>
           i === index ? {
             ...doc,
-            chaveArquivo: resultado.chaveArquivo,
+            keyCompleta: resultado.keyCompleta, // Armazena o caminho completo
             uploading: false
           } : doc
         ))
+        toast.success(resultado.message || 'Upload realizado com sucesso!')
       } else {
         // Remover arquivo em caso de erro
         setDocumentosUpload(prev => prev.map((doc, i) =>
@@ -178,7 +179,7 @@ export function FormularioNovaContratacao({ onSubmitCallback }: FormularioNovaCo
             uploading: false
           } : doc
         ))
-        alert(`Erro no upload: ${resultado.error}`)
+        toast.error(`Erro no upload: ${resultado.error}`)
       }
     } catch (error) {
       setDocumentosUpload(prev => prev.map((doc, i) =>
@@ -188,7 +189,7 @@ export function FormularioNovaContratacao({ onSubmitCallback }: FormularioNovaCo
           uploading: false
         } : doc
       ))
-      alert('Erro inesperado no upload')
+      toast.error('Erro inesperado no upload')
     }
   }
 
@@ -196,18 +197,19 @@ export function FormularioNovaContratacao({ onSubmitCallback }: FormularioNovaCo
   const removerArquivo = async (index: number) => {
     const documento = documentosUpload[index]
 
-    if (documento.chaveArquivo) {
-      const sucesso = await removerDocumento(documento.chaveArquivo)
+    if (documento.keyCompleta) {
+      const sucesso = await removerDocumento(documento.keyCompleta)
       if (sucesso) {
         setDocumentosUpload(prev => prev.map((doc, i) =>
           i === index ? {
             ...doc,
             arquivo: undefined,
-            chaveArquivo: undefined
+            keyCompleta: undefined
           } : doc
         ))
+        toast.success('Arquivo removido com sucesso!')
       } else {
-        alert('Erro ao remover arquivo do servidor')
+        toast.error('Erro ao remover arquivo do servidor')
       }
     } else {
       // Apenas remover arquivo local
@@ -233,7 +235,7 @@ export function FormularioNovaContratacao({ onSubmitCallback }: FormularioNovaCo
       // Transformar documentos com upload para o formato da API
       const documentosParaAPI = documentosUpload.map(doc => ({
         documento: doc.documento,
-        chaveArquivo: doc.chaveArquivo || undefined
+        chaveArquivo: doc.keyCompleta || undefined // Envia a keyCompleta para a API
       }))
 
       if (data.colaborador.pessoa.EmailPessoa?.length === 0) {
@@ -774,7 +776,7 @@ export function FormularioNovaContratacao({ onSubmitCallback }: FormularioNovaCo
                     <div>
                       <FormLabel>Arquivo</FormLabel>
                       <div className="space-y-2">
-                        {!documento.arquivo && !documento.chaveArquivo ? (
+                        {!documento.arquivo && !documento.keyCompleta ? (
                           <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
                             <div className="text-center">
                               <Upload className="mx-auto h-8 w-8 text-gray-400" />
@@ -811,7 +813,7 @@ export function FormularioNovaContratacao({ onSubmitCallback }: FormularioNovaCo
                               <div className="flex items-center space-x-2">
                                 {documento.uploading ? (
                                   <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
-                                ) : documento.chaveArquivo ? (
+                                ) : documento.keyCompleta ? (
                                   <CheckCircle className="h-4 w-4 text-green-500" />
                                 ) : (
                                   <FileText className="h-4 w-4 text-gray-500" />
@@ -822,7 +824,7 @@ export function FormularioNovaContratacao({ onSubmitCallback }: FormularioNovaCo
                                 {documento.uploading && (
                                   <span className="text-xs text-blue-500">Enviando...</span>
                                 )}
-                                {documento.chaveArquivo && (
+                                {documento.keyCompleta && (
                                   <span className="text-xs text-green-500">Enviado com sucesso</span>
                                 )}
                               </div>

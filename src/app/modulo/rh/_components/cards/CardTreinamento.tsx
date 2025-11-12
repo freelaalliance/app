@@ -27,19 +27,17 @@ export function CardTreinamento({ treinamento }: CardTreinamentoProps) {
     if (!treinamento.certificado) return
     
     try {
-      const url = await downloadFile(treinamento.certificado)
-      if (url) {
-        // Criar link temporário para download
-        const link = document.createElement('a')
-        link.href = url
-        link.download = `certificado_${treinamento.treinamento.nome.replace(/\s+/g, '_')}.pdf`
-        link.target = '_blank'
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-      } else {
-        toast.error('Erro ao baixar certificado')
+      const result = await downloadFile(treinamento.certificado)
+      
+      if (!result.success) {
+        toast.error(result.message || 'Erro ao baixar arquivo')
+        return
       }
+
+      // Abre o arquivo em uma nova aba para visualização (bom para PDFs)
+      window.open(result.url, '_blank')
+
+      toast.success('Download iniciado!')
     } catch (error) {
       console.error('Erro no download do certificado:', error)
       toast.error('Erro ao baixar certificado. Tente novamente.')

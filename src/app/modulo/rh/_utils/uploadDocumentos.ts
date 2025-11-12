@@ -4,30 +4,30 @@ export interface DocumentoUpload {
   id: string
   documento: string
   arquivo?: File
-  chaveArquivo?: string
-  urlArquivo?: string
+  keyCompleta?: string // Armazena o caminho completo (prefixo/uuid.extensao)
   uploading?: boolean
 }
 
-// Gera um ID único para o documento
+// Gera um ID único para o documento (usado apenas para controle local)
 export function gerarIdDocumento(): string {
   return `doc_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
 }
 
-// Gera a chave do arquivo para o S3
-export function gerarChaveArquivo(documentoId: string, nomeArquivo: string): string {
-  const extensao = nomeArquivo.split('.').pop()
-  return `contratacao/documentos/${documentoId}.${extensao}`
-}
-
-// Faz upload do arquivo para o S3
-export async function uploadDocumento(arquivo: File, documentoId: string) {
+/**
+ * Faz upload do arquivo para o S3 usando o padrão com UUID automático
+ * @param arquivo - Arquivo a ser enviado
+ * @param prefixo - Prefixo opcional para organização no bucket (ex: "contratacao/documentos")
+ * @returns Objeto com sucesso, UUID, keyCompleta e mensagem
+ */
+export async function uploadDocumento(arquivo: File, prefixo?: string) {
   try {
-    const chaveArquivo = gerarChaveArquivo(documentoId, arquivo.name)
-
     const formData = new FormData()
     formData.append('file', arquivo)
-    formData.append('keyArquivo', chaveArquivo)
+
+    // Adiciona o prefixo se fornecido
+    if (prefixo) {
+      formData.append('prefixo', prefixo)
+    }
 
     const resultado = await uploadFile(formData)
 
@@ -37,7 +37,9 @@ export async function uploadDocumento(arquivo: File, documentoId: string) {
 
     return {
       success: true,
-      chaveArquivo: resultado.key as string
+      uuid: resultado.key, // UUID gerado pelo servidor
+      keyCompleta: resultado.keyCompleta, // Caminho completo no bucket
+      message: resultado.message
     }
   } catch (error) {
     console.error('Erro no upload:', error)
@@ -48,11 +50,15 @@ export async function uploadDocumento(arquivo: File, documentoId: string) {
   }
 }
 
-// Remove arquivo do S3
-export async function removerDocumento(chaveArquivo: string) {
+/**
+ * Remove arquivo do S3
+ * @param keyCompleta - Caminho completo do arquivo no bucket (ex: "contratacao/documentos/uuid.pdf")
+ * @returns true se sucesso, false se erro
+ */
+export async function removerDocumento(keyCompleta: string) {
   try {
-    const sucesso = await deleteFile(chaveArquivo)
-    return sucesso
+    const resultado = await deleteFile(keyCompleta)
+    return resultado.success
   } catch (error) {
     console.error('Erro ao remover arquivo:', error)
     return false

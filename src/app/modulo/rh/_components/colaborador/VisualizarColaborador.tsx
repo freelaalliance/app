@@ -152,19 +152,17 @@ export function VisualizarColaborador({ contratacaoId }: VisualizarColaboradorPr
 
   const handleDownloadArquivo = async (chaveArquivo: string, nomeDocumento: string) => {
     try {
-      const url = await downloadFile(chaveArquivo)
-      if (url) {
-        // Criar link temporário para download
-        const link = document.createElement('a')
-        link.href = url
-        link.download = nomeDocumento
-        link.target = '_blank'
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-      } else {
-        toast.error('Erro ao baixar arquivo')
+      const result = await downloadFile(chaveArquivo)
+
+      if (!result.success) {
+        toast.error(result.message || 'Erro ao baixar arquivo')
+        return
       }
+
+      // Abre o arquivo em uma nova aba para visualização (bom para PDFs)
+      window.open(result.url, '_blank')
+
+      toast.success('Download iniciado!')
     } catch (error) {
       console.error('Erro no download:', error)
       toast.error(`Erro no download: ${error instanceof Error ? error.message : 'Erro desconhecido'}`)
