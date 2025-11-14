@@ -20,9 +20,7 @@ import {
   MapPin,
   MoreVertical,
   Phone,
-  Trash2,
-  Upload,
-  User
+  Trash2, User
 } from 'lucide-react'
 
 import { aplicarMascaraDocumento } from '@/lib/utils'
@@ -43,7 +41,6 @@ import { DialogTreinamentosNaoRealizados } from '../dialogs/colaborador/DialogTr
 import { PopoverAcoesColaborador } from '../dialogs/colaborador/PopoverAcoesColaborador'
 import { DocumentoSkeleton } from '../skeletons/DocumentoSkeleton'
 import { ColaboradorPDF } from './ColaboradorPDF'
-import { DialogUploadDocumento } from './DialogUploadDocumento'
 import { TimelineHistorico } from './TimelineHistorico'
 
 interface VisualizarColaboradorProps {
@@ -76,7 +73,6 @@ export function VisualizarColaborador({ contratacaoId }: VisualizarColaboradorPr
   const iniciarTreinamentosObrigatorios = useIniciarTreinamentosObrigatorios()
 
   const [documentoParaUpload, setDocumentoParaUpload] = useState<DocumentoContrato | null>(null)
-  const [uploadDialogOpen, setUploadDialogOpen] = useState(false)
   const [treinamentosNaoRealizadosDialogOpen, setTreinamentosNaoRealizadosDialogOpen] = useState(false)
   const editarColaboradorRef = useRef<HTMLButtonElement>(null)
 
@@ -124,11 +120,6 @@ export function VisualizarColaborador({ contratacaoId }: VisualizarColaboradorPr
         toast.error('Erro ao iniciar treinamentos obrigatórios. Tente novamente.')
       },
     })
-  }
-
-  const handleAbrirUpload = (documento: DocumentoContrato) => {
-    setDocumentoParaUpload(documento)
-    setUploadDialogOpen(true)
   }
 
   const formatarCEP = (cep: string) => {
@@ -489,7 +480,7 @@ export function VisualizarColaborador({ contratacaoId }: VisualizarColaboradorPr
                         </div>
 
                         <div className="flex items-center gap-2">
-                          {documento.chaveArquivo ? (
+                          {documento.chaveArquivo && (
                             <Button
                               variant="outline"
                               size="sm"
@@ -497,15 +488,6 @@ export function VisualizarColaborador({ contratacaoId }: VisualizarColaboradorPr
                             >
                               <Download className="h-4 w-4 mr-2" />
                               Baixar
-                            </Button>
-                          ) : (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleAbrirUpload(documento)}
-                            >
-                              <Upload className="h-4 w-4 mr-2" />
-                              Enviar Arquivo
                             </Button>
                           )}
                           <AlertDialogRemoverDocumento documento={documento}>
@@ -698,13 +680,6 @@ export function VisualizarColaborador({ contratacaoId }: VisualizarColaboradorPr
           )}
         </div>
       </div>
-
-      <DialogUploadDocumento
-        open={uploadDialogOpen}
-        onOpenChange={setUploadDialogOpen}
-        documento={documentoParaUpload}
-        contratacaoId={contratacaoId}
-      />
 
       {/* Dialog de editar colaborador com trigger oculto */}
       <DialogEditarColaborador contratacao={contratacao}>

@@ -3,21 +3,21 @@
 import { uploadFile } from '@/app/modulo/documentos/[id]/novo/_actions/upload-actions'
 import { Button } from '@/components/ui/button'
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from '@/components/ui/dialog'
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Upload } from '@/components/upload/upload'
@@ -74,16 +74,17 @@ export function DialogAdicionarDocumento({
       // Se há arquivo selecionado, faz upload primeiro
       if (arquivo) {
         const formData = new FormData()
-        const nomeArquivo = `documento-${Date.now()}-${arquivo.name}`
         formData.append('file', arquivo)
-        formData.append('keyArquivo', nomeArquivo)
+        formData.append('prefixo', 'documentos/colaborador') // Prefixo para organizar os arquivos
 
         const uploadResult = await uploadFile(formData)
-        if (uploadResult) {
-          chaveArquivo = nomeArquivo
-        } else {
-          throw new Error('Falha no upload do arquivo')
+        
+        if (!uploadResult.success) {
+          throw new Error(uploadResult.message || 'Falha no upload do arquivo')
         }
+
+        // Usa a keyCompleta retornada pelo upload (prefixo/uuid.extensao)
+        chaveArquivo = uploadResult.keyCompleta
       }
 
       // Adiciona o documento com ou sem arquivo
@@ -99,7 +100,8 @@ export function DialogAdicionarDocumento({
       setOpen(false)
     } catch (error) {
       console.error('Erro ao adicionar documento:', error)
-      toast.error('Erro ao adicionar documento')
+      const mensagemErro = error instanceof Error ? error.message : 'Erro ao adicionar documento'
+      toast.error(mensagemErro)
     } finally {
       setIsUploading(false)
     }
