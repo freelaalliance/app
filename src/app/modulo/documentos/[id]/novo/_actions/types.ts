@@ -68,10 +68,15 @@ export type DeleteResult =
 
 /**
  * Dados necessários para upload de arquivo
- * Nota: Em Server Actions, File é recebido via FormData como Blob
+ * Nota: Em Server Actions, File é recebido via FormData como objeto especial
  */
 export type UploadFileInput = {
-  file: Blob | File
+  file: {
+    name: string
+    size: number
+    type: string
+    arrayBuffer: () => Promise<ArrayBuffer>
+  }
   prefixo?: string // Prefixo/pasta opcional
 }
 

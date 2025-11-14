@@ -28,7 +28,10 @@ const schemaS3Config = z.object({
 })
 
 const schemaUploadFile = z.object({
-  file: z.instanceof(File, { message: "Arquivo inválido" }),
+  file: z.any().refine(
+    (file) => file && typeof file === 'object' && 'name' in file && 'size' in file && 'type' in file,
+    { message: "Arquivo inválido" }
+  ),
   prefixo: z.string().optional().nullable(),
 })
 
