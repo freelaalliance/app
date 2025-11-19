@@ -362,7 +362,7 @@ export default function CadastroFornecedorView() {
                   name={'nota'}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Nota da avaliação</FormLabel>
+                      <FormLabel>Nota de homologação</FormLabel>
                       <FormControl>
                         <Input placeholder="0-100" {...field} />
                       </FormControl>

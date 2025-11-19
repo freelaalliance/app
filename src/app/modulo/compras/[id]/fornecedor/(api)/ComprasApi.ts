@@ -34,6 +34,11 @@ export async function salvarNovoPedido(form: formNovoPedidoType) {
       prazoEntrega: form.prazoEntrega,
       codigo: form.codigo,
       itens: form.itens,
+      frete: form.frete,
+      armazenamento: form.armazenamento,
+      localEntrega: form.localEntrega,
+      formaPagamento: form.formaPagamento,
+      imposto: form.imposto,
     })
     .then(resp => {
       return resp.data

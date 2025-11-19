@@ -12,7 +12,7 @@ export interface NovaAvaliacaoCriticoProps {
   idFornecedor: string
 }
 
-const AvalicaoFornecedorCritico = dynamic(
+const HomologacaoFornecedorCritico = dynamic(
   () => import('../../(views)/NovaAvaliacao'),
   {
     loading: () => {
@@ -32,12 +32,12 @@ export function NovaAvaliacaoCriticoDialog({
   return (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Nova avaliação</DialogTitle>
+        <DialogTitle>Nova homologação</DialogTitle>
         <DialogDescription>
-          Adicionar uma nova avaliação para o fornecedor
+          Adicionar uma nova homologação para o fornecedor
         </DialogDescription>
       </DialogHeader>
-      <AvalicaoFornecedorCritico idFornecedor={idFornecedor} />
+      <HomologacaoFornecedorCritico idFornecedor={idFornecedor} />
     </DialogContent>
   )
 }

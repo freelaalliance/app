@@ -84,17 +84,7 @@ export const colunasFornecedores: ColumnDef<FornecedoresEmpresaType>[] = [
     enableHiding: false,
     cell: ({ row }) => (
       <div>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Progress
-              className="h-2 shadow"
-              value={row.getValue('desempenho')}
-            />
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>{`Média de desempenho: ${row.getValue('desempenho')}%`}</p>
-          </TooltipContent>
-        </Tooltip>
+        {`${row.getValue('desempenho')}%`}
       </div>
     ),
   },

@@ -5,6 +5,11 @@ export type PedidosFornecedorType = {
   permiteEntregaParcial: boolean
   prazoEntrega: Date
   condicoesEntrega: string
+  frete?: string,
+  armazenamento?: string,
+  localEntrega?: string,
+  formaPagamento?: string,
+  imposto?: string,
   recebido: boolean
   cancelado: boolean
   empresa?: {
@@ -51,6 +56,11 @@ export type PedidosFornecedorEmpresaType = {
   permiteEntregaParcial: boolean
   prazoEntrega: Date
   condicoesEntrega: string
+  frete?: string,
+  armazenamento?: string,
+  localEntrega?: string,
+  formaPagamento?: string,
+  imposto?: string,
   recebido: boolean
   cancelado: boolean
   empresa?: {

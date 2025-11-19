@@ -9,18 +9,18 @@ import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { DialogClose, DialogFooter } from '@/components/ui/dialog'
 import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from '@/components/ui/form'
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from '@/components/ui/popover'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
@@ -33,10 +33,25 @@ import { CalendarIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import type { ItemCarrinhoType } from '../../../_types/venda'
+import { useConfiguracoesCompras } from '@/hooks/useConfiguracao'
+
+const CONFIG_KEYS = {
+  HABILITAR_FRETE: 'vendas_habilitar_frete',
+  HABILITAR_ARMAZENAMENTO: 'vendas_habilitar_armazenamento',
+  HABILITAR_LOCAL_ENTREGA: 'vendas_habilitar_local_entrega',
+  HABILITAR_FORMA_PAGAMENTO: 'vendas_habilitar_forma_pagamento',
+  HABILITAR_IMPOSTOS: 'vendas_habilitar_impostos',
+} as const
 
 const expeditionSchema = z.object({
   id: z.string().uuid(),
   prazoEntrega: z.coerce.date(),
+  frete: z.string().optional(),
+  armazenamento: z.string().optional(),
+  localEntrega: z.string().optional(),
+  formaPagamento: z.string().optional(),
+  imposto: z.string().optional(),
+  condicoesEntrega: z.string().optional(),
   permiteEntregaParcial: z.boolean(),
   observacao: z.string().optional(),
   itens: z.array(
@@ -75,6 +90,8 @@ export function FormularioVendaCliente({
     },
   })
 
+  const { configuracoes } = useConfiguracoesCompras()
+
   const mutation = useMutation({
     mutationFn: async (data: VendaFormType) => {
       const response = await axiosInstance.post(`/vendas/cliente/${data.id}`, {
@@ -86,7 +103,7 @@ export function FormularioVendaCliente({
       })
       return response.data
     },
-    onSuccess: ({dados}) => {
+    onSuccess: ({ dados }) => {
       toast.success('Venda registrada com sucesso!', {
         action: {
           onClick: () => {
@@ -179,6 +196,141 @@ export function FormularioVendaCliente({
             </FormItem>
           )}
         />
+
+        {configuracoes?.map((config) => {
+          if (config.chave === CONFIG_KEYS.HABILITAR_FRETE && config.valor === 'true') {
+            return (
+              <FormField
+                key={config.id}
+                control={formVenda.control}
+                name="frete"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Frete</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Informações sobre o frete deste pedido"
+                        className="resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription className="select-none">
+                      Adicione informações relevantes sobre o frete do pedido ou até mesmo as
+                      condições para entrega do pedido
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )
+          }
+
+          if (config.chave === CONFIG_KEYS.HABILITAR_ARMAZENAMENTO && config.valor === 'true') {
+            return (
+              <FormField
+                key={config.id}
+                control={formVenda.control}
+                name="armazenamento"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Armazenamento</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Local de armazenamento após entrega"
+                        className="resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription className="select-none">
+                      Informe o local onde os itens serão armazenados após a entrega
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )
+          }
+
+          if (config.chave === CONFIG_KEYS.HABILITAR_LOCAL_ENTREGA && config.valor === 'true') {
+            return (
+              <FormField
+                key={config.id}
+                control={formVenda.control}
+                name="localEntrega"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Local de Entrega</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Endereço ou local de entrega do pedido"
+                        className="resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription className="select-none">
+                      Especifique o endereço ou local onde o pedido deve ser entregue
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )
+          }
+
+          if (config.chave === CONFIG_KEYS.HABILITAR_FORMA_PAGAMENTO && config.valor === 'true') {
+            return (
+              <FormField
+                key={config.id}
+                control={formVenda.control}
+                name="formaPagamento"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Forma de Pagamento</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Condições de pagamento do pedido"
+                        className="resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription className="select-none">
+                      Descreva as condições e forma de pagamento acordadas
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )
+          }
+
+          if (config.chave === CONFIG_KEYS.HABILITAR_IMPOSTOS && config.valor === 'true') {
+            return (
+              <FormField
+                key={config.id}
+                control={formVenda.control}
+                name="imposto"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Impostos</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Informações sobre impostos e tributos"
+                        className="resize-none"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription className="select-none">
+                      Adicione informações sobre impostos aplicáveis a este pedido
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )
+          }
+
+          return null
+        })}
 
         <FormField
           control={formVenda.control}

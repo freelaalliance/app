@@ -13,40 +13,49 @@ import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from '@/components/ui/card'
 import { DialogClose, DialogFooter } from '@/components/ui/dialog'
 import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from '@/components/ui/popover'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 
+import { useConfiguracoesCompras } from '@/hooks/useConfiguracao'
 import { salvarNovoPedido } from '../(api)/ComprasApi'
 import { getNumOrder } from '../utils/pedido-util'
+
+const CONFIG_KEYS = {
+  HABILITAR_FRETE: 'compras_habilitar_frete',
+  HABILITAR_ARMAZENAMENTO: 'compras_habilitar_armazenamento',
+  HABILITAR_LOCAL_ENTREGA: 'compras_habilitar_local_entrega',
+  HABILITAR_FORMA_PAGAMENTO: 'compras_habilitar_forma_pagamento',
+  HABILITAR_IMPOSTOS: 'compras_habilitar_impostos',
+} as const
 
 const schemaFormNovoPedido = z.object({
   fornecedorId: z.string().uuid(),
@@ -54,6 +63,11 @@ const schemaFormNovoPedido = z.object({
   prazoEntrega: z.coerce.date({
     required_error: 'Obrigatório informar o prazo de entrega',
   }),
+  frete: z.string().optional(),
+  armazenamento: z.string().optional(),
+  localEntrega: z.string().optional(),
+  formaPagamento: z.string().optional(),
+  imposto: z.string().optional(),
   condicoesEntrega: z.string().optional(),
   codigo: z.string({
     required_error: 'Obrigatório informar o código do pedido',
@@ -100,6 +114,8 @@ export default function NovoPedidoView({ fornecedorId }: NovoPedidoProps) {
     },
     mode: 'onChange',
   })
+
+  const { configuracoes } = useConfiguracoesCompras()
 
   const {
     fields: itens,
@@ -235,6 +251,142 @@ export default function NovoPedidoView({ fornecedorId }: NovoPedidoProps) {
               </FormItem>
             )}
           />
+
+          {configuracoes?.map((config) => {
+            if (config.chave === CONFIG_KEYS.HABILITAR_FRETE && config.valor === 'true') {
+              return (
+                <FormField
+                  key={config.id}
+                  control={formPedido.control}
+                  name="frete"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Frete</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Informações sobre o frete deste pedido"
+                          className="resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription className="select-none">
+                        Adicione informações relevantes sobre o frete do pedido ou até mesmo as
+                        condições para entrega do pedido
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )
+            }
+
+            if (config.chave === CONFIG_KEYS.HABILITAR_ARMAZENAMENTO && config.valor === 'true') {
+              return (
+                <FormField
+                  key={config.id}
+                  control={formPedido.control}
+                  name="armazenamento"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Armazenamento</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Local de armazenamento após entrega"
+                          className="resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription className="select-none">
+                        Informe o local onde os itens serão armazenados após a entrega
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )
+            }
+
+            if (config.chave === CONFIG_KEYS.HABILITAR_LOCAL_ENTREGA && config.valor === 'true') {
+              return (
+                <FormField
+                  key={config.id}
+                  control={formPedido.control}
+                  name="localEntrega"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Local de Entrega</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Endereço ou local de entrega do pedido"
+                          className="resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription className="select-none">
+                        Especifique o endereço ou local onde o pedido deve ser entregue
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )
+            }
+
+            if (config.chave === CONFIG_KEYS.HABILITAR_FORMA_PAGAMENTO && config.valor === 'true') {
+              return (
+                <FormField
+                  key={config.id}
+                  control={formPedido.control}
+                  name="formaPagamento"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Forma de Pagamento</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Condições de pagamento do pedido"
+                          className="resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription className="select-none">
+                        Descreva as condições e forma de pagamento acordadas
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )
+            }
+
+            if (config.chave === CONFIG_KEYS.HABILITAR_IMPOSTOS && config.valor === 'true') {
+              return (
+                <FormField
+                  key={config.id}
+                  control={formPedido.control}
+                  name="imposto"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Impostos</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Informações sobre impostos e tributos"
+                          className="resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription className="select-none">
+                        Adicione informações sobre impostos aplicáveis a este pedido
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )
+            }
+
+            return null
+          })}
+          
           <Card>
             <CardHeader className="flex flex-row justify-between">
               <div>

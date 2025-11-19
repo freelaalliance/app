@@ -67,6 +67,36 @@ export default function VisualizacaoDadosPedido({
               <strong>Cód. do Pedido:</strong>
               <span>{dadosPedido.codigo ?? ''}</span>
             </li>
+            <li className="flex justify-between items-center gap-2">
+                <strong>Frete </strong>
+                <span>
+                  {dadosPedido?.frete ?? '--'}
+                </span>
+              </li>
+              <li className="flex justify-between items-center gap-2">
+                <strong>Armazenamento </strong>
+                <span>
+                  {dadosPedido?.armazenamento ?? '--'}
+                </span>
+              </li>
+              <li className="flex justify-between items-center gap-2">
+                <strong>Local de Entrega </strong>
+                <span>
+                  {dadosPedido?.localEntrega ?? '--'}
+                </span>
+              </li>
+              <li className="flex justify-between items-center gap-2">
+                <strong>Forma de Pagamento </strong>
+                <span>
+                  {dadosPedido?.formaPagamento ?? '--'}
+                </span>
+              </li>
+              <li className="flex justify-between items-center gap-2">
+                <strong>Imposto </strong>
+                <span>
+                  {dadosPedido?.imposto ?? '--'}
+                </span>
+              </li>
           </ul>
         </div>
       </div>

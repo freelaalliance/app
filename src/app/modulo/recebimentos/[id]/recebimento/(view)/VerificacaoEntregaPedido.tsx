@@ -331,7 +331,7 @@ export default function VerificaEntregaPedido({
             <ul>
               <li className="flex justify-between items-center gap-2">
                 <strong>Num. do Pedido</strong>
-                <span>{dadosPedido.data?.dados?.numPedido ?? ''}</span>
+                <span>{dadosPedido.data?.dados?.numPedido ?? '--'}</span>
               </li>
               <li className="flex justify-between items-center gap-2">
                 <strong>Data do Pedido</strong>
@@ -345,7 +345,7 @@ export default function VerificaEntregaPedido({
               </li>
               <li className="flex justify-between items-center gap-2">
                 <strong>Responsável</strong>
-                <span>{dadosPedido.data?.dados?.cadastro.usuario ?? ''}</span>
+                <span>{dadosPedido.data?.dados?.cadastro.usuario ?? '--'}</span>
               </li>
               <li className="flex justify-between items-center gap-2">
                 <strong>Prazo para entrega </strong>
@@ -361,6 +361,36 @@ export default function VerificaEntregaPedido({
               <li className="flex justify-between items-center gap-2">
                 <strong>Entrega parcial </strong>
                 <span>{`${dadosPedido.data?.dados?.permiteEntregaParcial ? 'Sim' : 'Não'}`}</span>
+              </li>
+              <li className="flex justify-between items-center gap-2">
+                <strong>Frete </strong>
+                <span>
+                  {dadosPedido.data?.dados?.frete ?? '--'}
+                </span>
+              </li>
+              <li className="flex justify-between items-center gap-2">
+                <strong>Armazenamento </strong>
+                <span>
+                  {dadosPedido.data?.dados?.armazenamento ?? '--'}
+                </span>
+              </li>
+              <li className="flex justify-between items-center gap-2">
+                <strong>Local de Entrega </strong>
+                <span>
+                  {dadosPedido.data?.dados?.localEntrega ?? '--'}
+                </span>
+              </li>
+              <li className="flex justify-between items-center gap-2">
+                <strong>Forma de Pagamento </strong>
+                <span>
+                  {dadosPedido.data?.dados?.formaPagamento ?? '--'}
+                </span>
+              </li>
+              <li className="flex justify-between items-center gap-2">
+                <strong>Imposto </strong>
+                <span>
+                  {dadosPedido.data?.dados?.imposto ?? '--'}
+                </span>
               </li>
             </ul>
 
