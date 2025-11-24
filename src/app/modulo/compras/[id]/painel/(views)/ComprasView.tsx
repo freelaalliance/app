@@ -5,6 +5,7 @@ import { ptBR } from 'date-fns/locale'
 import {
   ArrowBigDownDash,
   CalendarClock,
+  Eye,
   FileText,
   FileX2,
   Filter,
@@ -44,6 +45,7 @@ import {
 } from '@/components/ui/tooltip'
 import { aplicarMascaraDocumento, formatarDataBrasil } from '@/lib/utils'
 
+import Link from 'next/link'
 import {
   type PedidosEmpresaType,
   buscarListaPedidosEmpresa,
@@ -192,18 +194,26 @@ export default function PainelCompras() {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-auto" />
                   <TableHead className="w-auto">Pedido</TableHead>
                   <TableHead className="w-2/6">Prazo entrega</TableHead>
                   <TableHead className="w-auto">Entrega parcial</TableHead>
                   <TableHead className="w-auto">Recebido</TableHead>
                   <TableHead className="w-auto">Cancelado</TableHead>
-                  <TableHead className="w-3/4">Fornecedor</TableHead>
+                  <TableHead className="w-auto">Fornecedor</TableHead>
                   <TableHead className="w-2/6">Documento</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {listaComprasEmpresas.map(pedido => (
                   <TableRow key={pedido.id}>
+                    <TableCell>
+                      <Button variant="ghost" size="icon" className="p-0" asChild>
+                        <Link href={`fornecedor/pedido/${pedido.id}/visualizar?codigo=${pedido.codigo}`} target='_blank'>
+                          <Eye className="size-5" />
+                        </Link>
+                      </Button>
+                    </TableCell>
                     <TableCell>{pedido.numPedido}</TableCell>
                     <TableCell>
                       {formatarDataBrasil(
