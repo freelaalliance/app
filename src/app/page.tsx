@@ -8,7 +8,7 @@ export default function Auth() {
 	return (
 		<div className="min-h-screen flex">
 			{/* Left Panel - Branding and Features */}
-			<div className="hidden lg:flex lg:w-1/2 bg-primary text-primary-foreground xl:px-50 p-12 flex-col lg:justify-center relative z-10 shadow-[24px_0px_32px_-5px_rgba(0,0,0,0.3)]">
+			<div className="hidden lg:flex lg:w-1/2 bg-primary text-primary-foreground xl:px-50 p-12 flex-row items-center lg:justify-center relative z-10 shadow-[24px_0px_32px_-5px_rgba(0,0,0,0.3)]">
 				<div className="max-w-lg">
 					<div className="flex items-center gap-3 mb-8">
 						<div className="w-12 h-12 bg-primary-foreground/10 rounded-xl flex items-center justify-center">
