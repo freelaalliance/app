@@ -30,7 +30,7 @@
   --destructive: 0 70% 50%; /* Vermelho para erro, mais escuro que o primário */
   --destructive-foreground: 0 5% 98%;
   --border: 0 5% 88%; /* Bordas suaves */
-  --input: 0 3% 96%; /* Inputs com fundo levemente cinza */
+  --input: 0 5% 88%; /* Inputs com fundo levemente cinza */
   --ring: 357 65% 45%; /* Anel de foco no vermelho Alliance */
   
   /* Cores para gráficos com harmonia Alliance */
