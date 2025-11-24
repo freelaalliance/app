@@ -79,6 +79,8 @@ export async function cadastrarNovaRevisaoDocumento(
   return await axiosInstance
     .post<ResponseType>(`documentos/revisao/${revisaoDocumentoForm.id}`, {
       arquivo: revisaoDocumentoForm.arquivo,
+      dataRevisao: revisaoDocumentoForm.dataRevisao,
+      numeroRevisao: revisaoDocumentoForm.numeroRevisao,
     })
     .then(({ data }) => data)
     .catch(() => null)

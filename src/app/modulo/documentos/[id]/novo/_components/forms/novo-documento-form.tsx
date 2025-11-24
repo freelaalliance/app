@@ -83,6 +83,8 @@ const schemaNovoDocumentoForm = z.object({
       })
     )
     .default([]),
+  numeroRevisao: z.coerce.number().optional(),
+  dataRevisao: z.coerce.date().optional(),
   arquivo: z.string().min(1, "Arquivo é obrigatório"),
   empresaId: z.string().uuid().optional(),
 })
@@ -346,7 +348,7 @@ export function NovoDocumentoForm({
                   <FormItem>
                     <FormLabel>Cópias</FormLabel>
                     <FormControl>
-                      <Input type="number" {...field} />
+                      <Input type="number" {...field} min={0} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -441,10 +443,68 @@ export function NovoDocumentoForm({
               )}
             </div>
           </div>
-          <UploadForm 
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <FormField
+              control={formNovoDocumento.control}
+              name={'dataRevisao'}
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel className="mb-[0.5px] mt-[9.2px]">
+                    {'Data da revisão'}
+                  </FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={'outline'}
+                          className={cn(
+                            'w-full pl-3 text-left font-normal',
+                            !field.value && 'text-muted-foreground'
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, 'PPP', {
+                              locale: ptBR,
+                            })
+                          ) : (
+                            <span>Selecione</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        locale={ptBR}
+                        captionLayout="dropdown"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={formNovoDocumento.control}
+              name={'numeroRevisao'}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Número da revisão</FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} min={1} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <UploadForm
             prefixo={empresaId ? `documentos/${empresaId}` : 'documentos'}
             onUploadSuccess={handleUploadSuccess}
-            arquivoSelecionado={selecionarArquivo} 
+            arquivoSelecionado={selecionarArquivo}
           />
         </div>
         <DialogFooter className='gap-2'>

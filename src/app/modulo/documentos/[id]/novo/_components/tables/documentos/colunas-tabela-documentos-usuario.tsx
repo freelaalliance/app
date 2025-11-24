@@ -71,7 +71,7 @@ export const ColunasDocumentosUsuario: Array<ColumnDef<DocumentoType>> = [
     header: 'Revisão',
     enableHiding: false,
     enableColumnFilter: true,
-    cell: ({ row }) => (<span>{row.original.revisoes.length}</span>),
+    cell: ({ row }) => (<span>{row.original.revisoes[row.original.revisoes.length - 1]?.numeroRevisao}</span>),
   },
   {
     accessorKey: 'ultimaRevisao',
@@ -80,7 +80,7 @@ export const ColunasDocumentosUsuario: Array<ColumnDef<DocumentoType>> = [
     enableColumnFilter: true,
     cell: ({ row }) => {
       const dataUltimaRevisao = new Date(
-        row.original.revisoes[0]?.revisadoEm || new Date()
+        row.original.revisoes[row.original.revisoes.length - 1]?.revisadoEm || new Date()
       )
 
       return (
