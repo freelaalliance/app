@@ -9,7 +9,7 @@ import NovoPedidoView, { type NovoPedidoProps } from '../../(views)/NovoPedido'
 
 export function NovoPedidoDialog({ fornecedorId }: NovoPedidoProps) {
   return (
-    <DialogContent className="overflow-auto max-h-full max-w-5xl">
+    <DialogContent className="overflow-auto max-h-screen max-w-5xl">
       <DialogHeader>
         <DialogTitle>Novo pedido</DialogTitle>
         <DialogDescription>

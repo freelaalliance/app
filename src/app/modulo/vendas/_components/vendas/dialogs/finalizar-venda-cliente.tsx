@@ -10,7 +10,7 @@ interface FinalizarVendaClienteDialogProps {
 
 export function FinalizarVendaClienteDialog({ itens, idCliente, vendaRealizada }: FinalizarVendaClienteDialogProps) {
   return (
-    <DialogContent>
+    <DialogContent className="overflow-auto max-h-screen max-w-5xl">
       <DialogHeader>
         <DialogTitle>Finalizar Compra</DialogTitle>
       </DialogHeader>

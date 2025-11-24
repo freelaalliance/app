@@ -252,141 +252,143 @@ export default function NovoPedidoView({ fornecedorId }: NovoPedidoProps) {
             )}
           />
 
-          {configuracoes?.map((config) => {
-            if (config.chave === CONFIG_KEYS.HABILITAR_FRETE && config.valor === 'true') {
-              return (
-                <FormField
-                  key={config.id}
-                  control={formPedido.control}
-                  name="frete"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Frete</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Informações sobre o frete deste pedido"
-                          className="resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription className="select-none">
-                        Adicione informações relevantes sobre o frete do pedido ou até mesmo as
-                        condições para entrega do pedido
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )
-            }
+          <ScrollArea className='max-h-60 p-4 space-y-4'>
+            {configuracoes?.map((config) => {
+              if (config.chave === CONFIG_KEYS.HABILITAR_FRETE && config.valor === 'true') {
+                return (
+                  <FormField
+                    key={config.id}
+                    control={formPedido.control}
+                    name="frete"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Frete</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Informações sobre o frete deste pedido"
+                            className="resize-none"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription className="select-none">
+                          Adicione informações relevantes sobre o frete do pedido ou até mesmo as
+                          condições para entrega do pedido
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )
+              }
 
-            if (config.chave === CONFIG_KEYS.HABILITAR_ARMAZENAMENTO && config.valor === 'true') {
-              return (
-                <FormField
-                  key={config.id}
-                  control={formPedido.control}
-                  name="armazenamento"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Armazenamento</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Local de armazenamento após entrega"
-                          className="resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription className="select-none">
-                        Informe o local onde os itens serão armazenados após a entrega
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )
-            }
+              if (config.chave === CONFIG_KEYS.HABILITAR_ARMAZENAMENTO && config.valor === 'true') {
+                return (
+                  <FormField
+                    key={config.id}
+                    control={formPedido.control}
+                    name="armazenamento"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Armazenamento</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Local de armazenamento após entrega"
+                            className="resize-none"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription className="select-none">
+                          Informe o local onde os itens serão armazenados após a entrega
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )
+              }
 
-            if (config.chave === CONFIG_KEYS.HABILITAR_LOCAL_ENTREGA && config.valor === 'true') {
-              return (
-                <FormField
-                  key={config.id}
-                  control={formPedido.control}
-                  name="localEntrega"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Local de Entrega</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Endereço ou local de entrega do pedido"
-                          className="resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription className="select-none">
-                        Especifique o endereço ou local onde o pedido deve ser entregue
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )
-            }
+              if (config.chave === CONFIG_KEYS.HABILITAR_LOCAL_ENTREGA && config.valor === 'true') {
+                return (
+                  <FormField
+                    key={config.id}
+                    control={formPedido.control}
+                    name="localEntrega"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Local de Entrega</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Endereço ou local de entrega do pedido"
+                            className="resize-none"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription className="select-none">
+                          Especifique o endereço ou local onde o pedido deve ser entregue
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )
+              }
 
-            if (config.chave === CONFIG_KEYS.HABILITAR_FORMA_PAGAMENTO && config.valor === 'true') {
-              return (
-                <FormField
-                  key={config.id}
-                  control={formPedido.control}
-                  name="formaPagamento"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Forma de Pagamento</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Condições de pagamento do pedido"
-                          className="resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription className="select-none">
-                        Descreva as condições e forma de pagamento acordadas
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )
-            }
+              if (config.chave === CONFIG_KEYS.HABILITAR_FORMA_PAGAMENTO && config.valor === 'true') {
+                return (
+                  <FormField
+                    key={config.id}
+                    control={formPedido.control}
+                    name="formaPagamento"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Forma de Pagamento</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Condições de pagamento do pedido"
+                            className="resize-none"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription className="select-none">
+                          Descreva as condições e forma de pagamento acordadas
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )
+              }
 
-            if (config.chave === CONFIG_KEYS.HABILITAR_IMPOSTOS && config.valor === 'true') {
-              return (
-                <FormField
-                  key={config.id}
-                  control={formPedido.control}
-                  name="imposto"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Impostos</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Informações sobre impostos e tributos"
-                          className="resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormDescription className="select-none">
-                        Adicione informações sobre impostos aplicáveis a este pedido
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              )
-            }
+              if (config.chave === CONFIG_KEYS.HABILITAR_IMPOSTOS && config.valor === 'true') {
+                return (
+                  <FormField
+                    key={config.id}
+                    control={formPedido.control}
+                    name="imposto"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Impostos</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Informações sobre impostos e tributos"
+                            className="resize-none"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription className="select-none">
+                          Adicione informações sobre impostos aplicáveis a este pedido
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )
+              }
 
-            return null
-          })}
-          
+              return null
+            })}
+          </ScrollArea>
+
           <Card>
             <CardHeader className="flex flex-row justify-between">
               <div>
