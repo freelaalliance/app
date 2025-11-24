@@ -201,7 +201,7 @@ export default function PainelCompras() {
                   <TableHead className="w-auto">Recebido</TableHead>
                   <TableHead className="w-auto">Cancelado</TableHead>
                   <TableHead className="w-auto">Fornecedor</TableHead>
-                  <TableHead className="w-2/6">Documento</TableHead>
+                  <TableHead className="w-auto">Documento</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -209,7 +209,7 @@ export default function PainelCompras() {
                   <TableRow key={pedido.id}>
                     <TableCell>
                       <Button variant="ghost" size="icon" className="p-0" asChild>
-                        <Link href={`fornecedor/pedido/${pedido.id}/visualizar?codigo=${pedido.codigo}`} target='_blank'>
+                        <Link href={`fornecedor/pedido/${pedido.id}/visualizar?codigo=${pedido.codigo}`}>
                           <Eye className="size-5" />
                         </Link>
                       </Button>
