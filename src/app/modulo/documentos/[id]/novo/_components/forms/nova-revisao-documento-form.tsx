@@ -150,7 +150,7 @@ export function NovaRevisaoDocumentoForm({ idDocumento }: NovaRevisaoDocumentoFo
               <FormItem>
                 <FormLabel>Número da revisão</FormLabel>
                 <FormControl>
-                  <Input type="number" {...field} min={1} />
+                  <Input type="number" {...field} min={0} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
