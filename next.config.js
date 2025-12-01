@@ -5,6 +5,11 @@ const nextConfig = {
     return config
   },
   output: "standalone",
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '15mb',
+    },
+  },
 }
 
 module.exports = nextConfig
