@@ -4,6 +4,8 @@ import type { DocumentoType } from '@/app/modulo/documentos/_api/documentos'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { formatarDataBrasil } from '@/lib/utils'
 import { MenuTabelaDocumentosEmpresaAdmin } from './menu-tabela-documentos-empresa-admin'
+import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
 export const ColunasDocumentosEmpresaAdmin: Array<ColumnDef<DocumentoType>> = [
   {
@@ -79,13 +81,15 @@ export const ColunasDocumentosEmpresaAdmin: Array<ColumnDef<DocumentoType>> = [
     enableHiding: false,
     enableColumnFilter: true,
     cell: ({ row }) => {
-      const dataUltimaRevisao = new Date(
-        row.original.revisoes[row.original.revisoes.length - 1]?.revisadoEm || new Date()
-      )
+      const dataUltimaRevisao = row.original.revisoes[row.original.revisoes.length - 1] ? new Date(
+        row.original.revisoes[row.original.revisoes.length - 1]?.revisadoEm
+      ) : null
 
       return (
         <div className='w-auto capitalize'>
-          {formatarDataBrasil(dataUltimaRevisao, false, 'P')}
+          {dataUltimaRevisao ? format(dataUltimaRevisao, 'P', {
+            locale: ptBR
+          }) : '--'}
         </div>
       )
     },
