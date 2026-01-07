@@ -135,7 +135,7 @@ export default function UploadForm({ prefixo, onUploadSuccess, arquivoSelecionad
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
         >
-          <input disabled={!!file} multiple={false} type="file" accept="application/pdf" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
+          <input disabled={!!file} multiple={false} type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
 
           {!file ? (
             <div className="flex flex-col items-center justify-center py-4">
@@ -144,7 +144,7 @@ export default function UploadForm({ prefixo, onUploadSuccess, arquivoSelecionad
                 Arraste e solte seu arquivo aqui ou clique para selecionar
               </p>
               <p className="text-sm text-gray-500 text-center mt-2">
-                Suporta arquivos PDFs
+                Suporta arquivos todos os tipos de arquivos. Tamanho máximo: 100MB.
               </p>
             </div>
           ) : (

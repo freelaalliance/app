@@ -154,6 +154,7 @@ export function NovoDocumentoForm({
     if (arquivoKey) {
       await deleteFile(arquivoKey)
     }
+    selecionarArquivo(false)
     formNovoDocumento.reset()
   }
 
