@@ -9,7 +9,7 @@ import {
   Loader2,
   Percent,
 } from 'lucide-react'
-import generatePDF, { Margin, Options, Resolution } from 'react-to-pdf'
+import generatePDF, { Margin, type Options, Resolution } from 'react-to-pdf'
 import { Pie, PieChart } from 'recharts'
 
 import { IndicadorInformativo } from '@/components/IndicadorInfo'
@@ -22,7 +22,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
@@ -52,27 +52,27 @@ export default function PainelFornecedores() {
   const dadosEstatisticasFornecedores = useQuery({
     queryKey: ['dadosEstatisticasFornecedores'],
     queryFn: () => buscarResumoFornecedor(),
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   const fornecedoresEmpresa = useQuery({
     queryKey: ['listaFornecedoresEmpresa'],
     queryFn: buscarFornecedores,
-    staleTime: Infinity,
+    staleTime: Number.POSITIVE_INFINITY,
   })
 
   const chartDataCritico = [
     {
       status: 'critico',
       qtd: dadosEstatisticasFornecedores.data?.fornecedoresCriticos.find(
-        (statusCritico) => statusCritico.critico === true,
+        statusCritico => statusCritico.critico === true
       )?.total,
       fill: 'hsl(360, 92%, 35%)',
     },
     {
       status: 'nao_critico',
       qtd: dadosEstatisticasFornecedores.data?.fornecedoresCriticos.find(
-        (statusCritico) => statusCritico.critico === false,
+        statusCritico => statusCritico.critico === false
       )?.total,
       fill: 'hsl(0, 0%, 15%)',
     },
@@ -96,14 +96,14 @@ export default function PainelFornecedores() {
     {
       status: 'aprovado',
       qtd: dadosEstatisticasFornecedores.data?.fornecedoresAprovados.find(
-        (statusAprovacao) => statusAprovacao.aprovado === true,
+        statusAprovacao => statusAprovacao.aprovado === true
       )?.total,
       fill: 'hsl(360, 92%, 35%)',
     },
     {
       status: 'reprovado',
       qtd: dadosEstatisticasFornecedores.data?.fornecedoresAprovados.find(
-        (statusAprovacao) => statusAprovacao.aprovado === false,
+        statusAprovacao => statusAprovacao.aprovado === false
       )?.total,
       fill: 'hsl(0, 0%, 15%)',
     },
@@ -170,7 +170,7 @@ export default function PainelFornecedores() {
             <IndicadorInformativo
               titulo="Fornecedores ativos"
               info={String(
-                dadosEstatisticasFornecedores.data?.totalFornecedores,
+                dadosEstatisticasFornecedores.data?.totalFornecedores
               )}
               carregandoInformacao={dadosEstatisticasFornecedores.isLoading}
               icon={Contact}
@@ -184,7 +184,7 @@ export default function PainelFornecedores() {
             <IndicadorInformativo
               titulo="Avaliações realizadas"
               info={String(
-                dadosEstatisticasFornecedores.data?.avaliacoes.total,
+                dadosEstatisticasFornecedores.data?.avaliacoes.total
               )}
               carregandoInformacao={dadosEstatisticasFornecedores.isLoading}
               icon={ListCheck}
@@ -192,7 +192,7 @@ export default function PainelFornecedores() {
             <IndicadorInformativo
               titulo="Média de avaliações"
               info={String(
-                dadosEstatisticasFornecedores.data?.avaliacoes.media,
+                dadosEstatisticasFornecedores.data?.avaliacoes.media
               )}
               carregandoInformacao={dadosEstatisticasFornecedores.isLoading}
               icon={Percent}
@@ -300,7 +300,7 @@ export default function PainelFornecedores() {
                     </TableRow>
                   </>
                 ) : (
-                  (fornecedoresEmpresa?.data?.map((fornecedor) => (
+                  (fornecedoresEmpresa?.data?.map(fornecedor => (
                     <TableRow key={fornecedor.id}>
                       <TableCell>
                         {aplicarMascaraDocumento(fornecedor.documento)}
