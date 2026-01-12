@@ -220,6 +220,9 @@ export default function ViewEstatisticaAvaliacoesCritico({
                       <p className="text-sm font-medium tracking-normal text-muted-foreground">
                         {`Nota: ${avaliacao.nota}%`}
                       </p>
+                      <p className="text-sm font-medium tracking-normal text-muted-foreground text-red-600">
+                        {`Validade: ${format(new Date(avaliacao.validade), 'P', { locale: ptBR })}`}
+                      </p>
                     </AccordionContent>
                   </AccordionItem>
                 )

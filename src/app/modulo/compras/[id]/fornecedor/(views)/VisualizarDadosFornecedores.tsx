@@ -280,7 +280,13 @@ export default function ViewDadosFornecedores({
                     <strong className="text-muted-foreground">
                       Ultima Avaliação:
                     </strong>
-                    <span>{`${consultaDadosFornecedor.data?.dados?.ultimaAvaliacao ? formatarDataBrasil(new Date(consultaDadosFornecedor.data?.dados?.ultimaAvaliacao)) : 'Não realizado'}`}</span>
+                    <span>{`${consultaDadosFornecedor.data?.dados?.ultimaAvaliacao ? format(new Date(consultaDadosFornecedor.data?.dados?.ultimaAvaliacao), 'P', { locale: ptBR }) : 'Não realizado'}`}</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <strong className="text-muted-foreground">
+                      Vencimento Avaliação:
+                    </strong>
+                    <span>{`${consultaDadosFornecedor.data?.dados?.ultimaAvaliacao ? format(new Date(estatisticasAvaliacaoCritico.data?.dados?.find((avaliacao) => avaliacao.avaliadoEm === consultaDadosFornecedor.data?.dados?.ultimaAvaliacao)?.validade || ''), 'P', { locale: ptBR }) : 'Não realizado'}`}</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <strong className="text-muted-foreground">
