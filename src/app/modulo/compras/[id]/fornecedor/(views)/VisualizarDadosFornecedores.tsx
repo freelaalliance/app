@@ -284,12 +284,6 @@ export default function ViewDadosFornecedores({
                   </li>
                   <li className="flex items-center gap-2">
                     <strong className="text-muted-foreground">
-                      Vencimento Avaliação:
-                    </strong>
-                    <span>{`${consultaDadosFornecedor.data?.dados?.ultimaAvaliacao ? format(new Date(estatisticasAvaliacaoCritico.data?.dados?.find((avaliacao) => avaliacao.avaliadoEm === consultaDadosFornecedor.data?.dados?.ultimaAvaliacao)?.validade || ''), 'P', { locale: ptBR }) : 'Não realizado'}`}</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <strong className="text-muted-foreground">
                       Status Avaliação:
                     </strong>
                     <span>{`${consultaDadosFornecedor.data?.dados?.aprovado ? 'Aprovado' : 'Reprovado'}`}</span>
