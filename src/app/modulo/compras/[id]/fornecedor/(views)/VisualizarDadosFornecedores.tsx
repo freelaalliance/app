@@ -53,9 +53,7 @@ import {
 } from '@/components/ui/tooltip'
 import {
   aplicarMascaraDocumento,
-  encodeFileToBase64,
-  formatarDataBrasil,
-  handleDownloadFile,
+  encodeFileToBase64, handleDownloadFile
 } from '@/lib/utils'
 
 import { buscarPedidosFornecedor } from '../(api)/ComprasApi'
@@ -145,7 +143,7 @@ export default function ViewDadosFornecedores({
       if (new Date(ultimaAvaliacaoRealizada.validade) <= new Date()) {
         return {
           titulo: 'Avaliação crítica vencida',
-          mensagem: `A avaliação do fornecedor está vencida (${format(new Date(ultimaAvaliacaoRealizada.validade), 'P', { locale: ptBR })}) e enquanto não for realizada uma nova avaliação não estará apto para novos pedidos`,
+          mensagem: `A ultima avaliação realizado em (${format(new Date(ultimaAvaliacaoRealizada.validade), 'P', { locale: ptBR })}) do fornecedor está vencida e enquanto não for realizada uma nova avaliação não estará apto para novos pedidos`,
         }
       }
     }
