@@ -136,9 +136,7 @@ export default function ViewDadosFornecedores({
       estatisticasAvaliacaoCritico.data.dados.length > 0
     ) {
       const ultimaAvaliacaoRealizada: AvaliacaoFornecedorType =
-        estatisticasAvaliacaoCritico.data.dados[
-          estatisticasAvaliacaoCritico.data.dados.length - 1
-        ]
+        estatisticasAvaliacaoCritico.data.dados[0]
 
       if (new Date(ultimaAvaliacaoRealizada.validade) <= new Date()) {
         return {
