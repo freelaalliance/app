@@ -6,18 +6,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Edit, Eye, FileDown, List, MoreVertical, Plus, Trash2 } from 'lucide-react'
-import { Margin, Resolution, usePDF } from 'react-to-pdf'
-import { toast } from 'sonner'
-import { useTreinamentosCargo } from '../../../_hooks/cargos/useCargos'
+import { Edit, Eye, List, MoreVertical, Plus, Trash2 } from 'lucide-react'
+import Link from 'next/link'
 import type { Cargo } from '../../../_types/cargos/CargoType'
 import { AlertExcluirCargo } from '../../alerts/cargos/AlertExcluirCargo'
-import { CargoPDF } from '../../cargos/CargoPDF'
 import { DialogListarTreinamentosCargo } from '../../dialogs/cargos/DialogListarTreinamentosCargo'
-import { DialogVisualizarCargo } from '../../dialogs/cargos/DialogVisualizarCargo'
 import { FormularioAdicionarTreinamentoCargo } from '../../forms/cargos/FormularioAdicionarTreinamentoCargo'
 import { FormularioEditarCargo } from '../../forms/cargos/FormularioEditarCargo'
-import Link from 'next/link'
 
 interface MenuTabelaCargosProps {
   dadosCargo: Cargo
@@ -41,7 +36,7 @@ export function MenuTabelaCargos({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[200px]">
           <DropdownMenuItem asChild>
-            <Link href={`cargos/pdf?id=${dadosCargo.id}`}>
+            <Link href={`cargos/visualizar?id=${dadosCargo.id}`}>
               <Eye className="mr-2 h-4 w-4" />
               Visualizar
             </Link>
