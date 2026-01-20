@@ -1,14 +1,14 @@
 'use client'
 
-import { CargoPDF } from "../../../_components/cargos/CargoPDF";
-import { useSearchParams } from "next/navigation";
-import { useCargo } from "../../../_hooks/cargos/useCargos";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { ArrowBigDownDash, ArrowLeft } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { Margin, Resolution, usePDF } from "react-to-pdf";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { ArrowBigDownDash, ArrowLeft } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { CargoPDF } from "../../../_components/cargos/CargoPDF";
+import { useCargo } from "../../../_hooks/cargos/useCargos";
 
 export default function PdfCargoPage() {
   const searchParams = useSearchParams();
