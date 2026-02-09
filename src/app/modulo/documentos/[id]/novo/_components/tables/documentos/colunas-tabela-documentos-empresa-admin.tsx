@@ -3,9 +3,9 @@ import type { ColumnDef } from '@tanstack/react-table'
 import type { DocumentoType } from '@/app/modulo/documentos/_api/documentos'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { formatarDataBrasil } from '@/lib/utils'
-import { MenuTabelaDocumentosEmpresaAdmin } from './menu-tabela-documentos-empresa-admin'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { MenuTabelaDocumentosEmpresaAdmin } from './menu-tabela-documentos-empresa-admin'
 
 export const ColunasDocumentosEmpresaAdmin: Array<ColumnDef<DocumentoType>> = [
   {
@@ -14,7 +14,7 @@ export const ColunasDocumentosEmpresaAdmin: Array<ColumnDef<DocumentoType>> = [
     enableColumnFilter: false,
     cell: ({ row }) => (
       <div className="flex flex-row justify-center">
-        <MenuTabelaDocumentosEmpresaAdmin documento={row.original}/>
+        <MenuTabelaDocumentosEmpresaAdmin documento={row.original} />
       </div>
     ),
   },
@@ -35,6 +35,22 @@ export const ColunasDocumentosEmpresaAdmin: Array<ColumnDef<DocumentoType>> = [
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
+      )
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
+  },
+  {
+    id: 'pastaNome',
+    accessorFn: (row) => row.pasta?.nome ?? '',
+    header: 'Pasta',
+    enableHiding: false,
+    enableColumnFilter: true,
+    cell: ({ row }) => {
+      const nomePasta = row.original.pasta?.nome
+      return (
+        <span className="line-clamp-1">{nomePasta ?? '—'}</span>
       )
     },
     filterFn: (row, id, value) => {
@@ -111,13 +127,13 @@ export const ColunasDocumentosEmpresaAdmin: Array<ColumnDef<DocumentoType>> = [
     enableHiding: false,
     enableColumnFilter: true,
     cell: ({ row }) => {
-      const dataVencimento = new Date(
+      const dataVencimento = row.original.retencao ? new Date(
         row.original.retencao
-      )
+      ) : null
 
       return (
         <div className='w-auto capitalize'>
-          {formatarDataBrasil(dataVencimento, false, 'P')}
+          {dataVencimento ? formatarDataBrasil(dataVencimento, false, 'P') : '--'}
         </div>
       )
     },

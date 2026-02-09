@@ -1,7 +1,12 @@
 'use client'
 
 import type { CategoriaDocumentoType } from '@/app/modulo/administrativo/modulos/_api/AdmDocumentos'
-import { cadastrarNovoDocumento } from '@/app/modulo/documentos/_api/documentos'
+import {
+  type PastaDocumentoType,
+  cadastrarNovoDocumento,
+  listarPastasPorEmpresa,
+  listarPastasUsuario,
+} from '@/app/modulo/documentos/_api/documentos'
 import type { UsuarioType } from '@/components/auth/schema/SchemaUsuario'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -27,17 +32,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { addYears, format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { CalendarIcon, X } from 'lucide-react'
+import { CalendarIcon, FolderPlus, Pencil, X } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { deleteFile } from '../../_actions/upload-actions'
+import { PastaDocumentoDialog } from '../dialogs/pasta-documento-dialog'
 import UploadForm from '../upload/upload-documentos'
 
 const schemaNovoDocumentoForm = z.object({
@@ -65,7 +76,7 @@ const schemaNovoDocumentoForm = z.object({
   disposicao: z.string({
     required_error: 'Campo de disposição é obrigatório',
   }),
-  retencao: z.coerce.date(),
+  retencao: z.coerce.date().optional(),
   uso: z.string({
     required_error: 'Campo uso é obrigatório',
   }),
@@ -87,6 +98,7 @@ const schemaNovoDocumentoForm = z.object({
   dataRevisao: z.coerce.date().optional(),
   arquivo: z.string().min(1, "Arquivo é obrigatório"),
   empresaId: z.string().uuid().optional(),
+  pastaDocumentoId: z.string().uuid().optional(),
 })
 
 export type NovoDocumentoFormType = z.infer<typeof schemaNovoDocumentoForm>
@@ -105,12 +117,19 @@ export function NovoDocumentoForm({
 
   const queryClient = useQueryClient()
   const [arquivoSelecionado, selecionarArquivo] = useState<boolean>(false)
+  const [dialogPastaAberto, setDialogPastaAberto] = useState(false)
+  const [pastaParaEditar, setPastaParaEditar] = useState<Pick<PastaDocumentoType, 'id' | 'nome'> | null>(null)
+
+  const { data: listaPastas, isLoading: carregandoPastas } = useQuery({
+    queryKey: ['pastasDocumentos', empresaId],
+    queryFn: () => empresaId ? listarPastasPorEmpresa(empresaId) : listarPastasUsuario(),
+    initialData: [],
+  })
 
   const formNovoDocumento = useForm<NovoDocumentoFormType>({
     resolver: zodResolver(schemaNovoDocumentoForm),
     defaultValues: {
       copias: 0,
-      retencao: addYears(new Date(), 5),
       usuariosAcessos: [],
       arquivo: '',
       empresaId,
@@ -251,6 +270,87 @@ export function NovoDocumentoForm({
               )}
             />
           </div>
+          <div className="grid grid-cols-1 gap-2">
+            <FormField
+              control={formNovoDocumento.control}
+              name={'pastaDocumentoId'}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Pasta do documento</FormLabel>
+                  <div className="flex items-center gap-2">
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value ?? ''}
+                        disabled={carregandoPastas}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder={
+                              carregandoPastas
+                                ? 'Carregando pastas...'
+                                : 'Selecione uma pasta (opcional)'
+                            } />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {(listaPastas ?? []).map((pasta) => (
+                            <SelectItem key={pasta.id} value={pasta.id}>
+                              {pasta.nome}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          className="shrink-0"
+                          onClick={() => {
+                            setPastaParaEditar(null)
+                            setDialogPastaAberto(true)
+                          }}
+                        >
+                          <FolderPlus className="size-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Criar nova pasta</TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          className="shrink-0"
+                          disabled={!field.value}
+                          onClick={() => {
+                            const pastaSelecionada = (listaPastas ?? []).find(
+                              (p) => p.id === field.value
+                            )
+                            if (pastaSelecionada) {
+                              setPastaParaEditar({
+                                id: pastaSelecionada.id,
+                                nome: pastaSelecionada.nome,
+                              })
+                              setDialogPastaAberto(true)
+                            }
+                          }}
+                        >
+                          <Pencil className="size-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Editar nome da pasta</TooltipContent>
+                    </Tooltip>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
             <FormField
               control={formNovoDocumento.control}
@@ -265,7 +365,6 @@ export function NovoDocumentoForm({
                       <FormControl>
                         <Button
                           variant={'outline'}
-                          disabled
                           className={cn(
                             'w-full pl-3 text-left font-normal',
                             !field.value && 'text-muted-foreground'
@@ -508,6 +607,14 @@ export function NovoDocumentoForm({
             arquivoSelecionado={selecionarArquivo}
           />
         </div>
+        <PastaDocumentoDialog
+          aberto={dialogPastaAberto}
+          onFechar={() => {
+            setDialogPastaAberto(false)
+            setPastaParaEditar(null)
+          }}
+          pasta={pastaParaEditar}
+        />
         <DialogFooter className='gap-2'>
           <DialogClose asChild>
             <Button

@@ -1,7 +1,7 @@
 'use client'
 
 import type { CategoriaDocumentoType } from '@/app/modulo/administrativo/modulos/_api/AdmDocumentos'
-import type { DocumentoType } from '@/app/modulo/documentos/_api/documentos'
+import type { DocumentoType, PastaDocumentoType } from '@/app/modulo/documentos/_api/documentos'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -38,7 +38,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { Check, PlusCircle } from 'lucide-react'
+import { Check, FolderOpen, PlusCircle } from 'lucide-react'
 import React from 'react'
 
 interface TabelaDocumentosProps {
@@ -46,15 +46,18 @@ interface TabelaDocumentosProps {
   colunasDocumento: Array<ColumnDef<DocumentoType>>
   dadosDocumentos: Array<DocumentoType>
   categoriasDocumento: Array<CategoriaDocumentoType>
+  pastasDocumento?: Array<PastaDocumentoType>
 }
 
 export function TabelaDocumentos({
   dadosDocumentos,
   carregandoDados,
   colunasDocumento,
-  categoriasDocumento
+  categoriasDocumento,
+  pastasDocumento = [],
 }: TabelaDocumentosProps) {
   const [open, setOpen] = React.useState(false)
+  const [openPasta, setOpenPasta] = React.useState(false)
   const table = useReactTable({
     data: dadosDocumentos,
     columns: colunasDocumento,
@@ -65,6 +68,19 @@ export function TabelaDocumentos({
 
   const facets = table.getColumn('categoriaDocumentoNome')?.getFacetedUniqueValues()
   const selectedValues = new Set(table.getColumn('categoriaDocumentoNome')?.getFilterValue() as string[])
+
+  const facetsPasta = table.getColumn('pastaNome')?.getFacetedUniqueValues()
+  const selectedPastas = new Set(table.getColumn('pastaNome')?.getFilterValue() as string[])
+
+  const pastasUnicas = React.useMemo(() => {
+    const nomes = new Set<string>()
+    for (const doc of dadosDocumentos) {
+      if (doc.pasta?.nome) {
+        nomes.add(doc.pasta.nome)
+      }
+    }
+    return Array.from(nomes).sort()
+  }, [dadosDocumentos])
 
   return (
     <section className="space-y-2">
@@ -168,6 +184,105 @@ export function TabelaDocumentos({
                     <CommandGroup>
                       <CommandItem
                         onSelect={() => table.getColumn('categoriaDocumentoNome')?.setFilterValue(undefined)}
+                        className="justify-center text-center"
+                      >
+                        Limpar filtros
+                      </CommandItem>
+                    </CommandGroup>
+                  </>
+                )}
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+        <Popover open={openPasta} onOpenChange={setOpenPasta}>
+          <PopoverTrigger asChild>
+            <Button variant="outline" className="border-dashed" disabled={dadosDocumentos?.length === 0}>
+              <FolderOpen className="mr-2 h-4 w-4" />
+              {"Pastas"}
+              {selectedPastas?.size > 0 && (
+                <>
+                  <Separator orientation="vertical" className="mx-2 h-4" />
+                  <Badge
+                    variant="secondary"
+                    className="rounded-sm px-1 font-normal lg:hidden"
+                  >
+                    {selectedPastas.size}
+                  </Badge>
+                  <div className="hidden space-x-1 lg:flex">
+                    {selectedPastas.size > 2 ? (
+                      <Badge
+                        variant="secondary"
+                        className="rounded-sm px-1 font-normal"
+                      >
+                        {`${selectedPastas.size} selecionadas`}
+                      </Badge>
+                    ) : (
+                      Array.from(selectedPastas).map((nomePasta) => (
+                        <Badge
+                          variant="secondary"
+                          key={nomePasta}
+                          className="rounded-sm px-1 font-normal"
+                        >
+                          {nomePasta}
+                        </Badge>
+                      ))
+                    )}
+                  </div>
+                </>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0">
+            <Command>
+              <CommandInput placeholder="Buscar por pasta" className="h-9" />
+              <CommandList>
+                <CommandEmpty>Nenhuma pasta encontrada</CommandEmpty>
+                <CommandGroup>
+                  {pastasUnicas.map((nomePasta) => {
+                    const isSelected = selectedPastas.has(nomePasta)
+                    return (
+                      <CommandItem
+                        key={nomePasta}
+                        value={nomePasta}
+                        onSelect={() => {
+                          if (isSelected) {
+                            selectedPastas.delete(nomePasta)
+                          } else {
+                            selectedPastas.add(nomePasta)
+                          }
+                          const filterValues = Array.from(selectedPastas)
+                          table.getColumn('pastaNome')?.setFilterValue(
+                            filterValues.length ? filterValues : undefined,
+                          )
+                        }}
+                      >
+                        <div
+                          className={cn(
+                            'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
+                            isSelected
+                              ? 'bg-primary text-primary-foreground'
+                              : 'opacity-50 [&_svg]:invisible',
+                          )}
+                        >
+                          <Check className={cn('h-4 w-4')} />
+                        </div>
+                        <span>{nomePasta}</span>
+                        {facetsPasta?.get(nomePasta) && (
+                          <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
+                            {facetsPasta.get(nomePasta)}
+                          </span>
+                        )}
+                      </CommandItem>
+                    )
+                  })}
+                </CommandGroup>
+                {selectedPastas.size > 0 && (
+                  <>
+                    <CommandSeparator />
+                    <CommandGroup>
+                      <CommandItem
+                        onSelect={() => table.getColumn('pastaNome')?.setFilterValue(undefined)}
                         className="justify-center text-center"
                       >
                         Limpar filtros

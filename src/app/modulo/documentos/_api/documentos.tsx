@@ -19,6 +19,7 @@ export type RevisoesDocumentoType = {
   usuario: string
 }
 
+
 export type DocumentoType = {
   id: string
   nome: string
@@ -27,11 +28,17 @@ export type DocumentoType = {
   recuperacao: string
   elegibilidade: string
   disposicao: string
-  retencao: Date
+  retencao?: Date
   uso: string
   empresaId: string
   categoriaDocumentoNome: string
   revisoes: RevisoesDocumentoType[]
+  pasta: PastaDocumentoType | null
+}
+
+export type PastaDocumentoType = {
+  id: string
+  nome: string
 }
 
 export async function buscarCategoriasDocumento() {
@@ -55,7 +62,7 @@ export async function buscarDocumentosUsuario() {
     .catch(() => null)
 }
 
-export async function buscarDocumentosEmpresa(idEmpresa?:string|null) {
+export async function buscarDocumentosEmpresa(idEmpresa?: string | null) {
   return await axiosInstance
     .get<Array<DocumentoType>>('documentos/empresa', {
       params: {
@@ -86,10 +93,77 @@ export async function cadastrarNovaRevisaoDocumento(
     .catch(() => null)
 }
 
-export async function removerDocumento({id, empresaId}: Pick<DocumentoType, 'id'> & {empresaId: string}) {
+export async function removerDocumento({ id, empresaId }: Pick<DocumentoType, 'id'> & { empresaId: string }) {
   return await axiosInstance
     .delete<ResponseType>(`documentos/${id}/empresa/${empresaId}`)
     .then(({ data }) => data)
     .catch(() => null)
 }
 
+// ==================== PASTAS DE DOCUMENTOS ====================
+
+/**
+ * Cria uma nova pasta vinculada à empresa do usuário logado
+ */
+export async function criarPastaDocumento(nome: string) {
+  return await axiosInstance
+    .post<{
+      status: boolean
+      msg: string
+      data?: {
+        id: string
+        nome: string
+        empresaId: string
+      }
+    }>('documentos/pastas', { nome })
+    .then(({ data }) => data)
+    .catch(() => null)
+}
+
+/**
+ * Lista todas as pastas não excluídas da empresa do usuário logado
+ */
+export async function listarPastasUsuario() {
+  return await axiosInstance
+    .get<Array<PastaDocumentoType>>('documentos/pastas')
+    .then(({ data }) => data)
+    .catch(() => null)
+}
+
+/**
+ * Lista todas as pastas não excluídas de uma empresa específica
+ */
+export async function listarPastasPorEmpresa(empresaId: string) {
+  return await axiosInstance
+    .get<Array<PastaDocumentoType>>(`documentos/pastas/empresa/${empresaId}`)
+    .then(({ data }) => data)
+    .catch(() => null)
+}
+
+/**
+ * Atualiza o nome de uma pasta
+ */
+export async function atualizarPastaDocumento(id: string, nome: string) {
+  return await axiosInstance
+    .put<{
+      status: boolean
+      msg: string
+      data?: {
+        id: string
+        nome: string
+        empresaId: string
+      }
+    }>(`documentos/pastas/${id}`, { nome })
+    .then(({ data }) => data)
+    .catch(() => null)
+}
+
+/**
+ * Exclui logicamente uma pasta (soft delete)
+ */
+export async function excluirPastaDocumento(id: string) {
+  return await axiosInstance
+    .delete<ResponseType>(`documentos/pastas/${id}`)
+    .then(({ data }) => data)
+    .catch(() => null)
+}
