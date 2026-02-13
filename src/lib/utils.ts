@@ -187,18 +187,18 @@ export function formatarDataBrasil(
 ): string {
   if (horas) {
     const dataComHoras = new Date(
-      data.getFullYear(),
-      data.getMonth(),
-      data.getDate(),
-      data.getHours(),
-      data.getMinutes()
+      data.getUTCFullYear(),
+      data.getUTCMonth(),
+      data.getUTCDate(),
+      data.getUTCHours(),
+      data.getUTCMinutes()
     )
-    return format(dataComHoras, 'dd/MM/yyyy HH:mm', {
+    return format(dataComHoras, formato, {
       locale: ptBR,
     })
   }
 
-  const dataFormatada = new Date(data.getFullYear(), data.getMonth(), data.getDate() + 1)
+  const dataFormatada = new Date(data.getUTCFullYear(), data.getUTCMonth(), data.getUTCDate())
 
   return format(dataFormatada, formato, {
     locale: ptBR,

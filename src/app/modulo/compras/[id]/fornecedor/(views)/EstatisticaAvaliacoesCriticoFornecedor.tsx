@@ -37,7 +37,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { cn } from '@/lib/utils'
+import { cn, formatarDataBrasil } from '@/lib/utils'
 
 import type { AvaliacaoFornecedorType } from '../(api)/FornecedorApi'
 import { ExcluirAvaliacaoDialog } from '../components/dialogs/ExcluirAvaliacaoDialog'
@@ -223,9 +223,7 @@ export default function ViewEstatisticaAvaliacoesCritico({
                   {avaliacoes.map(avaliacao => (
                     <TableRow key={avaliacao.id}>
                       <TableCell className="text-sm">
-                        {format(new Date(avaliacao.avaliadoEm), 'P', {
-                          locale: ptBR,
-                        })}
+                        {formatarDataBrasil(new Date(avaliacao.avaliadoEm), false, 'P')}
                       </TableCell>
                       <TableCell className="text-sm">
                         {avaliacao.usuario}
@@ -234,9 +232,7 @@ export default function ViewEstatisticaAvaliacoesCritico({
                         {`${avaliacao.nota}%`}
                       </TableCell>
                       <TableCell className="text-sm text-red-600">
-                        {format(new Date(avaliacao.validade), 'P', {
-                          locale: ptBR,
-                        })}
+                        {formatarDataBrasil(new Date(avaliacao.validade), false, 'P')}
                       </TableCell>
                       <TableCell>
                         <AlertDialog>

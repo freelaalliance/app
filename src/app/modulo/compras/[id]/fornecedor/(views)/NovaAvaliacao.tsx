@@ -64,9 +64,11 @@ export default function NovaAvaliacaoCriticoView({
     },
     onSuccess: (data, dados) => {
       if (data.status) {
-        queryClient.refetchQueries({
+        queryClient.invalidateQueries({
           queryKey: ['estatisticasAvaliacoesCritico', idFornecedor],
-          exact: true,
+        })
+        queryClient.invalidateQueries({
+          queryKey: ['fornecedoresEmpresa'],
         })
 
         const listaFornecedores: undefined | FornecedoresEmpresaType[] =

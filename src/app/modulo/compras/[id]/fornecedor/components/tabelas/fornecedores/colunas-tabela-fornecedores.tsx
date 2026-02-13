@@ -1,12 +1,6 @@
 import type { ColumnDef } from '@tanstack/react-table'
 
-import { Progress } from '@/components/ui/progress'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
-import { aplicarMascaraDocumento, cn } from '@/lib/utils'
+import { aplicarMascaraDocumento, cn, formatarDataBrasil } from '@/lib/utils'
 
 import type { FornecedoresEmpresaType } from '../../../(api)/FornecedorApi'
 
@@ -86,11 +80,13 @@ export const colunasFornecedores: ColumnDef<FornecedoresEmpresaType>[] = [
     cell: ({ row }) => {
       const ultimaAvaliacao = row.original.avaliacao
       if (!ultimaAvaliacao) return <div>N/A</div>
+
+      const dataAvaliacao = new Date(ultimaAvaliacao.avaliadoEm)
+      const dataLocal = new Date(dataAvaliacao.getUTCFullYear(), dataAvaliacao.getUTCMonth(), dataAvaliacao.getUTCDate())
+
       return (
         <div>
-          {`${new Date(
-            ultimaAvaliacao.avaliadoEm 
-          ).toLocaleDateString()}`}
+          {formatarDataBrasil(dataLocal, false, 'P')}
         </div>
       )
     },
@@ -101,12 +97,12 @@ export const colunasFornecedores: ColumnDef<FornecedoresEmpresaType>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const ultimaAvaliacao = row.original.avaliacao
+
       if (!ultimaAvaliacao) return <div>N/A</div>
+
       return (
         <div>
-          {`${new Date(
-            ultimaAvaliacao.validade
-          ).toLocaleDateString()}`}
+          {formatarDataBrasil(new Date(ultimaAvaliacao.validade), false, 'P')}
         </div>
       )
     },
