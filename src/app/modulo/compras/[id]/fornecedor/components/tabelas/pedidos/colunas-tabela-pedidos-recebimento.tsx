@@ -46,6 +46,13 @@ export const ColunasPedidosEmpresaRecebimento: Array<
       },
     },
     {
+      accessorKey: 'fornecedor.nome',
+      header: 'Fornecedor',
+      enableHiding: false,
+      enableColumnFilter: true,
+      cell: ({ row }) => <div className="capitalize">{row.original.fornecedor.nome}</div>,
+    },
+    {
       accessorKey: 'prazoEntrega',
       header: 'Previsão entrega',
       enableHiding: false,

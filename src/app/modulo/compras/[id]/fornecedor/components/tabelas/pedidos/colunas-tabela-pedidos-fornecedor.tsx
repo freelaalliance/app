@@ -51,6 +51,13 @@ export const ColunasPedidosFornecedor: Array<ColumnDef<PedidosFornecedorType>> =
       },
     },
     {
+      accessorKey: 'fornecedor.nome',
+      header: 'Fornecedor',
+      enableHiding: false,
+      enableColumnFilter: true,
+      cell: ({ row }) => <div className="capitalize">{row.original.fornecedor.nome}</div>,
+    },
+    {
       accessorKey: 'recebimento',
       header: 'Data da entrega',
       enableHiding: false,
