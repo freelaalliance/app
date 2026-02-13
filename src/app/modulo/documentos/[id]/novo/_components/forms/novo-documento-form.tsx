@@ -178,6 +178,21 @@ export function NovoDocumentoForm({
   }
 
   const handleSubmit = async (data: NovoDocumentoFormType) => {
+    if(data.categoriaDocumento.toUpperCase() !== 'FORMULÁRIOS E REGISTROS'){
+      if(!data.dataRevisao){
+        formNovoDocumento.setError('dataRevisao', {
+          message: 'Data de revisão é obrigatória para esta categoria',
+        })
+        return
+      }
+
+      if(!data.retencao){
+        formNovoDocumento.setError('retencao', {
+          message: 'Data de retenção é obrigatória para esta categoria',
+        })
+        return
+      }
+    }
     if (!arquivoSelecionado) {
       toast.error('Por favor, selecione um arquivo para fazer o upload.')
       return
