@@ -74,6 +74,7 @@ import { TabelaEmailsFornecedor } from '../components/tabelas/emails/tabela-emai
 import { ColunasPedidosFornecedor } from '../components/tabelas/pedidos/colunas-tabela-pedidos-fornecedor'
 import { TabelaPedidos } from '../components/tabelas/pedidos/tabela-pedidos'
 import { TabelaTelefonesFornecedor } from '../components/tabelas/telefones/tabela-telefones-fornecedores'
+import { ListaAnexosFornecedor } from '../components/lista-anexos-fornecedor'
 
 interface DadosFornecedorProps {
   idFornecedor: string
@@ -658,75 +659,11 @@ export default function ViewDadosFornecedores({
               </Tooltip>
             </CardHeader>
             <CardContent>
-              <div className="p-4 space-x-4 min-w-max gap-2">
-                {consultarAnexosFornecedores.isLoading ? (
-                  <div className="flex flex-col md:flex-row justify-center gap-4">
-                    <div className="flex flex-col items-center space-y-2 w-32">
-                      <Skeleton className="w-full h-32 flex items-center justify-center bg-gray-100 rounded-lg" />
-                      <Skeleton className="text-sm text-center truncate w-full" />
-                    </div>
-                    <div className="flex flex-col items-center space-y-2 w-32">
-                      <Skeleton className="w-full h-32 flex items-center justify-center bg-gray-100 rounded-lg" />
-                      <Skeleton className="text-sm text-center truncate w-full" />
-                    </div>
-                    <div className="flex flex-col items-center space-y-2 w-32">
-                      <Skeleton className="w-full h-32 flex items-center justify-center bg-gray-100 rounded-lg" />
-                      <Skeleton className="text-sm text-center truncate w-full" />
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex flex-col md:flex-row justify-center gap-4 overflow-auto">
-                    {consultarAnexosFornecedores.data?.dados?.map(anexo => (
-                      <div
-                        key={anexo.id}
-                        className="flex flex-col items-center space-y-2 w-32"
-                      >
-                        <div className="w-full h-32 flex items-center justify-center bg-gray-100 rounded-lg shadow-lg">
-                          <File className="h-12 w-12 text-white" />
-                        </div>
-                        <span
-                          className="text-sm text-center truncate w-full"
-                          title={anexo.nome}
-                        >
-                          {anexo.nome}
-                        </span>
-                        <div className="flex gap-2">
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="h-8 w-8"
-                            disabled={isPending}
-                            onClick={() => {
-                              handleDownloadFile(anexo.arquivo, anexo.id)
-                            }}
-                          >
-                            <Download className="h-4 w-4" />
-                          </Button>
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button
-                                variant="outline"
-                                size="icon"
-                                className="h-8 w-8"
-                                disabled={isPending}
-                              >
-                                <Trash2 className="h-4 w-4" />
-                                <span className="sr-only">
-                                  Excluir {anexo.arquivo}
-                                </span>
-                              </Button>
-                            </AlertDialogTrigger>
-                            <ExclusaoAnexoFornecedor
-                              idFornecedor={idFornecedor}
-                              id={anexo.id}
-                            />
-                          </AlertDialog>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <ListaAnexosFornecedor
+                listarAnexos={consultarAnexosFornecedores.data}
+                isLoading={consultaDadosFornecedor.isLoading}
+                idFornecedor={idFornecedor}
+              />
             </CardContent>
           </Card>
         </TabsContent>

@@ -16,6 +16,7 @@ import type { FornecedoresEmpresaType } from '../../../(api)/FornecedorApi'
 import { NovaAvaliacaoCriticoDialog } from '../../dialogs/NovaAvaliacaoCriticoDialog'
 import { NovoPedidoDialog } from '../../dialogs/NovoPedidoDialog'
 import { ExclusaoFornecedor } from '../../dialogs/RemoverFornecedorDialog'
+import { DialogAnexosFornecedor } from '../../dialogs/AnexosFornecedorDialog'
 
 interface MenuTabelaFornecedoresProps {
   fornecedor: FornecedoresEmpresaType
@@ -41,6 +42,18 @@ export function MenuTabelaFornecedores({
             Visualizar
           </Link>
         </DropdownMenuItem>
+        <Dialog>
+          <DialogTrigger asChild>
+            <DropdownMenuItem
+              onSelect={e => {
+                e.preventDefault()
+              }}
+            >
+              Anexos
+            </DropdownMenuItem>
+          </DialogTrigger>
+          <DialogAnexosFornecedor idFornecedor={fornecedor.id} />
+        </Dialog>
         {fornecedor.aprovado && (
           <Dialog>
             <DialogTrigger asChild>

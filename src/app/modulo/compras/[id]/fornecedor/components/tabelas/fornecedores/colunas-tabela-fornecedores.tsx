@@ -6,7 +6,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { aplicarMascaraDocumento } from '@/lib/utils'
+import { aplicarMascaraDocumento, cn } from '@/lib/utils'
 
 import type { FornecedoresEmpresaType } from '../../../(api)/FornecedorApi'
 
@@ -15,6 +15,7 @@ import {
   optionsStatusAprovado,
   optionsStatusCritico,
 } from './tabela-fornecedores'
+import { Badge } from '@/components/ui/badge'
 
 export const colunasFornecedores: ColumnDef<FornecedoresEmpresaType>[] = [
   {
@@ -76,6 +77,80 @@ export const colunasFornecedores: ColumnDef<FornecedoresEmpresaType>[] = [
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id) ? 'sim' : 'nao')
+    },
+  },
+  {
+    accessorKey: 'avaliacao.avaliadoEm',
+    header: 'Última Avaliação',
+    enableHiding: false,
+    cell: ({ row }) => {
+      const ultimaAvaliacao = row.original.avaliacao
+      if (!ultimaAvaliacao) return <div>N/A</div>
+      return (
+        <div>
+          {`${new Date(
+            ultimaAvaliacao.avaliadoEm 
+          ).toLocaleDateString()}`}
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: 'avaliacao.validade',
+    header: 'Validade Avaliação',
+    enableHiding: false,
+    cell: ({ row }) => {
+      const ultimaAvaliacao = row.original.avaliacao
+      if (!ultimaAvaliacao) return <div>N/A</div>
+      return (
+        <div>
+          {`${new Date(
+            ultimaAvaliacao.validade
+          ).toLocaleDateString()}`}
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: 'avaliacao.nota',
+    header: 'Nota Avaliação',
+    enableHiding: false,
+    cell: ({ row }) => {
+      const ultimaAvaliacao = row.original.avaliacao
+      if (!ultimaAvaliacao) return <div>N/A</div>
+      return (
+        <div>
+          {`${ultimaAvaliacao.nota}%`}
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: 'mediaAvaliacoes',
+    header: 'Média Avaliações',
+    enableHiding: false,
+    cell: ({ row }) => {
+      const mediaAvaliacoes = row.getValue('mediaAvaliacoes')
+      if (mediaAvaliacoes === null || mediaAvaliacoes === undefined) return <div>N/A</div>
+      return (
+        <div>
+          {`${mediaAvaliacoes}%`}
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: 'conceito',
+    header: 'Conceito',
+    enableHiding: false,
+    cell: ({ row }) => {
+      const conceito = row.getValue('conceito')
+      if (conceito === null || conceito === undefined) return <div>N/A</div>
+      return (
+        <Badge className={cn({ 'bg-green-500': conceito === 'A', 'bg-yellow-500': conceito === 'B', 'bg-red-500': conceito === 'C' })}>
+          {`${conceito}`}
+        </Badge>
+      )
     },
   },
   {

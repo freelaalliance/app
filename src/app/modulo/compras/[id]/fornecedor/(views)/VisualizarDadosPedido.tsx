@@ -25,6 +25,38 @@ export interface VisualizacaoDadosPedidoProps {
   dadosPedido: PedidosFornecedorType
 }
 
+interface DetalheItemProps {
+  label: string
+  valor: string
+}
+
+function DetalheItem({ label, valor }: DetalheItemProps) {
+  return (
+    <li className="flex justify-between items-center gap-2">
+      <strong>{label}</strong>
+      <span>{valor}</span>
+    </li>
+  )
+}
+
+interface CardInformacaoProps {
+  titulo: string
+  descricao: string
+  children: React.ReactNode
+}
+
+function CardInformacao({ titulo, descricao, children }: CardInformacaoProps) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{titulo}</CardTitle>
+        <CardDescription>{descricao}</CardDescription>
+      </CardHeader>
+      <CardContent>{children}</CardContent>
+    </Card>
+  )
+}
+
 export default function VisualizacaoDadosPedido({
   dadosPedido,
 }: VisualizacaoDadosPedidoProps) {
@@ -43,126 +75,82 @@ export default function VisualizacaoDadosPedido({
             viewBox={"0 0 256 256"}
           />
         </div>
-        <div className="space-y-2 border rounded px-4 py-2">
+        <div className="space-y-2 border rounded px-4 py-2 flex-1">
           <h3 className="font-medium text-lg">Dados do pedido</h3>
           <Separator />
-          <ul>
-            <li className="flex items-center gap-2">
-              <strong>Num. do Pedido:</strong>
-              <span>{dadosPedido.numPedido ?? ''}</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <strong>Data do Pedido:</strong>
-              <span>
-                {formatarDataBrasil(
-                  new Date(dadosPedido.cadastro.dataCadastro)
-                )}
-              </span>
-            </li>
-            <li className="flex items-center gap-2">
-              <strong>Responsável:</strong>
-              <span>{dadosPedido.cadastro.usuario ?? ''}</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <strong>Cód. do Pedido:</strong>
-              <span>{dadosPedido.codigo ?? ''}</span>
-            </li>
-            <li className="flex justify-between items-center gap-2">
-                <strong>Frete </strong>
-                <span>
-                  {dadosPedido?.frete ?? '--'}
-                </span>
-              </li>
-              <li className="flex justify-between items-center gap-2">
-                <strong>Armazenamento </strong>
-                <span>
-                  {dadosPedido?.armazenamento ?? '--'}
-                </span>
-              </li>
-              <li className="flex justify-between items-center gap-2">
-                <strong>Local de Entrega </strong>
-                <span>
-                  {dadosPedido?.localEntrega ?? '--'}
-                </span>
-              </li>
-              <li className="flex justify-between items-center gap-2">
-                <strong>Forma de Pagamento </strong>
-                <span>
-                  {dadosPedido?.formaPagamento ?? '--'}
-                </span>
-              </li>
-              <li className="flex justify-between items-center gap-2">
-                <strong>Imposto </strong>
-                <span>
-                  {dadosPedido?.imposto ?? '--'}
-                </span>
-              </li>
+          <ul className="space-y-1">
+            <DetalheItem
+              label="Num. do Pedido:"
+              valor={dadosPedido.numPedido ?? ''}
+            />
+            <DetalheItem
+              label="Data do Pedido:"
+              valor={formatarDataBrasil(
+                new Date(dadosPedido.cadastro.dataCadastro)
+              )}
+            />
+            <DetalheItem
+              label="Responsável:"
+              valor={dadosPedido.cadastro.usuario ?? ''}
+            />
+            <DetalheItem
+              label="Cód. do Pedido:"
+              valor={dadosPedido.codigo ?? ''}
+            />
           </ul>
         </div>
       </div>
       <Separator />
-      <Card>
-        <CardHeader>
-          <CardTitle>Solicitante</CardTitle>
-          <CardDescription>
-            Informações do solicitante do pedido
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col md:flex-row justify-between gap-4 md:gap-0">
-          <div>
-            <ul>
-              <li className="flex items-center gap-2">
-                <strong>Nome Fantasia/Razão Social:</strong>
-                <span>{` ${dadosPedido.empresa?.nome}`}</span>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <ul>
-              <li className="flex items-center gap-2">
-                <strong>Logradouro:</strong>
-                <span>{` ${dadosPedido.empresa?.endereco?.logradouro ?? ''}`}</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <strong>Número:</strong>
-                <span>{` ${dadosPedido.empresa?.endereco?.numero ?? ''}`}</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <strong>Bairro:</strong>
-                <span>{` ${dadosPedido.empresa?.endereco?.bairro ?? ''}`}</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <strong>Cidade:</strong>
-                <span>{` ${dadosPedido.empresa?.endereco?.cidade ?? ''} - ${dadosPedido.empresa?.endereco?.estado ?? ''}`}</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <strong>CEP:</strong>
-                <span>{` ${dadosPedido.empresa?.endereco?.cep ?? ''}`}</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <strong>Complemento:</strong>
-                <span>{` ${dadosPedido.empresa?.endereco?.complemento ?? 'Não informado'}`}</span>
-              </li>
-            </ul>
-          </div>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>Fornecedor</CardTitle>
-          <CardDescription>
-            Informações do fornecedor do produto/serviço
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-2">
+      <CardInformacao
+        titulo="Solicitante"
+        descricao="Informações do solicitante do pedido"
+      >
+        <div className="flex flex-col md:flex-row justify-between gap-4 md:gap-0">
           <ul>
-            <li className="flex items-center gap-2">
-              <strong>Nome Fantasia/Razão Social:</strong>
-              <span>{` ${dadosPedido.fornecedor.nome}`}</span>
-            </li>
+            <DetalheItem
+              label="Nome Fantasia/Razão Social:"
+              valor={dadosPedido.empresa?.nome ?? ''}
+            />
           </ul>
-        </CardContent>
-      </Card>
+          <ul className="space-y-1">
+            <DetalheItem
+              label="Logradouro:"
+              valor={dadosPedido.empresa?.endereco?.logradouro ?? ''}
+            />
+            <DetalheItem
+              label="Número:"
+              valor={dadosPedido.empresa?.endereco?.numero ?? ''}
+            />
+            <DetalheItem
+              label="Bairro:"
+              valor={dadosPedido.empresa?.endereco?.bairro ?? ''}
+            />
+            <DetalheItem
+              label="Cidade:"
+              valor={`${dadosPedido.empresa?.endereco?.cidade ?? ''} - ${dadosPedido.empresa?.endereco?.estado ?? ''}`}
+            />
+            <DetalheItem
+              label="CEP:"
+              valor={dadosPedido.empresa?.endereco?.cep ?? ''}
+            />
+            <DetalheItem
+              label="Complemento:"
+              valor={dadosPedido.empresa?.endereco?.complemento || 'Não informado'}
+            />
+          </ul>
+        </div>
+      </CardInformacao>
+      <CardInformacao
+        titulo="Fornecedor"
+        descricao="Informações do fornecedor do produto/serviço"
+      >
+        <ul>
+          <DetalheItem
+            label="Nome Fantasia/Razão Social:"
+            valor={dadosPedido.fornecedor.nome}
+          />
+        </ul>
+      </CardInformacao>
       <Card>
         <CardHeader>
           <CardTitle>Itens</CardTitle>

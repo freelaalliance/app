@@ -1,6 +1,7 @@
 'use client'
 
 import {
+  ColumnDef,
   flexRender,
   getCoreRowModel,
   getFacetedUniqueValues,
@@ -28,10 +29,15 @@ import type { FornecedoresEmpresaType } from '../../../(api)/FornecedorApi'
 import { NovoFornecedorDialog } from '../../dialogs/NovoFornecedorDialog'
 
 import { colunasFornecedores } from './colunas-tabela-fornecedores'
+import { cn } from '@/lib/utils'
 
 interface TabelaFornecedoresProps {
   listaFornecedores: FornecedoresEmpresaType[]
   carregandoFornecedores: boolean
+  colunasTabela?: ColumnDef<FornecedoresEmpresaType>[]
+  opcaoFiltroSituacao?: boolean
+  opcaoFiltroAvaliacao?: boolean
+  opcaoNovoFornecedor?: boolean
 }
 
 export const optionsStatusCritico = [
@@ -59,10 +65,14 @@ export const optionsStatusAprovado = [
 export function TabelaFornecedores({
   listaFornecedores,
   carregandoFornecedores,
+  colunasTabela,
+  opcaoFiltroSituacao = true,
+  opcaoFiltroAvaliacao = true,
+  opcaoNovoFornecedor = true,
 }: TabelaFornecedoresProps) {
   const tabelaFornecedor = useReactTable({
     data: listaFornecedores,
-    columns: colunasFornecedores,
+    columns: colunasTabela ?? colunasFornecedores,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -71,16 +81,21 @@ export function TabelaFornecedores({
 
   return (
     <div className="space-y-2">
-      <div className="flex flex-col items-center gap-2 py-4 md:flex-row-reverse md:justify-between">
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button className="shadow bg-padrao-red hover:bg-red-800 flex md:justify-between justify-center md:gap-4 gap-2 w-full md:w-auto">
-              <Plus />
-              {'Novo'}
-            </Button>
-          </DialogTrigger>
-          <NovoFornecedorDialog />
-        </Dialog>
+      <div className={cn("flex flex-col items-center gap-2 py-4 justify-start md:flex-row", {
+        "md:justify-between": opcaoNovoFornecedor,
+        "md:flex-row-reverse": opcaoNovoFornecedor
+      })}>
+        {opcaoNovoFornecedor && (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button className="shadow bg-padrao-red hover:bg-red-800 flex md:justify-between justify-center md:gap-4 gap-2 w-full md:w-auto">
+                <Plus />
+                {'Novo'}
+              </Button>
+            </DialogTrigger>
+            <NovoFornecedorDialog />
+          </Dialog>
+        )}
         <div className="flex flex-row gap-2">
           <Input
             disabled={listaFornecedores.length === 0 || carregandoFornecedores}
@@ -97,16 +112,19 @@ export function TabelaFornecedores({
                 ?.setFilterValue(event.target.value)
             }
           />
-          <FiltroStatusTabela
-            options={optionsStatusCritico}
-            title={'Situação'}
-            column={tabelaFornecedor.getColumn('critico')}
-          />
-          <FiltroStatusTabela
-            options={optionsStatusAprovado}
-            title={'Avaliação'}
-            column={tabelaFornecedor.getColumn('aprovado')}
-          />
+          {opcaoFiltroSituacao && (
+            <FiltroStatusTabela
+              options={optionsStatusCritico}
+              title={'Situação'}
+              column={tabelaFornecedor.getColumn('critico')}
+            />
+          )}
+          {opcaoFiltroAvaliacao && (
+            <FiltroStatusTabela
+              options={optionsStatusAprovado}
+              title={'Avaliação'}
+              column={tabelaFornecedor.getColumn('aprovado')}
+            />)}
         </div>
       </div>
       <div className="rounded-md border shadow overflow-auto bg-gray-50 ">
@@ -120,9 +138,9 @@ export function TabelaFornecedores({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   )
                 })}

@@ -193,6 +193,38 @@ export async function buscarPedidosEmpresa() {
     })
 }
 
+export async function baixarPdfPedido(idPedido: string) {
+  return await axiosInstance
+    .get<Blob>(`pedido/${idPedido}/pdf`, {
+      responseType: 'blob',
+    })
+    .then(resp => {
+      const blob = new Blob([resp.data], { type: 'application/pdf' })
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+
+      link.href = url
+      link.download = `pedido_${idPedido}.pdf`
+      document.body.appendChild(link)
+      link.click()
+
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(url)
+
+      return {
+        status: true,
+        msg: 'PDF baixado com sucesso!',
+      }
+    })
+    .catch(error => {
+      return {
+        status: false,
+        msg: 'Ocorreu um erro ao baixar o PDF do pedido.',
+        error,
+      }
+    })
+}
+
 export async function buscarItensAvaliativosRecebimento() {
   return await axiosInstance
     .get<Array<ItemAvaliacaoType>>('pedido/recebimento/avaliacao/itens')

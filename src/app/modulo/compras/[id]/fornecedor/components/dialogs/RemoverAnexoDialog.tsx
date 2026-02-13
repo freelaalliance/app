@@ -16,8 +16,8 @@ import {
 import { Button } from '@/components/ui/button'
 
 import {
+  type ResponseAnexosFornecedorType,
   excluirAnexo,
-  ResponseAnexosFornecedorType,
 } from '../../(api)/FornecedorApi'
 
 interface ExcluirAnexoDialogProps {
@@ -32,22 +32,22 @@ export function ExclusaoAnexoFornecedor({
 
   const { mutateAsync: removerAnexo, isPending } = useMutation({
     mutationFn: excluirAnexo,
-    onError: (error) => {
+    onError: error => {
       toast.error('Erro ao excluir o anexo', {
         description: error.message,
       })
     },
-    onSuccess: (resp) => {
+    onSuccess: resp => {
       const anexosFornecedor: ResponseAnexosFornecedorType | undefined =
         queryClient.getQueryData(['anexosFornecedor', idFornecedor])
 
       queryClient.setQueryData(
         ['anexosFornecedor', idFornecedor],
         anexosFornecedor &&
-          resp.status && {
-            ...anexosFornecedor,
-            dados: anexosFornecedor.dados?.filter((email) => email.id !== id),
-          },
+        resp.status && {
+          ...anexosFornecedor,
+          dados: anexosFornecedor.dados?.filter(email => email.id !== id),
+        }
       )
 
       toast.success('Anexo excluído com sucesso!')

@@ -1,10 +1,10 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { ArrowBigDownDash, ArrowLeft, Loader2 } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
-import generatePDF, { Margin, type Options, Resolution } from 'react-to-pdf'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -13,7 +13,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 
-import { consultarPedido } from '../../../(api)/ComprasApi'
+import { baixarPdfPedido, consultarPedido } from '../../../(api)/ComprasApi'
 
 const PedidoView = dynamic(
   () => import('../../../(views)/VisualizarDadosPedido'),
@@ -36,17 +36,19 @@ export default function VisualizarPedido() {
 
   const codigo = searchParams.get('codigo')
 
-  const getDadosPedido = () => document.getElementById('pedido')
-
-  const options: Options = {
-    method: 'open',
-    resolution: Resolution.HIGH,
-    page: {
-      margin: Margin.MEDIUM,
-      format: 'A4',
-      orientation: 'portrait',
+  const { mutateAsync: downloadPdf, isPending: baixandoPdf } = useMutation({
+    mutationFn: baixarPdfPedido,
+    onSuccess: data => {
+      if (data.status) {
+        toast.success(data.msg)
+      } else {
+        toast.error(data.msg)
+      }
     },
-  }
+    onError: () => {
+      toast.error('Erro ao baixar o PDF do pedido.')
+    },
+  })
 
   const dadosPedido = useQuery({
     queryKey: ['visualizarPedido', idPedido, codigo],
@@ -79,12 +81,16 @@ export default function VisualizarPedido() {
           <TooltipTrigger asChild>
             <Button
               size={'sm'}
-              disabled={!dadosPedido.data || !dadosPedido.data.dados}
+              disabled={!dadosPedido.data || !dadosPedido.data.dados || baixandoPdf}
               className="shadow bg-padrao-gray-250 hover:bg-gray-900 gap-2"
-              onClick={() => generatePDF(getDadosPedido, options)}
+              onClick={() => downloadPdf(idPedido)}
             >
-              <ArrowBigDownDash className="size-5" />
-              {'Baixar PDF'}
+              {baixandoPdf ? (
+                <Loader2 className="size-5 animate-spin" />
+              ) : (
+                <ArrowBigDownDash className="size-5" />
+              )}
+              {baixandoPdf ? 'Baixando...' : 'Baixar PDF'}
             </Button>
           </TooltipTrigger>
           <TooltipContent>

@@ -24,7 +24,7 @@ const FormularioCadastroFornecedor = dynamic(
 
 export function NovoFornecedorDialog() {
   return (
-    <DialogContent className="overflow-auto max-h-full max-w-5xl">
+    <DialogContent className="overflow-auto max-h-screen max-w-5xl">
       <DialogHeader>
         <DialogTitle>Novo Fornecedor</DialogTitle>
         <DialogDescription>

@@ -29,24 +29,16 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart'
-import { Skeleton } from '@/components/ui/skeleton'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { aplicarMascaraDocumento } from '@/lib/utils'
 
 import { buscarFornecedores } from '../../fornecedor/(api)/FornecedorApi'
 import { buscarResumoFornecedor } from '../api/RelatorioCompras'
+import { TabelaFornecedores } from '../../fornecedor/components/tabelas/fornecedores/tabela-fornecedores'
+import { colunasFornecedoresPainel } from '../../fornecedor/components/tabelas/fornecedores/colunas-tabela-fornecedores-painel'
 
 export default function PainelFornecedores() {
   const dadosEstatisticasFornecedores = useQuery({
@@ -268,57 +260,13 @@ export default function PainelFornecedores() {
               </Card>
             </div>
           )}
-          <div className="rounded border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-2/6">Documento</TableHead>
-                  <TableHead className="w-3/4">Nome</TableHead>
-                  <TableHead className="w-auto">Aprovado</TableHead>
-                  <TableHead className="w-auto">Crítico</TableHead>
-                  <TableHead className="w-auto">Desempenho</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {fornecedoresEmpresa.isLoading ? (
-                  <>
-                    <TableRow>
-                      <TableCell
-                        colSpan={5}
-                        className="h-16 text-center text-padrao-gray-200 text-sm font-medium mt-5 md:text-base lg:text-lg"
-                      >
-                        <Skeleton className="h-4 w-full " />
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell
-                        colSpan={5}
-                        className="h-16 text-center text-padrao-gray-200 text-sm font-medium mt-5 md:text-base lg:text-lg"
-                      >
-                        <Skeleton className="h-4 w-full " />
-                      </TableCell>
-                    </TableRow>
-                  </>
-                ) : (
-                  (fornecedoresEmpresa?.data?.map(fornecedor => (
-                    <TableRow key={fornecedor.id}>
-                      <TableCell>
-                        {aplicarMascaraDocumento(fornecedor.documento)}
-                      </TableCell>
-                      <TableCell>{fornecedor.nome}</TableCell>
-                      <TableCell>
-                        {fornecedor.aprovado ? 'Sim' : 'Não'}
-                      </TableCell>
-                      <TableCell>
-                        {fornecedor.critico ? 'Sim' : 'Não'}
-                      </TableCell>
-                      <TableCell>{`${fornecedor.desempenho}%`}</TableCell>
-                    </TableRow>
-                  )) ?? [])
-                )}
-              </TableBody>
-            </Table>
-          </div>
+
+          <TabelaFornecedores
+            listaFornecedores={fornecedoresEmpresa.data ?? []}
+            carregandoFornecedores={fornecedoresEmpresa.isLoading}
+            colunasTabela={colunasFornecedoresPainel}
+            opcaoNovoFornecedor={false}
+          />
         </CardContent>
       </Card>
     </section>

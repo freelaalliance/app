@@ -43,13 +43,21 @@ interface ExclusaoDadosProps {
   id: string
 }
 
+interface ExcluirAvaliacaoProps {
+  idFornecedor: string
+  avaliacaoId: string
+}
+
 export type FornecedoresEmpresaType = {
   id: string
   nome: string
   documento: string
   aprovado: boolean
   desempenho: boolean
-  critico: boolean
+  critico: boolean,
+  conceito: 'A' | 'B' | 'C' | null
+  mediaAvaliacoes: number
+  avaliacao: Pick<AvaliacaoFornecedorType, 'nota' | 'avaliadoEm' | 'validade'> | null
 }
 
 export type FornecedorDadosType = {
@@ -382,6 +390,32 @@ export async function excluirAnexo({ id }: ExclusaoDadosProps): Promise<{
       status: boolean
       msg: string
     }>(`fornecedor/anexo/${id}`)
+    .then(response => {
+      return {
+        status: response.data.status,
+        msg: response.data.msg,
+      }
+    })
+    .catch(error => {
+      return {
+        status: false,
+        msg: error.response.data.msg,
+      }
+    })
+}
+
+export async function excluirAvaliacaoFornecedor({
+  idFornecedor,
+  avaliacaoId,
+}: ExcluirAvaliacaoProps): Promise<{
+  status: boolean
+  msg: string
+}> {
+  return await axiosInstance
+    .delete<{
+      status: boolean
+      msg: string
+    }>(`fornecedor/${idFornecedor}/avaliacao/${avaliacaoId}`)
     .then(response => {
       return {
         status: response.data.status,

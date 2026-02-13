@@ -2,15 +2,13 @@
 
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { Loader2, Plus } from 'lucide-react'
+import { Loader2, Plus, Trash2 } from 'lucide-react'
 import { Bar, BarChart, Label, Rectangle, ReferenceLine, XAxis } from 'recharts'
 
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion'
+  AlertDialog,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -27,6 +25,14 @@ import {
 import { Dialog, DialogTrigger } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -34,6 +40,7 @@ import {
 import { cn } from '@/lib/utils'
 
 import type { AvaliacaoFornecedorType } from '../(api)/FornecedorApi'
+import { ExcluirAvaliacaoDialog } from '../components/dialogs/ExcluirAvaliacaoDialog'
 import { NovaAvaliacaoCriticoDialog } from '../components/dialogs/NovaAvaliacaoCriticoDialog'
 
 interface EstatisticaAvaliacaoCriticoProps {
@@ -55,11 +62,11 @@ export default function ViewEstatisticaAvaliacoesCritico({
   }> =
     avaliacoes.length > 0
       ? avaliacoes.map(avaliacao => {
-          return {
-            date: new Date(avaliacao.avaliadoEm),
-            nota: Number(avaliacao.nota),
-          }
-        })
+        return {
+          date: new Date(avaliacao.avaliadoEm),
+          nota: Number(avaliacao.nota),
+        }
+      })
       : []
 
   const totalAvaliacao = dadosAvaliacoes.reduce((total, avaliacao) => {
@@ -196,38 +203,70 @@ export default function ViewEstatisticaAvaliacoesCritico({
         className={cn('flex-1 md:col-span-2', qtdAvaliacoes === 0 && 'hidden')}
       >
         <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Histórico</CardTitle>
+            <CardDescription>Avaliações realizadas</CardDescription>
+          </CardHeader>
           <CardContent>
-            <Accordion
-              type="single"
-              collapsible
-              className="w-full overflow-auto max-h-[390.27px]"
-            >
-              {avaliacoes.map((avaliacao, index) => {
-                return (
-                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                  <AccordionItem value={avaliacao.id} key={index}>
-                    <AccordionTrigger>{`Avaliado em ${format(
-                      new Date(avaliacao.avaliadoEm),
-                      'PP',
-                      {
-                        locale: ptBR,
-                      }
-                    )}`}</AccordionTrigger>
-                    <AccordionContent className="grid">
-                      <p className="text-sm font-medium tracking-normal text-muted-foreground">
-                        {`Avaliação realizado por ${avaliacao.usuario}`}
-                      </p>
-                      <p className="text-sm font-medium tracking-normal text-muted-foreground">
-                        {`Nota: ${avaliacao.nota}%`}
-                      </p>
-                      <p className="text-sm font-medium tracking-normal text-muted-foreground text-red-600">
-                        {`Validade: ${format(new Date(avaliacao.validade), 'P', { locale: ptBR })}`}
-                      </p>
-                    </AccordionContent>
-                  </AccordionItem>
-                )
-              })}
-            </Accordion>
+            <div className="rounded border overflow-auto max-h-[390px]">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Data</TableHead>
+                    <TableHead>Usuário</TableHead>
+                    <TableHead>Nota</TableHead>
+                    <TableHead>Validade</TableHead>
+                    <TableHead className="w-[50px]" />
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {avaliacoes.map(avaliacao => (
+                    <TableRow key={avaliacao.id}>
+                      <TableCell className="text-sm">
+                        {format(new Date(avaliacao.avaliadoEm), 'P', {
+                          locale: ptBR,
+                        })}
+                      </TableCell>
+                      <TableCell className="text-sm">
+                        {avaliacao.usuario}
+                      </TableCell>
+                      <TableCell className="text-sm font-medium">
+                        {`${avaliacao.nota}%`}
+                      </TableCell>
+                      <TableCell className="text-sm text-red-600">
+                        {format(new Date(avaliacao.validade), 'P', {
+                          locale: ptBR,
+                        })}
+                      </TableCell>
+                      <TableCell>
+                        <AlertDialog>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <AlertDialogTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="size-8"
+                                >
+                                  <Trash2 className="size-4 text-red-600" />
+                                </Button>
+                              </AlertDialogTrigger>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Excluir avaliação</p>
+                            </TooltipContent>
+                          </Tooltip>
+                          <ExcluirAvaliacaoDialog
+                            avaliacaoId={avaliacao.id}
+                            idFornecedor={idFornecedor}
+                          />
+                        </AlertDialog>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </CardContent>
         </Card>
       </div>
