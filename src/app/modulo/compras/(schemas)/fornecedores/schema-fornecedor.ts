@@ -176,6 +176,7 @@ export const schemaDocumentoForm = z.object({
   id: z.string().uuid().optional(),
   nome: z.string(),
   arquivo: z.string(),
+  observacao: z.string().nullable().optional(),
 })
 
 export const schemaAvaliacaoFornecedor = z.object({

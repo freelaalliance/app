@@ -164,10 +164,28 @@ export const downloadFileFromBase64 = (
   document.body.removeChild(link)
 }
 
-export async function handleDownloadFile(
+export function handleDownloadFile(
   anexo: string,
   id: string
-): Promise<void> {
+) {
+  // Verifica se é uma URL (S3 ou HTTP) ao invés de base64
+  if (anexo.startsWith('http://') || anexo.startsWith('https://')) {
+    const link = document.createElement('a')
+    link.href = anexo
+    link.target = '_blank'
+    link.rel = 'noopener noreferrer'
+
+    // Tenta extrair a extensão da URL
+    const urlPath = new URL(anexo).pathname
+    const nomeArquivo = urlPath.split('/').pop() || `anexo_${id}`
+    link.download = nomeArquivo
+
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    return
+  }
+
   const tipoArquivo: string | null = identifyFileTypeFromBase64(anexo)
 
   if (!tipoArquivo) {
@@ -177,7 +195,7 @@ export async function handleDownloadFile(
 
   const extensao = tipoArquivo.split('/')[1]
 
-  await downloadFileFromBase64(anexo, `anexo_${id}.${extensao}`)
+  downloadFileFromBase64(anexo, `anexo_${id}.${extensao}`)
 }
 
 export function formatarDataBrasil(

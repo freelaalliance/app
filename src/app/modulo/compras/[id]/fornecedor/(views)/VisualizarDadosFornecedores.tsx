@@ -1,25 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import {
   ArrowLeft,
   Clock,
-  Download,
-  File,
   Loader2,
   MessageSquareWarning,
   Pen,
   Plus,
   ShoppingCart,
   TicketX,
-  Trash2,
   Truck,
 } from 'lucide-react'
 import dynamic from 'next/dynamic'
-import { useMemo, useRef } from 'react'
+import { useMemo } from 'react'
 import {
   Label,
   PolarGrid,
@@ -27,12 +24,10 @@ import {
   RadialBar,
   RadialBarChart,
 } from 'recharts'
-import { toast } from 'sonner'
 import type { z } from 'zod'
 
 import { IndicadorInformativo } from '@/components/IndicadorInfo'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { AlertDialog, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -42,8 +37,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { type ChartConfig, ChartContainer } from '@/components/ui/chart'
-import { Dialog, DialogTrigger } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -53,28 +47,25 @@ import {
 } from '@/components/ui/tooltip'
 import {
   aplicarMascaraDocumento,
-  encodeFileToBase64, handleDownloadFile
 } from '@/lib/utils'
 
 import { buscarPedidosFornecedor } from '../(api)/ComprasApi'
 import {
   type AvaliacaoFornecedorType,
-  type ResponseAnexosFornecedorType,
   consultarAnexosFornecedor,
   consultarAvaliacoesFornecedor,
   consultarDadosFornecedor,
-  salvarAnexoFornecedor,
 } from '../(api)/FornecedorApi'
 import type { schemaDocumentoForm } from '../../../(schemas)/fornecedores/schema-fornecedor'
 import { EdicaoEnderecoFornecedorDialog } from '../components/dialogs/EdicaoEnderecoFornecedorDialog'
 import { NovoEmailFornecedorDialog } from '../components/dialogs/NovoEmailFornecedorDialog'
 import { NovoTelefoneFornecedorDialog } from '../components/dialogs/NovoTelefoneFornecedorDialog'
-import { ExclusaoAnexoFornecedor } from '../components/dialogs/RemoverAnexoDialog'
 import { TabelaEmailsFornecedor } from '../components/tabelas/emails/tabela-email-fornecedores'
 import { ColunasPedidosFornecedor } from '../components/tabelas/pedidos/colunas-tabela-pedidos-fornecedor'
 import { TabelaPedidos } from '../components/tabelas/pedidos/tabela-pedidos'
 import { TabelaTelefonesFornecedor } from '../components/tabelas/telefones/tabela-telefones-fornecedores'
 import { ListaAnexosFornecedor } from '../components/lista-anexos-fornecedor'
+import { FormularioAnexoFornecedor } from '../components/formulario-anexo-fornecedor'
 
 interface DadosFornecedorProps {
   idFornecedor: string
@@ -104,8 +95,6 @@ const EstatisticaAvalicoesFornecedorCritico = dynamic(
 export default function ViewDadosFornecedores({
   idFornecedor,
 }: DadosFornecedorProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const queryClient = useQueryClient()
 
   const consultaDadosFornecedor = useQuery({
     queryKey: ['dadosFornecedor', idFornecedor],
@@ -167,46 +156,6 @@ export default function ViewDadosFornecedores({
       color: 'hsl(210, 2%, 21%)',
     },
   } satisfies ChartConfig
-
-  const { mutateAsync: novoAnexo, isPending } = useMutation({
-    mutationFn: salvarAnexoFornecedor,
-    onError: error => {
-      toast.error('Erro ao salvar o anexo, tente novamente!', {
-        description: error.message,
-      })
-    },
-    onSuccess: data => {
-      if (data.status) {
-        const anexosFornecedor: ResponseAnexosFornecedorType | undefined =
-          queryClient.getQueryData(['anexosFornecedor', idFornecedor])
-
-        queryClient.setQueryData(['anexosFornecedor', idFornecedor], {
-          ...anexosFornecedor,
-          dados: [...(anexosFornecedor?.dados ?? []), data.dados],
-        })
-
-        if (fileInputRef.current) {
-          fileInputRef.current.files = null
-        }
-
-        toast.success(data.msg)
-      } else {
-        toast.warning(data.msg)
-      }
-    },
-  })
-
-  async function adicionarAnexoFornecedor(arquivo: File) {
-    const arquivo64 = await encodeFileToBase64(arquivo)
-
-    await novoAnexo({
-      anexo: {
-        nome: arquivo.name,
-        arquivo: arquivo64,
-      },
-      idFornecedor,
-    })
-  }
 
   return (
     <>
@@ -620,38 +569,25 @@ export default function ViewDadosFornecedores({
               </div>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  {isPending ? (
-                    <Button
-                      size={'icon'}
-                      className="shadow bg-padrao-red hover:bg-red-800"
-                    >
-                      <Loader2 className="size-4 animate-spin" />
-                    </Button>
-                  ) : (
-                    <>
-                      <Input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={async event => {
-                          if (event.target.files) {
-                            const arquivo = event.target.files[0]
-
-                            await adicionarAnexoFornecedor(arquivo)
-                          } else {
-                            toast.warning('Nenhum arquivo selecionado')
-                          }
-                        }}
-                        className="hidden"
-                      />
+                  <Dialog>
+                    <DialogTrigger asChild>
                       <Button
                         size={'icon'}
                         className="shadow bg-padrao-red hover:bg-red-800"
-                        onClick={() => fileInputRef.current?.click()}
                       >
                         <Plus className="size-4" />
                       </Button>
-                    </>
-                  )}
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl">
+                      <DialogHeader>
+                        <DialogTitle>Adicionar anexo</DialogTitle>
+                        <DialogDescription>
+                          Selecione um arquivo e adicione uma observação opcional.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <FormularioAnexoFornecedor idFornecedor={idFornecedor} />
+                    </DialogContent>
+                  </Dialog>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Adicionar novo anexo ao fornecedor</p>

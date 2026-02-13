@@ -92,6 +92,7 @@ export type AnexoFornecedor = {
   id: string
   nome: string
   arquivo: string
+  observacao?: string | null
 }
 
 type ResponseNovoFornecedorType = {
