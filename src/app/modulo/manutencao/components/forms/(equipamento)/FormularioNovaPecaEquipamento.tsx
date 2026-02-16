@@ -135,6 +135,7 @@ export function FormularioNovaPeca({
             <ScrollArea className="max-h-52 md:max-h-72 w-full overflow-auto">
               {pecas.map((peca, index) => (
                 <div
+                  // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                   key={index}
                   className="flex flex-row justify-between gap-2 mb-4"
                 >
@@ -153,6 +154,7 @@ export function FormularioNovaPeca({
                       )}
                     />
                     <FormField
+                      // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                       key={index}
                       control={formNovaPecaEquipamento.control}
                       name={`pecas.${index}.descricao`}

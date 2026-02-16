@@ -1,5 +1,6 @@
 'use client'
 
+import { atualizarEquipamento } from "@/app/modulo/manutencao/api/EquipamentoAPi";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -8,10 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { z } from "zod"
-import { atualizarEquipamento } from "@/app/modulo/manutencao/api/EquipamentoAPi";
 import { toast } from "sonner";
-import { DadosEquipamentoType } from "../../../schemas/EquipamentoSchema";
+import { z } from "zod";
 
 const schemaEdicaoEquipamentoProps = z.object({
   id: z.string().uuid(),
@@ -72,19 +71,8 @@ export function EdicaoEquipamentoForm({ id, codigo, nome, especificacao, frequen
         description: error.message,
       })
     },
-    onSuccess: (dados) => {
-      const listaEquipamentos: Array<DadosEquipamentoType> | undefined = queryClient.getQueryData(['listaEquipamentosEmpresa'])
-
-      queryClient.setQueryData(
-        ['listaEquipamentosEmpresa'],
-        listaEquipamentos?.map((equipamento) => {
-          if (equipamento.id === id) {
-            return dados
-          }
-
-          return equipamento
-        }),
-      )
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['listaEquipamentosEmpresa'] })
 
       toast.success('Equipamento salvo com sucesso!')
       formEdicaoEquipamento.reset()

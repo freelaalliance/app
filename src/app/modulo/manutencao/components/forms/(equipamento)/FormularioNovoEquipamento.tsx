@@ -23,9 +23,8 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Textarea } from '@/components/ui/textarea'
 
 import {
-  DadosEquipamentoType,
-  FormularioNovoEquipamentoType,
-  schemaFormularioNovoEquipamento,
+  type FormularioNovoEquipamentoType,
+  schemaFormularioNovoEquipamento
 } from '../../../schemas/EquipamentoSchema'
 
 import { MAX_PECAS_EQUIPAMENTO } from './utils-equipamento'
@@ -56,19 +55,13 @@ export function NovoEquipamentoForm() {
 
   const { mutateAsync: salvarEquipamento } = useMutation({
     mutationFn: criarEquipamento,
-    onError: (error) => {
+    onError: error => {
       toast.error('Erro ao salvar equipamento', {
         description: error.message,
       })
     },
-    onSuccess: (dados) => {
-      const listaEquipamentos: Array<DadosEquipamentoType> | undefined =
-        queryClient.getQueryData(['listaEquipamentosEmpresa'])
-
-      queryClient.setQueryData(
-        ['listaEquipamentosEmpresa'],
-        [...(listaEquipamentos ?? []), dados],
-      )
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['listaEquipamentosEmpresa'] })
 
       toast.success('Equipamento salvo com sucesso!')
       formNovoEquipamento.reset()
@@ -185,6 +178,7 @@ export function NovoEquipamentoForm() {
               {pecas.map((peca, index) => (
                 <>
                   <div
+                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                     key={index}
                     className="flex flex-row justify-between space-x-2 mb-4"
                   >
@@ -203,6 +197,7 @@ export function NovoEquipamentoForm() {
                         )}
                       />
                       <FormField
+                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                         key={index}
                         control={formNovoEquipamento.control}
                         name={`pecas.${index}.descricao`}

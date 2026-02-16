@@ -1,7 +1,22 @@
-import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { EdicaoEquipamentoForm, FormEdicaoEquipamentoProps } from "../../forms/(equipamento)/FormularioEdicaoEquipamento";
+import {
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import {
+  EdicaoEquipamentoForm,
+  type FormEdicaoEquipamentoProps,
+} from '../../forms/(equipamento)/FormularioEdicaoEquipamento'
 
-export function EdicaoEquipamentoDialog({ id, codigo, nome, especificacao, frequencia, tempoOperacao }: FormEdicaoEquipamentoProps) {
+export function EdicaoEquipamentoDialog({
+  id,
+  codigo,
+  nome,
+  especificacao,
+  frequencia,
+  tempoOperacao,
+}: FormEdicaoEquipamentoProps) {
   return (
     <DialogContent className="max-w-4xl">
       <DialogHeader>
