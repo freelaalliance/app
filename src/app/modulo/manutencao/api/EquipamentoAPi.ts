@@ -1,10 +1,10 @@
 import { axiosInstance } from '@/lib/AxiosLib'
 
-import { ExcluirEquipamentoDialogProps } from '../components/dialogs/(equipamento)/ExclusaoEquipamentoDialog'
-import { ExclusaoPecaEquipamentoProps } from '../components/dialogs/(equipamento)/ExclusaoPecaEquipamentoDialog'
-import { FormEdicaoEquipamentoType } from '../components/forms/(equipamento)/FormularioEdicaoEquipamento'
-import { TabelaPecasEquipamentoProps } from '../components/tables/pecas_equipamento/tabela-pecas-equipamento'
-import {
+import type { ExcluirEquipamentoDialogProps } from '../components/dialogs/(equipamento)/ExclusaoEquipamentoDialog'
+import type { ExclusaoPecaEquipamentoProps } from '../components/dialogs/(equipamento)/ExclusaoPecaEquipamentoDialog'
+import type { FormEdicaoEquipamentoType } from '../components/forms/(equipamento)/FormularioEdicaoEquipamento'
+import type { TabelaPecasEquipamentoProps } from '../components/tables/pecas_equipamento/tabela-pecas-equipamento'
+import type {
   DadosAgendaEquipamentoType,
   DadosEquipamentoType,
   DadosPecasEquipamentoType,
@@ -38,11 +38,11 @@ export async function listarEquipamentos() {
 }
 
 export async function criarEquipamento(
-  dadosEquipamento: FormularioNovoEquipamentoType,
+  dadosEquipamento: FormularioNovoEquipamentoType
 ) {
   const response = await axiosInstance.post<DadosEquipamentoType>(
     'equipamento/',
-    dadosEquipamento,
+    dadosEquipamento
   )
 
   return response.data
@@ -60,7 +60,7 @@ export async function listarPecasEquipamento({
   idEquipamento,
 }: TabelaPecasEquipamentoProps) {
   const response = await axiosInstance.get<Array<DadosPecasEquipamentoType>>(
-    `equipamento/${idEquipamento}/pecas`,
+    `equipamento/${idEquipamento}/pecas`
   )
 
   return response.data
@@ -88,7 +88,7 @@ export async function atualizarPecaEquipamento({
 }: EdicaoPecaEquipamentoProps) {
   const response = await axiosInstance.put<DadosPecasEquipamentoType>(
     `equipamento/${equipamentoId}/peca/${id}`,
-    { nome, descricao },
+    { nome, descricao }
   )
 
   return response.data
@@ -104,7 +104,7 @@ export async function atualizarEquipamento({
 }: FormEdicaoEquipamentoType) {
   const response = await axiosInstance.put<DadosEquipamentoType>(
     `equipamento/${id}`,
-    { codigo, nome, especificacao, frequencia, tempoOperacao },
+    { codigo, nome, especificacao, frequencia, tempoOperacao }
   )
 
   return response.data
@@ -114,7 +114,7 @@ export async function buscarAgendamentosEquipamento({
   idEquipamento,
 }: TabelaPecasEquipamentoProps) {
   const response = await axiosInstance.get<Array<DadosAgendaEquipamentoType>>(
-    `equipamento/${idEquipamento}/agenda`,
+    `equipamento/${idEquipamento}/agenda`
   )
 
   return response.data
@@ -124,7 +124,17 @@ export async function buscarDadosEquipamento({
   equipamentoId,
 }: EquipamentoApiProps) {
   const response = await axiosInstance.get<DadosEquipamentoType>(
-    `equipamento/${equipamentoId}`,
+    `equipamento/${equipamentoId}`
+  )
+
+  return response.data
+}
+
+export async function copiarEquipamento({
+  equipamentoId,
+}: EquipamentoApiProps) {
+  const response = await axiosInstance.post<DadosEquipamentoType>(
+    `equipamento/${equipamentoId}/copiar`
   )
 
   return response.data

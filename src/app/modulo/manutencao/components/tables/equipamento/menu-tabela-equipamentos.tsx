@@ -1,7 +1,9 @@
 'use client'
 
-import { MoreVertical } from 'lucide-react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Loader2, MoreVertical } from 'lucide-react'
 import Link from 'next/link'
+import { toast } from 'sonner'
 
 import { AlertDialog, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
@@ -14,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
+import { copiarEquipamento } from '../../../api/EquipamentoAPi'
 import type { DadosEquipamentoType } from '../../../schemas/EquipamentoSchema'
 import { EdicaoEquipamentoDialog } from '../../dialogs/(equipamento)/EdicaoEquipamentoDialog'
 import { ExclusaoEquipamentoDialog } from '../../dialogs/(equipamento)/ExclusaoEquipamentoDialog'
@@ -30,6 +33,22 @@ export function MenuTabelaEquipamento({ row }: MenuTabelaEquipamentoProps) {
   if (typeof window !== 'undefined') {
     idModulo = localStorage.getItem('modulo')
   }
+
+  const queryClient = useQueryClient()
+
+  const { mutateAsync: duplicarEquipamento, isPending: copiandoEquipamento } = useMutation({
+    mutationFn: copiarEquipamento,
+    onError: (error) => {
+      toast.error('Erro ao copiar o equipamento', {
+        description: error.message,
+      })
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['listaEquipamentosEmpresa'] })
+
+      toast.success('Equipamento copiado com sucesso!')
+    },
+  })
 
   return (
     <DropdownMenu>
@@ -62,6 +81,18 @@ export function MenuTabelaEquipamento({ row }: MenuTabelaEquipamentoProps) {
             nome={row.nome}
           />
         </Dialog>
+        <DropdownMenuItem
+          disabled={copiandoEquipamento}
+          onSelect={async (e) => {
+            e.preventDefault()
+            await duplicarEquipamento({ equipamentoId: row.id })
+          }}
+        >
+          {copiandoEquipamento ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : null}
+          {copiandoEquipamento ? 'Copiando...' : 'Copiar equipamento'}
+        </DropdownMenuItem>
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <DropdownMenuItem
