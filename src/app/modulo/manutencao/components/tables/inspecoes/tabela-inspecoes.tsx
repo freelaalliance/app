@@ -61,12 +61,24 @@ export function TabelaInspecoesEquipamento({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
+  const inspecaoRealizadoHoje = data.find(inspecao => {
+    if(inspecao.finalizadoEm){
+      const dataInspecao = new Date(inspecao.finalizadoEm)
+      const hoje = new Date()
+      return (
+        dataInspecao.getDate() === hoje.getDate() &&
+        dataInspecao.getMonth() === hoje.getMonth() &&
+        dataInspecao.getFullYear() === hoje.getFullYear()
+      )
+    }
+  })
+
   return (
     <div className="space-y-2 w-full">
       <div className="flex gap-2">
         <Dialog open={modalInspecaoAberto} onOpenChange={abrirModalInspecao}>
           <DialogTrigger asChild>
-            <Button className="shadow bg-padrao-red hover:bg-red-800 gap-2">
+            <Button className="shadow bg-padrao-red hover:bg-red-800 gap-2" disabled={!!inspecaoRealizadoHoje}>
               <Stethoscope className="size-5" />
               Nova manutenção
             </Button>

@@ -1,22 +1,34 @@
 'use client'
 
-import { useForm } from "react-hook-form"
-import { DadosManutencaoEquipamentoType, DadosNovaOrdemManutencaoType, schemaFormNovaOrdemManutencao } from "../../../schemas/ManutencaoSchema"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Textarea } from "@/components/ui/textarea"
-import { DialogClose, DialogFooter } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { criarNovaManutencaoEquipamento } from "../../../api/ManutencaoEquipamentoAPI"
-import { toast } from "sonner"
+import { Button } from '@/components/ui/button'
+import { DialogClose, DialogFooter } from '@/components/ui/dialog'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Textarea } from '@/components/ui/textarea'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import { criarNovaManutencaoEquipamento } from '../../../api/ManutencaoEquipamentoAPI'
+import {
+  type DadosNovaOrdemManutencaoType,
+  schemaFormNovaOrdemManutencao
+} from '../../../schemas/ManutencaoSchema'
 
 export interface FormNovaOrdemManutencaoEquipamentoProps {
   equipamentoId: string
 }
 
-export function FormNovaOrdemManutencaoEquipamento({ equipamentoId }: FormNovaOrdemManutencaoEquipamentoProps) {
-
+export function FormNovaOrdemManutencaoEquipamento({
+  equipamentoId,
+}: FormNovaOrdemManutencaoEquipamentoProps) {
   const queryClient = useQueryClient()
   const formNovaManutencao = useForm<DadosNovaOrdemManutencaoType>({
     resolver: zodResolver(schemaFormNovaOrdemManutencao),
@@ -31,24 +43,24 @@ export function FormNovaOrdemManutencaoEquipamento({ equipamentoId }: FormNovaOr
     onError: () => {
       toast.error('Erro ao criar nova manutenção para equipamento')
     },
-    onSuccess: (dados) => {
-      const listaManutencoesEquipamento: Array<DadosManutencaoEquipamentoType> | undefined = queryClient.getQueryData(['manutencoesEquipamento', equipamentoId])
-
-      queryClient.setQueryData(
-        ['manutencoesEquipamento', equipamentoId],
-        [...(listaManutencoesEquipamento ?? []), dados]
-      )
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['manutencoes-equipamento', equipamentoId],
+      })
 
       formNovaManutencao.reset()
       toast.success('Manutenção criada com sucesso')
-    }
+    },
   })
 
   return (
     <Form {...formNovaManutencao}>
-      <form className="flex-1 space-y-2" onSubmit={formNovaManutencao.handleSubmit(async (dados) => {
-        await criarNovaOrdemManutencao(dados)
-      })}>
+      <form
+        className="flex-1 space-y-2"
+        onSubmit={formNovaManutencao.handleSubmit(async dados => {
+          await criarNovaOrdemManutencao(dados)
+        })}
+      >
         <FormField
           control={formNovaManutencao.control}
           name="observacao"
@@ -63,7 +75,8 @@ export function FormNovaOrdemManutencaoEquipamento({ equipamentoId }: FormNovaOr
                 />
               </FormControl>
               <FormDescription>
-                Mencione os motivos e problemas do equipamento para o setor de manutenção
+                Mencione os motivos e problemas do equipamento para o setor de
+                manutenção
               </FormDescription>
               <FormMessage />
             </FormItem>

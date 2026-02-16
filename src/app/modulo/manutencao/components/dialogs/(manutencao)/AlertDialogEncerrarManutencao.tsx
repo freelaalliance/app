@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/alert-dialog'
 
 import { finalizarManutencao } from '../../../api/ManutencaoEquipamentoAPI'
-import { DadosManutencaoEquipamentoType } from '../../../schemas/ManutencaoSchema'
+import type { DadosManutencaoEquipamentoType } from '../../../schemas/ManutencaoSchema'
 
 interface AlertEncerraManutencaoProps {
   idManutencao: string
@@ -31,26 +31,27 @@ export function AlertEncerrarManutencaoEquipamento({
     onError: () => {
       toast.error('Erro ao encerrar a manutenção do equipamento')
     },
-    onSuccess: (dados) => {
+    onSuccess: dados => {
       const listaManutencoesEquipamento:
         | Array<DadosManutencaoEquipamentoType>
         | undefined = queryClient.getQueryData([
-        'manutencoesEquipamento',
-        equipamentoId,
-      ])
+          'manutencoesEquipamento',
+          equipamentoId,
+        ])
 
       queryClient.setQueryData(
         ['manutencoesEquipamento', equipamentoId],
-        listaManutencoesEquipamento?.map((manutencao) => {
+        listaManutencoesEquipamento?.map(manutencao => {
           if (dados.id === manutencao.id) {
             return {
               ...manutencao,
               finalizadoEm: dados.finalizadoEm,
               duracao: dados.duracao,
+              equipamentoParado: dados.equipamentoParado
             }
           }
           return manutencao
-        }),
+        })
       )
 
       toast.success('Manutenção encerrada com sucesso')

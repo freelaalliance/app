@@ -91,6 +91,7 @@ export type DadosInspecoesEquipamentoType = {
   PontosInspecaoEquipamento: Array<{
     pecaEquipamentoId: string
     inspecionadoEm: Date | null
+    observacao?: string | null
   }>
   usuario: {
     pessoa: {

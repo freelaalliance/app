@@ -55,7 +55,6 @@ export function RetomadaInspecaoForm({
           : new Date(),
         inspecionado: !!ponto.inspecionadoEm,
       })),
-      observacao: undefined,
     },
     mode: 'onChange',
   })
@@ -68,9 +67,9 @@ export function RetomadaInspecaoForm({
   function verificarTodosItensInspecionado() {
     const todosItensInspecionado =
       !(
-      formFinalizacaoInspecao
-        .getValues('inspecaoPeca')
-        .filter(peca => !peca.inspecionado).length > 0)
+        formFinalizacaoInspecao
+          .getValues('inspecaoPeca')
+          .filter(peca => !peca.inspecionado).length > 0)
 
     todosItensInspecionado
       ? formFinalizacaoInspecao.setValue('finalizadoEm', new Date())
@@ -96,9 +95,9 @@ export function RetomadaInspecaoForm({
       const listaInspecaoEquipamento:
         | Array<DadosInspecoesEquipamentoType>
         | undefined = queryClient.getQueryData([
-        'listaInspecoesEquipamento',
-        dadosInspecao.equipamentoId,
-      ])
+          'listaInspecoesEquipamento',
+          dadosInspecao.equipamentoId,
+        ])
 
       const dataHoraFinalizado =
         formFinalizacaoInspecao.getValues('finalizadoEm')
@@ -195,112 +194,129 @@ export function RetomadaInspecaoForm({
                   key={index}
                   className="flex-1 flex-row justify-between gap-2 my-2 p-4 space-y-4 rounded-md border"
                 >
-                  <div>
-                    <FormField
-                      key={`${peca.id}.aprovacao`}
-                      control={formFinalizacaoInspecao.control}
-                      name={`inspecaoPeca.${index}.aprovado`}
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-center gap-4">
-                          <FormControl>
-                            <Switch
-                              checked={field.value}
-                              onCheckedChange={(checked: boolean) => {
-                                field.onChange(checked)
+                  <FormField
+                    key={`${peca.id}.aprovacao`}
+                    control={formFinalizacaoInspecao.control}
+                    name={`inspecaoPeca.${index}.aprovado`}
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center gap-4">
+                        <FormControl>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={(checked: boolean) => {
+                              field.onChange(checked)
+                              formFinalizacaoInspecao.setValue(
+                                `inspecaoPeca.${index}.inspecionadoEm`,
+                                new Date()
+                              )
+
+                              setarItensAprovado(
+                                verificarTodosItensAprovados()
+                              )
+
+                              if (checked) {
+                                formFinalizacaoInspecao.setValue(
+                                  `inspecaoPeca.${index}.inspecionado`,
+                                  true
+                                )
+                                formFinalizacaoInspecao.trigger(
+                                  `inspecaoPeca.${index}.inspecionado`
+                                )
+                                setarInspecionado(
+                                  verificarTodosItensInspecionado()
+                                )
+                              }
+                            }}
+                          />
+                        </FormControl>
+                        <div className="space-y-0.5 leading-none">
+                          <FormLabel className="text-base">
+                            {`Item ${pontosInspecao.find(
+                              pecaEquipamento =>
+                                pecaEquipamento.pecasEquipamento.id ===
+                                formFinalizacaoInspecao.getValues(
+                                  `inspecaoPeca.${index}.pecaEquipamentoId`
+                                )
+                            )?.pecasEquipamento.nome ?? ''
+                              } aprovado`}
+                          </FormLabel>
+                          <FormDescription>
+                            Se aprovado na inspeção, marque para aprovar
+                          </FormDescription>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    key={`${peca.id}.inspecao`}
+                    control={formFinalizacaoInspecao.control}
+                    name={`inspecaoPeca.${index}.inspecionado`}
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-center gap-4">
+                        <FormControl>
+                          <Switch
+                            checked={field.value}
+                            onCheckedChange={(checked: boolean) => {
+                              field.onChange(checked)
+                              if (checked) {
                                 formFinalizacaoInspecao.setValue(
                                   `inspecaoPeca.${index}.inspecionadoEm`,
                                   new Date()
                                 )
-
-                                setarItensAprovado(
-                                  verificarTodosItensAprovados()
+                              } else {
+                                formFinalizacaoInspecao.setValue(
+                                  `inspecaoPeca.${index}.inspecionadoEm`,
+                                  undefined
                                 )
-
-                                if (checked) {
-                                  formFinalizacaoInspecao.setValue(
-                                    `inspecaoPeca.${index}.inspecionado`,
-                                    true
-                                  )
-                                  formFinalizacaoInspecao.trigger(
-                                    `inspecaoPeca.${index}.inspecionado`
-                                  )
-                                  setarInspecionado(
-                                    verificarTodosItensInspecionado()
-                                  )
-                                }
-                              }}
-                            />
-                          </FormControl>
-                          <div className="space-y-0.5 leading-none">
-                            <FormLabel className="text-base">
-                              {`Item ${
-                                pontosInspecao.find(
-                                  pecaEquipamento =>
-                                    pecaEquipamento.pecasEquipamento.id ===
-                                    formFinalizacaoInspecao.getValues(
-                                      `inspecaoPeca.${index}.pecaEquipamentoId`
-                                    )
-                                )?.pecasEquipamento.nome ?? ''
-                              } aprovado`}
-                            </FormLabel>
-                            <FormDescription>
-                              Se aprovado na inspeção, marque para aprovar
-                            </FormDescription>
-                          </div>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <div>
-                    <FormField
-                      key={`${peca.id}.inspecao`}
-                      control={formFinalizacaoInspecao.control}
-                      name={`inspecaoPeca.${index}.inspecionado`}
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-center gap-4">
-                          <FormControl>
-                            <Switch
-                              checked={field.value}
-                              onCheckedChange={(checked: boolean) => {
-                                field.onChange(checked)
-                                if (checked) {
-                                  formFinalizacaoInspecao.setValue(
-                                    `inspecaoPeca.${index}.inspecionadoEm`,
-                                    new Date()
-                                  )
-                                } else {
-                                  formFinalizacaoInspecao.setValue(
-                                    `inspecaoPeca.${index}.inspecionadoEm`,
-                                    undefined
-                                  )
-                                  formFinalizacaoInspecao.setValue(
-                                    `inspecaoPeca.${index}.aprovado`,
-                                    false
-                                  )
-                                  formFinalizacaoInspecao.trigger(
-                                    `inspecaoPeca.${index}.aprovado`
-                                  )
-                                }
-
-                                setarInspecionado(
-                                  verificarTodosItensInspecionado()
+                                formFinalizacaoInspecao.setValue(
+                                  `inspecaoPeca.${index}.aprovado`,
+                                  false
                                 )
-                              }}
-                            />
-                          </FormControl>
-                          <div className="space-y-0.5 leading-none">
-                            <FormLabel className="text-base">
-                              Item inspecionado
-                            </FormLabel>
-                            <FormDescription>
-                              Se o item foi inspecionado marque para validar
-                            </FormDescription>
-                          </div>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+                                formFinalizacaoInspecao.trigger(
+                                  `inspecaoPeca.${index}.aprovado`
+                                )
+                              }
+
+                              setarInspecionado(
+                                verificarTodosItensInspecionado()
+                              )
+                            }}
+                          />
+                        </FormControl>
+                        <div className="space-y-0.5 leading-none">
+                          <FormLabel className="text-base">
+                            Item inspecionado
+                          </FormLabel>
+                          <FormDescription>
+                            Se o item foi inspecionado marque para validar
+                          </FormDescription>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    key={`${peca.id}.observacao`}
+                    control={formFinalizacaoInspecao.control}
+                    name={`inspecaoPeca.${index}.observacao`}
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col gap-2">
+                        <FormLabel className="text-base">
+                          Observação do item
+                        </FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Observação do item ..."
+                            className="resize-none"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Mencione os motivos e problemas do item para o setor
+                          de manutenção, caso tenha algo a relatar sobre o item inspecionado
+                        </FormDescription>
+                      </FormItem>
+                    )}
+                  />
                 </div>
               ))}
             </ScrollArea>

@@ -21,7 +21,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-import { DadosManutencaoEquipamentoType } from '../../../schemas/ManutencaoSchema'
+import type { DadosManutencaoEquipamentoType } from '../../../schemas/ManutencaoSchema'
 import { NovaOrdemManutencaoDialog } from '../../dialogs/(manutencao)/DialogNovaOrdemManutencao'
 
 import { colunasManutencaoEquipamento } from './colunas-tabela-manutencao'
@@ -46,10 +46,10 @@ export function TabelaManutencoesEquipamento({
   })
 
   const manutencaoAberto = data.filter(
-    (manutencoes) =>
+    manutencoes =>
       manutencoes.criadoEm &&
       !manutencoes.finalizadoEm &&
-      !manutencoes.canceladoEm,
+      !manutencoes.canceladoEm
   )
 
   return (
@@ -71,17 +71,17 @@ export function TabelaManutencoesEquipamento({
       <div className="rounded-md border shadow-md bg-gray-50">
         <Table>
           <TableHeader>
-            {tabela.getHeaderGroups().map((headerGroup) => (
+            {tabela.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
+                {headerGroup.headers.map(header => {
                   return (
                     <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   )
                 })}
@@ -108,16 +108,16 @@ export function TabelaManutencoesEquipamento({
                 </TableRow>
               </>
             ) : tabela.getRowModel().rows?.length > 0 ? (
-              tabela.getRowModel().rows.map((row) => (
+              tabela.getRowModel().rows.map(row => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                 >
-                  {row.getVisibleCells().map((cell) => (
+                  {row.getVisibleCells().map(cell => (
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}

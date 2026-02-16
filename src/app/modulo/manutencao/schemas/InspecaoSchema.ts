@@ -9,6 +9,7 @@ export const schemaPontosInspecao = z.array(
     }),
     aprovado: z.boolean().default(false),
     inspecionadoEm: z.date().nullable(),
+    observacao: z.string().optional().nullable(),
   })
 )
 
@@ -25,6 +26,7 @@ export const schemaFormInspecao = z.object({
       aprovado: z.boolean().default(false),
       inspecionadoEm: z.date().nullable(),
       inspecionado: z.boolean().default(false),
+      observacao: z.string().optional(),
     })
   )
 })
@@ -43,6 +45,7 @@ export const schemaFormFinalizacaoInspecao = z.object({
       aprovado: z.boolean().default(false),
       inspecionadoEm: z.coerce.date().optional(),
       inspecionado: z.boolean().default(false),
+      observacao: z.string().optional(),
     })
   )
 })
