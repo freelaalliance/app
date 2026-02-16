@@ -1,7 +1,14 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import {
   Table,
@@ -17,232 +24,272 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { axiosInstance } from '@/lib/AxiosLib'
 import {
   aplicarMascaraDocumento,
   formatarDataBrasil,
   formatarValorMoeda,
 } from '@/lib/utils'
 import { ArrowBigDownDash, Loader2 } from 'lucide-react'
-import { useState } from 'react'
 import QRCode from 'react-qr-code'
-import { toast } from 'sonner'
 import type { VendaDetalhada } from '../../../_schemas/vendas.schema'
+import { useDownloadPdfVenda } from '../../../_servicos/useVendas'
 
 interface VisualizarFichaVendaProps {
   id: string
   venda: VendaDetalhada
 }
 
-export default function VisualizarFichaVenda({ id, venda }: VisualizarFichaVendaProps) {
-  const [isLoading, setIsLoading] = useState(false)
+interface DetalheItemProps {
+  label: string
+  valor: string
+}
 
-  async function handleDownload() {
-    try {
-      setIsLoading(true)
-      toast.loading('Gerando PDF da venda...')
+function DetalheItem({ label, valor }: DetalheItemProps) {
+  return (
+    <li className="flex justify-between items-center gap-2">
+      <strong>{label}</strong>
+      <span>{valor}</span>
+    </li>
+  )
+}
 
-      const response = await axiosInstance.get(`/vendas/${id}/pdf`, {
-        responseType: 'blob',
-      })
+interface CardInformacaoProps {
+  titulo: string
+  descricao: string
+  children: React.ReactNode
+}
 
-      const blob = new Blob([response.data], { type: 'application/pdf' })
-      const url = window.URL.createObjectURL(blob)
-
-      const link = document.createElement('a')
-      link.href = url
-      link.download = `venda-${id}.pdf`
-      link.click()
-
-      window.URL.revokeObjectURL(url)
-      toast.dismiss()
-      toast.success('PDF gerado com sucesso!')
-    } catch (error) {
-      toast.error('Erro ao gerar PDF')
-      console.error('Erro ao baixar PDF:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
+function CardInformacao({ titulo, descricao, children }: CardInformacaoProps) {
   return (
     <Card>
-      <CardContent className=" py-4">
-        <div className="space-y-6">
-          <div className="flex flex-col md:flex-row justify-between">
-            <h1 className="text-2xl font-bold">{`Detalhes da Venda #${venda?.numPedido}`}</h1>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  size={'sm'}
-                  disabled={!venda || isLoading}
-                  className="shadow bg-padrao-gray-250 hover:bg-gray-900 gap-2"
-                  onClick={() => handleDownload()}
-                >
-                  {isLoading ? (
-                    <Loader2 className="animate-spin size-5" />
-                  ) : (
-                    <ArrowBigDownDash className="size-5" />
-                  )}
-                  {isLoading ? 'Baixando...' : 'Baixar PDF'}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Baixar PDF da venda</p>
-              </TooltipContent>
-            </Tooltip>
-          </div>
+      <CardHeader>
+        <CardTitle>{titulo}</CardTitle>
+        <CardDescription>{descricao}</CardDescription>
+      </CardHeader>
+      <CardContent>{children}</CardContent>
+    </Card>
+  )
+}
 
+export default function VisualizarFichaVenda({
+  id,
+  venda,
+}: VisualizarFichaVendaProps) {
+  const { mutateAsync: downloadPdf, isPending } = useDownloadPdfVenda(id)
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-col md:flex-row justify-between items-center">
+        <h1 className="text-2xl font-bold">{`Detalhes da Venda #${venda.numPedido}`}</h1>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              size={'sm'}
+              disabled={isPending}
+              className="shadow bg-padrao-gray-250 hover:bg-gray-900 gap-2"
+              onClick={() => downloadPdf()}
+            >
+              {isPending ? (
+                <Loader2 className="animate-spin size-5" />
+              ) : (
+                <ArrowBigDownDash className="size-5" />
+              )}
+              {isPending ? 'Baixando...' : 'Baixar PDF'}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Baixar PDF da venda</p>
+          </TooltipContent>
+        </Tooltip>
+      </div>
+
+      <Separator />
+
+      <div className="flex flex-col md:flex-row justify-between items-stretch gap-4 bg-background rounded-md p-4">
+        <div className="size-32 p-2">
+          <QRCode
+            size={256}
+            style={{
+              height: 'auto',
+              maxWidth: '100%',
+              width: '100%',
+            }}
+            value={`${venda.codigo}`}
+            viewBox={'0 0 256 256'}
+          />
+        </div>
+        <div className="space-y-2 px-4 py-2 flex-1">
+          <h3 className="font-medium text-lg">Dados do pedido</h3>
           <Separator />
+          <ul className="space-y-1">
+            <DetalheItem
+              label="Num. do Pedido:"
+              valor={String(venda.numPedido)}
+            />
+            <DetalheItem
+              label="Data da Venda:"
+              valor={formatarDataBrasil(
+                new Date(venda.cadastradoEm),
+                true,
+                'Pp'
+              )}
+            />
+            <DetalheItem
+              label="Cód. do Pedido:"
+              valor={venda.codigo ?? ''}
+            />
+          </ul>
+        </div>
+      </div>
 
-          <section className="p-4 bg-white shadow rounded space-y-8">
-            <div className="space-y-2 flex flex-row justify-between">
-              <div>
-                <p>
-                  <strong>Código:</strong> {venda?.codigo}
-                </p>
-                <p>
-                  <strong>Data da venda:</strong>{' '}
-                  {venda &&
-                    formatarDataBrasil(
-                      new Date(venda?.cadastradoEm),
-                      true,
-                      'Pp'
-                    )}
-                </p>
-              </div>
-              <div className="size-32 p-2 rounded border">
-                <QRCode
-                  size={256}
-                  style={{
-                    height: 'auto',
-                    maxWidth: '100%',
-                    width: '100%',
-                  }}
-                  value={`${venda.codigo}`}
-                  viewBox={'0 0 256 256'}
+      <Separator />
+
+      <CardInformacao
+        titulo="Cliente"
+        descricao="Informações do cliente da venda"
+      >
+        <div className="flex flex-col md:flex-row justify-between gap-4 md:gap-0">
+          <ul className="space-y-1">
+            <DetalheItem
+              label="Nome Fantasia/Razão Social:"
+              valor={venda.cliente.pessoa.nome}
+            />
+            <DetalheItem
+              label="Documento:"
+              valor={aplicarMascaraDocumento(venda.cliente.documento)}
+            />
+          </ul>
+          <ul className="space-y-1">
+            {venda.cliente.pessoa.Endereco ? (
+              <>
+                <DetalheItem
+                  label="Logradouro:"
+                  valor={venda.cliente.pessoa.Endereco.logradouro}
                 />
-              </div>
-            </div>
-            <Separator />
-            <div className="flex flex-col md:flex-row justify-between">
-              <div className="space-y-2">
-                <h2 className="text-xl font-semibold">Cliente</h2>
-                <ul>
-                  <li className="flex items-center gap-2">
-                    <strong>Nome Fantasia/Razão Social:</strong>
-                    <span>{venda?.cliente.pessoa.nome}</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <strong>Documento:</strong>
-                    <span>
-                      {venda &&
-                        aplicarMascaraDocumento(venda.cliente.documento)}
-                    </span>
-                  </li>
-                </ul>
-              </div>
+                <DetalheItem
+                  label="Número:"
+                  valor={venda.cliente.pessoa.Endereco.numero}
+                />
+                <DetalheItem
+                  label="Bairro:"
+                  valor={venda.cliente.pessoa.Endereco.bairro}
+                />
+                <DetalheItem
+                  label="Cidade:"
+                  valor={`${venda.cliente.pessoa.Endereco.cidade} - ${venda.cliente.pessoa.Endereco.estado}`}
+                />
+                <DetalheItem
+                  label="CEP:"
+                  valor={venda.cliente.pessoa.Endereco.cep}
+                />
+                <DetalheItem
+                  label="Complemento:"
+                  valor={
+                    venda.cliente.pessoa.Endereco.complemento || 'Não informado'
+                  }
+                />
+              </>
+            ) : (
+              <li className="text-sm text-muted-foreground">
+                Endereço não informado
+              </li>
+            )}
+          </ul>
+        </div>
+      </CardInformacao>
 
-              <div className="space-y-2 w-1/3">
-                <h2 className="text-lg font-semibold">Endereço</h2>
-                <div className="w-full">
-                  {venda?.cliente.pessoa.Endereco ? (
-                    <p className="text-sm">
-                      {venda?.cliente.pessoa.Endereco.logradouro},{' '}
-                      {venda?.cliente.pessoa.Endereco.numero}
-                      {venda?.cliente.pessoa.Endereco.complemento &&
-                        ` — ${venda?.cliente.pessoa.Endereco.complemento}`}
-                      <br />
-                      {venda?.cliente.pessoa.Endereco.bairro},{' '}
-                      {venda?.cliente.pessoa.Endereco.cidade} -{' '}
-                      {venda?.cliente.pessoa.Endereco.estado}
-                      <br />
-                      CEP: {venda?.cliente.pessoa.Endereco.cep}
-                    </p>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">
-                      Não informado
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-            <article className='text-wrap grid space-y-4'>
-              <h2 className='text-lg font-semibold'>Observações do cliente:</h2>
-              <p className='text-justify'>{venda?.cliente.observacoes || 'Sem observações'}</p>
-            </article>
-          </section>
+      {venda.cliente.observacoes && (
+        <CardInformacao
+          titulo="Observações do cliente"
+          descricao="Observações registradas sobre o cliente"
+        >
+          <p className="text-justify whitespace-break-spaces">
+            {venda.cliente.observacoes}
+          </p>
+        </CardInformacao>
+      )}
 
-          <section className="p-4 bg-white shadow rounded space-y-2">
-            <h2 className="text-xl font-semibold">Itens da Venda</h2>
-
-            <div className="rounded border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-auto">#</TableHead>
-                    <TableHead className="w-3/4">Nome</TableHead>
-                    <TableHead className="w-auto">Qtd.</TableHead>
-                    <TableHead className="w-auto">Preço</TableHead>
-                    <TableHead className="w-auto">Total</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {venda?.itensVenda.map((item, index) => (
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                    <TableRow key={index}>
-                      <TableCell>{index + 1}</TableCell>
-                      <TableCell>{item.produtoServico.nome}</TableCell>
-                      <TableCell>{item.quantidade}</TableCell>
-                      <TableCell>
-                        {formatarValorMoeda(item.produtoServico.preco)}
-                      </TableCell>
-                      <TableCell>
-                        {formatarValorMoeda(
-                          item.quantidade * Number(item.produtoServico.preco)
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  )) ?? []}
-                </TableBody>
-                <TableFooter>
-                  <TableRow className='px-6'>
-                    <TableCell colSpan={4}>Total</TableCell>
-                    <TableCell colSpan={1} className="mr-10">
+      <Card>
+        <CardHeader>
+          <CardTitle>Itens da Venda</CardTitle>
+          <CardDescription>
+            Descrição dos itens e valores do pedido
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="rounded border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-auto">#</TableHead>
+                  <TableHead className="w-3/4">Nome</TableHead>
+                  <TableHead className="w-auto">Qtd.</TableHead>
+                  <TableHead className="w-auto">Preço</TableHead>
+                  <TableHead className="w-auto">Total</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {venda.itensVenda.map((item, index) => (
+                  <TableRow key={item.produtoServico.id}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{item.produtoServico.nome}</TableCell>
+                    <TableCell>{item.quantidade}</TableCell>
+                    <TableCell>
+                      {formatarValorMoeda(item.produtoServico.preco)}
+                    </TableCell>
+                    <TableCell>
                       {formatarValorMoeda(
-                        venda?.itensVenda.reduce(
-                          (acc, item) =>
-                            acc +
-                            item.quantidade * Number(item.produtoServico.preco),
-                          0
-                        )
+                        item.quantidade * Number(item.produtoServico.preco)
                       )}
                     </TableCell>
                   </TableRow>
-                </TableFooter>
-              </Table>
+                ))}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TableCell colSpan={4}>Total</TableCell>
+                  <TableCell>
+                    {formatarValorMoeda(
+                      venda.itensVenda.reduce(
+                        (acc, item) =>
+                          acc +
+                          item.quantidade * Number(item.produtoServico.preco),
+                        0
+                      )
+                    )}
+                  </TableCell>
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </div>
+        </CardContent>
+        <CardFooter>
+          <div className="grid space-y-2">
+            <div>
+              <strong>Prazo para entrega: </strong>
+              <span>
+                {formatarDataBrasil(new Date(venda.prazoEntrega), false, 'P')}
+              </span>
             </div>
-          </section>
 
-          <section className="p-4 bg-white shadow rounded space-y-2">
-            <h2 className="text-xl font-semibold">Complementos</h2>
-            <div className="space-y-1">
-              <p>
-                <strong>Entrega parcial:</strong>{' '}
-                {venda?.permiteEntregaParcial ? 'Sim' : 'Não'}
-              </p>
-              <p>
-                <strong>Prazo de entrega:</strong>{' '}
-                {venda &&
-                  formatarDataBrasil(new Date(venda.prazoEntrega), false, 'P')}
-              </p>
-              <p>
-                <strong>Observações:</strong> {venda?.condicoes || '—'}
-              </p>
+            <div>
+              <strong>Permite entrega parcial do pedido: </strong>
+              <span>{venda.permiteEntregaParcial ? 'Sim' : 'Não'}</span>
             </div>
-          </section>
-        </div>
-      </CardContent>
-    </Card>
+
+            {venda.condicoes && (
+              <div className="grid">
+                <strong>Observações:</strong>
+                <blockquote>
+                  <p className="ml-2 whitespace-break-spaces">
+                    {venda.condicoes}
+                  </p>
+                </blockquote>
+              </div>
+            )}
+          </div>
+        </CardFooter>
+      </Card>
+    </div>
   )
 }

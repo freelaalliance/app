@@ -39,11 +39,11 @@ export type VendaDetalhada = {
   condicoes: string | null
   permiteEntregaParcial: boolean
   prazoEntrega: Date
-  frete?: string,
-  armazenamento?: string,
-  localEntrega?: string,
-  formaPagamento?: string,
-  imposto?: string,
+  frete?: string|null,
+  armazenamento?: string|null,
+  localEntrega?: string|null,
+  formaPagamento?: string|null,
+  imposto?: string|null,
   cliente: Cliente
   itensVenda: ItemVenda[],
   cadastradoEm: Date

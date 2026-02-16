@@ -1,5 +1,6 @@
 import { axiosInstance } from '@/lib/AxiosLib'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import type { VendaDetalhada, VendasCliente } from '../_schemas/vendas.schema'
 
 export function useVenda(id: string) {
@@ -35,6 +36,38 @@ export function useVendasPendentes() {
       return response.data.dados
     },
     initialData: []
+  })
+}
+
+export function useDownloadPdfVenda(id: string) {
+  return useMutation({
+    mutationFn: async () => {
+      const response = await axiosInstance.get(`/vendas/${id}/pdf`, {
+        responseType: 'blob',
+      })
+
+      return response.data
+    },
+    onMutate: () => {
+      toast.loading('Gerando PDF da venda...')
+    },
+    onSuccess: (data) => {
+      const blob = new Blob([data], { type: 'application/pdf' })
+      const url = window.URL.createObjectURL(blob)
+
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `venda-${id}.pdf`
+      link.click()
+
+      window.URL.revokeObjectURL(url)
+      toast.dismiss()
+      toast.success('PDF gerado com sucesso!')
+    },
+    onError: () => {
+      toast.dismiss()
+      toast.error('Erro ao gerar PDF da venda')
+    },
   })
 }
 
