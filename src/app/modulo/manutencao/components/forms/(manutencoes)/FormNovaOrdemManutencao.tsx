@@ -45,7 +45,7 @@ export function FormNovaOrdemManutencaoEquipamento({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['manutencoes-equipamento', equipamentoId],
+        queryKey: ['manutencoesEquipamento', equipamentoId],
       })
 
       formNovaManutencao.reset()
