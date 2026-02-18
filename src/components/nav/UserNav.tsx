@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
+import { logout } from '../auth/api/AuthApi'
 import { closeSession } from '../auth/api/SessaoUsuario'
 import type { UsuarioType } from '../auth/schema/SchemaUsuario'
 import { Avatar, AvatarFallback } from '../ui/avatar'
@@ -79,9 +80,10 @@ export function UserNav({ usuario, carregandoDados }: UserNavProps) {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={async () => {
+              await logout()
+              await closeSession()
               queryClient.clear()
               localStorage.clear()
-              await closeSession()
             }}
           >
             <span>Encerrar sessão</span>
