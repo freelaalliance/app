@@ -81,9 +81,9 @@ export function UserNav({ usuario, carregandoDados }: UserNavProps) {
           <DropdownMenuItem
             onClick={async () => {
               await logout()
-              await closeSession()
               queryClient.clear()
               localStorage.clear()
+              await closeSession()
             }}
           >
             <span>Encerrar sessão</span>
