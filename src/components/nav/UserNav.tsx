@@ -14,8 +14,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
+import { useRouter } from 'next/navigation'
 import { logout } from '../auth/api/AuthApi'
-import { closeSession } from '../auth/api/SessaoUsuario'
 import type { UsuarioType } from '../auth/schema/SchemaUsuario'
 import { Avatar, AvatarFallback } from '../ui/avatar'
 import { Button } from '../ui/button'
@@ -28,12 +28,26 @@ interface UserNavProps {
 
 export function UserNav({ usuario, carregandoDados }: UserNavProps) {
   const queryClient = useQueryClient()
+  const router = useRouter()
+
   const capturarIniciaisNome = (nomeUsuario: string) => {
     const parts = nomeUsuario.split(' ')
     const initials = parts.map((part: string) =>
       part.substring(0, 1).toUpperCase()
     )
     return initials.join('')
+  }
+
+  const handleLogout = async () => {
+    try {
+      await logout()
+      queryClient.clear()
+      localStorage.clear()
+      router.push('/')
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error)
+      router.push('/home')
+    }
   }
 
   return (
@@ -80,10 +94,8 @@ export function UserNav({ usuario, carregandoDados }: UserNavProps) {
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={async () => {
-              await logout()
-              queryClient.clear()
-              localStorage.clear()
-              await closeSession()
+              await handleLogout()
+
             }}
           >
             <span>Encerrar sessão</span>
