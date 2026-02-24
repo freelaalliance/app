@@ -3,9 +3,9 @@ import type {
   AdicionarTreinamentoCargoRequest,
   AtualizarCargoRequest,
   Cargo,
+  ColaboradorCargo,
   CriarCargoRequest,
 } from '../../_types/cargos/CargoType'
-import type { Contratacao } from '../../_types/colaborador/ContratacaoType'
 import type { TreinamentosType } from '../../_types/treinamentos/TreinamentoType'
 import type { ApiResponse } from '../rhService'
 
@@ -34,5 +34,5 @@ export const cargosApi = {
     ),
 
   listarColaboradores: (id: string) =>
-    axiosInstance.get<ApiResponse<Contratacao[]>>(`/rh/cargos/${id}/colaboradores`),
+    axiosInstance.get<ApiResponse<ColaboradorCargo[]>>(`/rh/cargos/${id}/colaboradores`),
 }

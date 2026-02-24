@@ -3,8 +3,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { treinamentosColaboradorApi } from '../../_api/colaborador/TreinamentosColaboradorService'
 import type {
-    AtualizarTreinamentoRealizadoRequest,
-    FinalizarTreinamentoRequest,
+  AtualizarTreinamentoRealizadoRequest,
+  CadastrarTreinamentoRealizadoRequest,
+  FinalizarTreinamentoRequest,
 } from '../../_types/colaborador/ContratacaoType'
 
 export const useTreinamentosColaborador = (
@@ -126,7 +127,7 @@ export const useTreinamentosFinalizados = () => {
 }
 
 export const useTreinamentosNaoRealizados = (
-  contratacaoId: string, 
+  contratacaoId: string,
   tipo?: 'integracao' | 'capacitacao'
 ) => {
   return useQuery({
@@ -136,5 +137,29 @@ export const useTreinamentosNaoRealizados = (
       return data.dados || []
     },
     enabled: !!contratacaoId,
+  })
+}
+
+export const useTreinamentosPorCargo = (cargoId: string) => {
+  return useQuery({
+    queryKey: ['treinamentos-colaborador', 'cargo', cargoId],
+    queryFn: async () => {
+      const { data } = await treinamentosColaboradorApi.listarPorCargo(cargoId)
+      return data.dados || []
+    },
+    enabled: !!cargoId,
+    initialData: [],
+  })
+}
+
+export const useCadastrarTreinamentoRealizado = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (data: CadastrarTreinamentoRealizadoRequest) =>
+      treinamentosColaboradorApi.cadastrar(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['treinamentos-colaborador'] })
+    },
   })
 }

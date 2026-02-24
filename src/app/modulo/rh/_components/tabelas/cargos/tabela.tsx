@@ -42,12 +42,8 @@ export function TabelaCargos({
     globalFilterFn: (row, columnId, filterValue) => {
       const cargo = row.original as Cargo
       const nome = cargo.nome?.toLowerCase() || ''
-      const atribuicoes = cargo.atribuicoes?.toLowerCase() || ''
-      const escolaridade = cargo.escolaridadeMinima?.toLowerCase() || ''
       
-      return nome.includes(filterValue.toLowerCase()) ||
-             atribuicoes.includes(filterValue.toLowerCase()) ||
-             escolaridade.includes(filterValue.toLowerCase())
+      return nome.includes(filterValue.toLowerCase()) 
     },
   })
 

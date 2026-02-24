@@ -57,7 +57,6 @@ export function FormularioEditarCargo({
     defaultValues: {
       nome: '',
       atribuicoes: '',
-      superior: false,
       experienciaMinima: '',
       escolaridadeMinima: '',
     },
@@ -68,7 +67,6 @@ export function FormularioEditarCargo({
       form.reset({
         nome: cargo.nome || '',
         atribuicoes: cargo.atribuicoes || '',
-        superior: cargo.superior || false,
         experienciaMinima: cargo.experienciaMinima || '',
         escolaridadeMinima: cargo.escolaridadeMinima || '',
       })
@@ -123,29 +121,6 @@ export function FormularioEditarCargo({
                       />
                     </FormControl>
                     <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="superior"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel>
-                        Exige educação Superior
-                      </FormLabel>
-                      <FormDescription>
-                        Marque se este cargo vai exigir educação superior dos colaboradores na contratação
-                      </FormDescription>
-                    </div>
                   </FormItem>
                 )}
               />

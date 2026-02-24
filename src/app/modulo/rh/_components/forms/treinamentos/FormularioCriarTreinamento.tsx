@@ -2,31 +2,31 @@
 
 import { Button } from '@/components/ui/button'
 import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from '@/components/ui/dialog'
 import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Plus, Trash2 } from 'lucide-react'
@@ -35,8 +35,8 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { useCriarTreinamento } from '../../../_hooks/treinamentos/useTreinamentos'
 import {
-    type CriarTreinamentoFormData,
-    criarTreinamentoSchema,
+  type CriarTreinamentoFormData,
+  criarTreinamentoSchema,
 } from '../../../_schemas/treinamentos/criarTreinamento.schema'
 
 interface FormularioCriarTreinamentoProps {
@@ -54,6 +54,7 @@ export function FormularioCriarTreinamento({
     defaultValues: {
       nome: '',
       tipo: 'integracao',
+      grupo: 'interno',
       planos: [{ nome: '' }],
     },
   })
@@ -141,12 +142,36 @@ export function FormularioCriarTreinamento({
                       <SelectContent>
                         <SelectItem value="integracao">Integração</SelectItem>
                         <SelectItem value="capacitacao">Capacitação</SelectItem>
+                        <SelectItem value="reciclagem">Reciclagem</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormDescription>
                       Integração: para novos funcionários. Capacitação: para
-                      desenvolvimento de habilidades.
+                      desenvolvimento de habilidades. Reciclagem: para
+                      atualização de conhecimentos.
                     </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="grupo"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Grupo</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione o grupo" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="interno">Interno</SelectItem>
+                        <SelectItem value="externo">Externo</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}

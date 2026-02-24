@@ -27,7 +27,7 @@ import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { useConfiguracoesCompras } from '@/hooks/useConfiguracao'
 import { axiosInstance } from '@/lib/AxiosLib'
-import { cn } from '@/lib/utils'
+import { cn, formatarDataBrasil } from '@/lib/utils'
 import { useMutation } from '@tanstack/react-query'
 import { addDays, format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
@@ -150,9 +150,7 @@ export function FormularioVendaCliente({
                       )}
                     >
                       {field.value ? (
-                        format(field.value, 'PP', {
-                          locale: ptBR,
-                        })
+                        formatarDataBrasil(field.value, false, 'PP')
                       ) : (
                         <span>Selecione a data</span>
                       )}

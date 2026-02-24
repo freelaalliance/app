@@ -7,13 +7,15 @@ import type { ApiResponse } from '../rhService'
 
 export interface CriarTreinamentoRequest {
   nome: string
-  tipo: 'integracao' | 'capacitacao'
+  tipo: 'integracao' | 'capacitacao' | 'reciclagem'
+  grupo?: 'interno' | 'externo'
   planos: Array<{ nome: string }>
 }
 
 export interface AtualizarTreinamentoRequest {
   nome: string
-  tipo: 'integracao' | 'capacitacao'
+  tipo: 'integracao' | 'capacitacao' | 'reciclagem'
+  grupo?: 'interno' | 'externo'
 }
 
 export interface CriarPlanoTreinamentoRequest {

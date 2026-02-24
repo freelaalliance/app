@@ -26,12 +26,12 @@ import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { CalendarIcon, FileText, Upload, X } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { CalendarIcon } from 'lucide-react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
-import { uploadFile } from '../../../../documentos/[id]/novo/_actions/upload-actions'
+import UploadForm from '../../../../documentos/[id]/novo/_components/upload/upload-documentos'
 import { useFinalizarTreinamento } from '../../../_hooks/colaborador/useTreinamentosColaborador'
 import type { TreinamentoRealizado } from '../../../_types/colaborador/ContratacaoType'
 
@@ -59,10 +59,8 @@ export function DialogFinalizarTreinamento({
   treinamento,
 }: DialogFinalizarTreinamentoProps) {
   const finalizarTreinamento = useFinalizarTreinamento()
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null)
   const [certificadoUrl, setCertificadoUrl] = useState<string>('')
-  const [uploadLoading, setUploadLoading] = useState(false)
+  const [arquivoAnexado, setArquivoAnexado] = useState(false)
 
   const form = useForm<FinalizarTreinamentoFormData>({
     resolver: zodResolver(finalizarTreinamentoSchema),
@@ -73,63 +71,9 @@ export function DialogFinalizarTreinamento({
     },
   })
 
-  const handleFileUpload = async (file: File) => {
-    setUploadLoading(true)
-    try {
-      // Gerar nome único para o arquivo
-      const timestamp = Date.now()
-      const extension = file.name.split('.').pop()
-      const fileName = `certificados/treinamento_${treinamento?.id}_${timestamp}.${extension}`
-      
-      const formData = new FormData()
-      formData.append('file', file)
-      formData.append('keyArquivo', fileName)
-
-      const result = await uploadFile(formData)
-      
-      if (result.success) {
-        setCertificadoUrl(fileName)
-        form.setValue('certificado', fileName)
-        setUploadedFile(file)
-        toast.success('Certificado enviado com sucesso!')
-      } else {
-        toast.error('Erro ao enviar certificado. Tente novamente.')
-      }
-    } catch (error) {
-      console.error('Erro no upload:', error)
-      toast.error('Erro ao enviar certificado. Tente novamente.')
-    } finally {
-      setUploadLoading(false)
-    }
-  }
-
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      // Validar tipo de arquivo (PDF, imagens)
-      const allowedTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png']
-      if (!allowedTypes.includes(file.type)) {
-        toast.error('Tipo de arquivo não permitido. Use PDF, JPG ou PNG.')
-        return
-      }
-      
-      // Validar tamanho (máximo 10MB)
-      if (file.size > 10 * 1024 * 1024) {
-        toast.error('Arquivo muito grande. Máximo 10MB.')
-        return
-      }
-      
-      handleFileUpload(file)
-    }
-  }
-
-  const removeUploadedFile = () => {
-    setUploadedFile(null)
-    setCertificadoUrl('')
-    form.setValue('certificado', '')
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
+  const handleUploadSuccess = (uuid: string, keyCompleta: string) => {
+    setCertificadoUrl(keyCompleta)
+    form.setValue('certificado', keyCompleta)
   }
 
   const handleSubmit = (data: FinalizarTreinamentoFormData) => {
@@ -160,11 +104,8 @@ export function DialogFinalizarTreinamento({
 
   const handleReset = () => {
     form.reset()
-    setUploadedFile(null)
     setCertificadoUrl('')
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ''
-    }
+    setArquivoAnexado(false)
   }
 
   const handleClose = () => {
@@ -278,60 +219,11 @@ export function DialogFinalizarTreinamento({
                 <FormItem>
                   <FormLabel>Certificado (opcional)</FormLabel>
                   <FormControl>
-                    <div className="space-y-3">
-                      {/* Input file oculto */}
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept=".pdf,.jpg,.jpeg,.png"
-                        onChange={handleFileSelect}
-                        className="hidden"
-                      />
-                      
-                      {/* Área de upload */}
-                      {!uploadedFile ? (
-                        <button
-                          type="button"
-                          className="w-full border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-gray-400 transition-colors"
-                          onClick={() => fileInputRef.current?.click()}
-                        >
-                          <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-                          <p className="text-sm font-medium text-gray-700">
-                            Clique para enviar certificado
-                          </p>
-                          <p className="text-xs text-gray-500 mt-1">
-                            PDF, JPG ou PNG até 10MB
-                          </p>
-                        </button>
-                      ) : (
-                        <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
-                          <div className="flex items-center gap-2">
-                            <FileText className="h-4 w-4 text-green-600" />
-                            <span className="text-sm font-medium text-green-800">
-                              {uploadedFile.name}
-                            </span>
-                          </div>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={removeUploadedFile}
-                            className="text-red-600 hover:text-red-800 hover:bg-red-50"
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      )}
-                      
-                      {uploadLoading && (
-                        <div className="flex items-center justify-center p-3">
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600" />
-                          <span className="ml-2 text-sm text-gray-600">
-                            Enviando certificado...
-                          </span>
-                        </div>
-                      )}
-                    </div>
+                    <UploadForm
+                      prefixo={`certificados/treinamento_${treinamento?.id}`}
+                      onUploadSuccess={handleUploadSuccess}
+                      arquivoSelecionado={setArquivoAnexado}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -342,8 +234,8 @@ export function DialogFinalizarTreinamento({
               <Button type="button" variant="outline" onClick={handleClose}>
                 Cancelar
               </Button>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 disabled={finalizarTreinamento.isPending}
                 className="bg-green-600 hover:bg-green-700"
               >

@@ -6,9 +6,10 @@ export const editarTreinamentoSchema = z.object({
     .min(1, 'Nome do treinamento é obrigatório')
     .min(3, 'Nome deve ter pelo menos 3 caracteres')
     .max(100, 'Nome não pode ter mais de 100 caracteres'),
-  tipo: z.enum(['integracao', 'capacitacao'], {
+  tipo: z.enum(['integracao', 'capacitacao', 'reciclagem'], {
     required_error: 'Tipo de treinamento é obrigatório',
   }),
+  grupo: z.enum(['interno', 'externo']).default('interno'),
 })
 
 export type EditarTreinamentoFormData = z.infer<typeof editarTreinamentoSchema>

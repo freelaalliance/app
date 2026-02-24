@@ -84,6 +84,39 @@ export interface AtualizarTreinamentoRealizadoRequest {
   certificado?: string
 }
 
+export interface RealizadoItem {
+  contratacaoColaboradorId: string
+  iniciadoEm: string
+  finalizadoEm?: string
+  certificado?: string
+}
+
+export interface CadastrarTreinamentoRealizadoRequest {
+  treinamentosId?: string
+  treinamento?: {
+    nome: string
+    tipo: 'integracao' | 'capacitacao' | 'reciclagem'
+    grupo?: 'interno' | 'externo'
+  }
+  cargoId: string
+  realizados: RealizadoItem[]
+}
+
+export interface CadastrarTreinamentoRealizadoResponse {
+  id: string
+  iniciadoEm: string
+  finalizadoEm: string
+  certificado?: string
+  treinamento: {
+    id: string
+    nome: string
+    tipo: 'integracao' | 'capacitacao' | 'reciclagem'
+    grupo: 'interno' | 'externo'
+  }
+  colaborador: string
+  cargo: string
+}
+
 export interface HistoricoContratacao {
   id: string
   data: string

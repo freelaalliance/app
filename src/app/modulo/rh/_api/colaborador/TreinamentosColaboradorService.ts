@@ -1,10 +1,13 @@
 import { axiosInstance } from '@/lib/AxiosLib'
 import type {
   AtualizarTreinamentoRealizadoRequest,
+  CadastrarTreinamentoRealizadoRequest,
+  CadastrarTreinamentoRealizadoResponse,
   FinalizarTreinamentoRequest,
   IniciarTreinamentoRequest,
   TreinamentoRealizado,
 } from '../../_types/colaborador/ContratacaoType'
+import type { TreinamentoCargoType } from '../../_types/treinamentos/TreinamentoType'
 import type { ApiResponse } from '../rhService'
 
 export const treinamentosColaboradorApi = {
@@ -56,5 +59,16 @@ export const treinamentosColaboradorApi = {
       {
         params: tipo ? { tipo } : {}
       }
+    ),
+
+  listarPorCargo: (cargoId: string) =>
+    axiosInstance.get<ApiResponse<TreinamentoCargoType[]>>(
+      `/rh/contrato/treinamentos/cargo/${cargoId}`
+    ),
+
+  cadastrar: (data: CadastrarTreinamentoRealizadoRequest) =>
+    axiosInstance.post<ApiResponse<CadastrarTreinamentoRealizadoResponse[]>>(
+      '/rh/contrato/treinamentos/cadastrar',
+      data
     ),
 }

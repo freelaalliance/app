@@ -48,15 +48,6 @@ export const colunasTabelaCargos: ColumnDef<Cargo>[] = [
     },
   },
   {
-    accessorKey: 'superior',
-    header: 'Exige Ensino Superior',
-    cell: ({ row }) => (
-      <Badge className={cn('w-fit', row.original.superior ? 'bg-emerald-500' : 'bg-red-500')} variant={row.original.superior ? 'default' : 'secondary'}>
-        {row.original.superior ? 'Sim' : 'Não'}
-      </Badge>
-    ),
-  },
-  {
     accessorKey: 'experienciaMinima',
     header: 'Experiência Mínima',
     cell: ({ row }) => {
@@ -96,41 +87,6 @@ export const colunasTabelaCargos: ColumnDef<Cargo>[] = [
             </TooltipTrigger>
             <TooltipContent>
               <p className="whitespace-pre-wrap">{escolaridade}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      )
-    },
-  },
-  {
-    accessorKey: 'treinamentos',
-    header: 'Treinamentos',
-    cell: ({ row }) => {
-      const treinamentos = row.original.treinamentos
-      if (!treinamentos || treinamentos.length === 0) {
-        return <div className="text-gray-500">Nenhum</div>
-      }
-      
-      if (treinamentos.length === 1) {
-        return <div className="text-sm">{treinamentos[0].nome}</div>
-      }
-      
-      return (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Badge variant="outline" className="cursor-help">
-                {treinamentos.length} treinamento{treinamentos.length > 1 ? 's' : ''}
-              </Badge>
-            </TooltipTrigger>
-            <TooltipContent>
-              <div className="space-y-1">
-                {treinamentos.map(treinamento => (
-                  <div key={treinamento.id} className="text-sm">
-                    {treinamento.nome}
-                  </div>
-                ))}
-              </div>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
