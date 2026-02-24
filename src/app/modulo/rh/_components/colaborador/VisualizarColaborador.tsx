@@ -431,12 +431,6 @@ export function VisualizarColaborador({ contratacaoId }: VisualizarColaboradorPr
                           <p className="text-sm">{cargo.escolaridadeMinima}</p>
                         </div>
                       )}
-                      {cargo.superior && (
-                        <div>
-                          <span className="text-sm font-medium text-muted-foreground">Cargo Superior</span>
-                          <p className="text-sm">{cargo.superior}</p>
-                        </div>
-                      )}
                     </div>
                     {cargo.atribuicoes && (
                       <div className="mt-3">

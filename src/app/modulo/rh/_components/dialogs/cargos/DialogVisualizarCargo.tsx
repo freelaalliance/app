@@ -68,19 +68,12 @@ export function DialogVisualizarCargo({
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid gap-4">
                   <div>
                     <div className="text-sm font-medium text-gray-700">Nome do Cargo</div>
                     <div className="flex items-center gap-2 mt-1">
                       <p className="text-sm text-gray-900 font-medium">{cargo.nome}</p>
                     </div>
-                  </div>
-
-                  <div>
-                    <div className="text-sm font-medium text-gray-700">Exige ensino superior</div>
-                    <p className="text-sm text-gray-900 mt-1">
-                      {cargo.superior ? 'Sim' : 'Não'}
-                    </p>
                   </div>
                 </div>
 

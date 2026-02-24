@@ -210,12 +210,6 @@ export function ColaboradorPDF({
                   <p>{cargo.escolaridadeMinima}</p>
                 </div>
               )}
-              {cargo.superior && (
-                <div>
-                  <p className="font-medium text-gray-600">Cargo Superior</p>
-                  <p>{cargo.superior}</p>
-                </div>
-              )}
             </div>
             {cargo.atribuicoes && (
               <div>
