@@ -1,7 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { addMonths, format } from 'date-fns'
+import { addMonths } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { CalendarIcon, Loader2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -29,7 +29,7 @@ import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { ListaArquivo } from '@/components/upload/lista-arquivo'
 import { Upload } from '@/components/upload/upload'
-import { cn } from '@/lib/utils'
+import { cn, formatarDataBrasil } from '@/lib/utils'
 
 import { useQueryClient } from '@tanstack/react-query'
 import {
@@ -62,17 +62,17 @@ export function NovaCalibracaoForm() {
   }
 
   async function onSubmit(data: CalibracaoInstrumentoValores) {
-    if(Number.isNaN(Number(data.incertezaTendenciaEncontrado))){
+    if (Number.isNaN(Number(data.incertezaTendenciaEncontrado))) {
       toast.warning('O campo Incerteza ou tendência encontrado deve ser um número válido!')
       return
     }
 
-    if(Number.isNaN(Number(data.erroEncontrado))){
+    if (Number.isNaN(Number(data.erroEncontrado))) {
       toast.warning('O campo erro encontrado deve ser um número válido!')
       return
     }
 
-    if(Number.isNaN(Number(data.tolerancia))){
+    if (Number.isNaN(Number(data.tolerancia))) {
       toast.warning('O campo tolerância deve ser um número válido!')
       return
     }
@@ -241,9 +241,7 @@ export function NovaCalibracaoForm() {
                         )}
                       >
                         {field.value ? (
-                          format(field.value, 'PPP', {
-                            locale: ptBR,
-                          })
+                          formatarDataBrasil(field.value, false, 'PPP')
                         ) : (
                           <span>Selecione a data de calibração...</span>
                         )}

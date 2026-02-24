@@ -30,7 +30,7 @@ import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
 import { ListaArquivo } from '@/components/upload/lista-arquivo'
 import { Upload } from '@/components/upload/upload'
-import { cn, encodeFileToBase64 } from '@/lib/utils'
+import { cn, encodeFileToBase64, formatarDataBrasil } from '@/lib/utils'
 
 import {
   type CalibracoesInstrumentosEmpresaType,
@@ -290,9 +290,7 @@ export function FormaularioEdicaoCalibracao({
                         )}
                       >
                         {field.value ? (
-                          format(field.value, 'PPP', {
-                            locale: ptBR,
-                          })
+                          formatarDataBrasil(field.value, false, 'PPP')
                         ) : (
                           <span>Selecione a data de calibração...</span>
                         )}
