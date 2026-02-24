@@ -192,9 +192,7 @@ export default function VerificaEntregaPedido({
                             )}
                           >
                             {field.value ? (
-                              format(field.value, 'PP', {
-                                locale: ptBR,
-                              })
+                              formatarDataBrasil(field.value, false, 'PP')
                             ) : (
                               <span>Selecione a data</span>
                             )}

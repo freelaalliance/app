@@ -47,6 +47,7 @@ import {
 } from '@/components/ui/tooltip'
 import {
   aplicarMascaraDocumento,
+  formatarDataBrasil,
 } from '@/lib/utils'
 
 import { buscarPedidosFornecedor } from '../(api)/ComprasApi'
@@ -131,7 +132,7 @@ export default function ViewDadosFornecedores({
       if (new Date(ultimaAvaliacaoRealizada.validade) <= new Date()) {
         return {
           titulo: 'Avaliação crítica vencida',
-          mensagem: `A ultima avaliação realizado em (${format(new Date(ultimaAvaliacaoRealizada.validade), 'P', { locale: ptBR })}) do fornecedor está vencida e enquanto não for realizada uma nova avaliação não estará apto para novos pedidos`,
+          mensagem: `A ultima avaliação realizado em (${formatarDataBrasil(new Date(ultimaAvaliacaoRealizada.validade), false, 'P')}) do fornecedor está vencida e enquanto não for realizada uma nova avaliação não estará apto para novos pedidos`,
         }
       }
     }
@@ -226,7 +227,7 @@ export default function ViewDadosFornecedores({
                     <strong className="text-muted-foreground">
                       Ultima Avaliação:
                     </strong>
-                    <span>{`${consultaDadosFornecedor.data?.dados?.ultimaAvaliacao ? format(new Date(consultaDadosFornecedor.data?.dados?.ultimaAvaliacao), 'P', { locale: ptBR }) : 'Não realizado'}`}</span>
+                    <span>{`${consultaDadosFornecedor.data?.dados?.ultimaAvaliacao ? formatarDataBrasil(new Date(consultaDadosFornecedor.data?.dados?.ultimaAvaliacao), false, 'P') : 'Não realizado'}`}</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <strong className="text-muted-foreground">

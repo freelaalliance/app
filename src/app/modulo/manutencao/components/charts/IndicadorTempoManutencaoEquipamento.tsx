@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/chart"
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts"
 import { CardFooter } from "@/components/ui/card"
+import { formatarDataBrasil } from "@/lib/utils"
 
 interface RankingDuracaoManutencaoProps {
   dados: DuracaoManutencoesEquipamentoType[]
@@ -37,7 +38,7 @@ export default function RankingDurancaoManutencaoEquipamento({ dados }: RankingD
     const registroManutencao = dados.find(
       (manutencao) => {
         const mesAnoManutencao = manutencao.inicioManutencao.split('-')
-        const mesManutencaoFormatado = format(new Date(Number(mesAnoManutencao[0]), Number(mesAnoManutencao[1])), 'MMMMMM', { locale: ptBR })
+        const mesManutencaoFormatado = formatarDataBrasil(new Date(Number(mesAnoManutencao[0]), Number(mesAnoManutencao[1])), false, 'MMMMMM')
 
         if (mesManutencaoFormatado === mes.toLowerCase()) {
           return manutencao

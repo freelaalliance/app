@@ -27,7 +27,7 @@ import {
     PopoverTrigger,
 } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
-import { cn } from '@/lib/utils'
+import { cn, formatarDataBrasil } from '@/lib/utils'
 
 import {
     type FornecedoresEmpresaType,
@@ -195,9 +195,7 @@ export default function NovaAvaliacaoCriticoView({
                           )}
                         >
                           {field.value ? (
-                            format(field.value, 'PPP', {
-                              locale: ptBR,
-                            })
+                            formatarDataBrasil(field.value, false, 'PPP')
                           ) : (
                             <span>Selecione</span>
                           )}

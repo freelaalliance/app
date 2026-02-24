@@ -20,7 +20,7 @@ import {
     PopoverTrigger,
 } from '@/components/ui/popover'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { cn } from '@/lib/utils'
+import { cn, formatarDataBrasil } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
@@ -118,9 +118,7 @@ export function FormularioExpedicao({ dadosVenda, itensAvaliacaoExpedicao }: For
                       )}
                     >
                       {field.value ? (
-                        format(field.value, 'PP', {
-                          locale: ptBR,
-                        })
+                        formatarDataBrasil(field.value, false, 'PP')
                       ) : (
                         <span>Selecione a data</span>
                       )}

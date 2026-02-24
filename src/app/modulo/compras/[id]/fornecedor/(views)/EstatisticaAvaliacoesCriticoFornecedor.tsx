@@ -162,9 +162,7 @@ export default function ViewEstatisticaAvaliacoesCritico({
                     axisLine={false}
                     tickMargin={4}
                     tickFormatter={value => {
-                      return format(new Date(value), 'P', {
-                        locale: ptBR,
-                      })
+                      return formatarDataBrasil(new Date(value), false, 'P')
                     }}
                   />
                   <ChartTooltip

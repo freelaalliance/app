@@ -43,7 +43,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { cn } from '@/lib/utils'
+import { cn, formatarDataBrasil } from '@/lib/utils'
 
 import { useConfiguracoesCompras } from '@/hooks/useConfiguracao'
 import { salvarNovoPedido } from '../(api)/ComprasApi'
@@ -183,9 +183,7 @@ export default function NovoPedidoView({ fornecedorId }: NovoPedidoProps) {
                           )}
                         >
                           {field.value ? (
-                            format(field.value, 'PP', {
-                              locale: ptBR,
-                            })
+                            formatarDataBrasil(field.value, false, 'PP')
                           ) : (
                             <span>Selecione a data</span>
                           )}
