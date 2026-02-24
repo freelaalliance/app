@@ -1,24 +1,23 @@
 'use client'
 
-import { format } from "date-fns"
-import { DuracaoManutencoesEquipamentoType } from "../../schemas/ManutencaoSchema"
-import { ptBR } from "date-fns/locale"
+import { CardFooter } from '@/components/ui/card'
 import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts"
-import { CardFooter } from "@/components/ui/card"
-import { formatarDataBrasil } from "@/lib/utils"
+} from '@/components/ui/chart'
+import { formatarDataBrasil } from '@/lib/utils'
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from 'recharts'
+import type { DuracaoManutencoesEquipamentoType } from '../../schemas/ManutencaoSchema'
 
 interface RankingDuracaoManutencaoProps {
   dados: DuracaoManutencoesEquipamentoType[]
 }
 
-export default function RankingDurancaoManutencaoEquipamento({ dados }: RankingDuracaoManutencaoProps) {
-
+export default function RankingDurancaoManutencaoEquipamento({
+  dados,
+}: RankingDuracaoManutencaoProps) {
   const meses = [
     'Janeiro',
     'Fevereiro',
@@ -34,17 +33,19 @@ export default function RankingDurancaoManutencaoEquipamento({ dados }: RankingD
     'Dezembro',
   ]
 
-  const chartData = meses.flatMap((mes) => {
-    const registroManutencao = dados.find(
-      (manutencao) => {
-        const mesAnoManutencao = manutencao.inicioManutencao.split('-')
-        const mesManutencaoFormatado = formatarDataBrasil(new Date(Number(mesAnoManutencao[0]), Number(mesAnoManutencao[1])), false, 'MMMMMM')
+  const chartData = meses.flatMap(mes => {
+    const registroManutencao = dados.find(manutencao => {
+      const mesAnoManutencao = manutencao.inicioManutencao.split('-')
+      const mesManutencaoFormatado = formatarDataBrasil(
+        new Date(Number(mesAnoManutencao[0]), Number(mesAnoManutencao[1])),
+        false,
+        'MMMMMM'
+      )
 
-        if (mesManutencaoFormatado === mes.toLowerCase()) {
-          return manutencao
-        }
+      if (mesManutencaoFormatado === mes.toLowerCase()) {
+        return manutencao
       }
-    )
+    })
 
     return [
       {
@@ -53,14 +54,14 @@ export default function RankingDurancaoManutencaoEquipamento({ dados }: RankingD
       },
     ]
   })
-  
+
   const chartConfig = {
     duracao: {
-      label: "Min",
-      color: "hsl(0, 0%, 15%)",
+      label: 'Min',
+      color: 'hsl(0, 0%, 15%)',
     },
     label: {
-      color: "hsl(var(--background))",
+      color: 'hsl(var(--background))',
     },
   } satisfies ChartConfig
 
@@ -82,13 +83,15 @@ export default function RankingDurancaoManutencaoEquipamento({ dados }: RankingD
             tickLine={false}
             tickMargin={10}
             axisLine={false}
-            tickFormatter={(value) => value.slice(0, 3)}
+            tickFormatter={value => value.slice(0, 3)}
             hide
           />
           <XAxis dataKey="duracao" type="number" hide />
           <ChartTooltip
             cursor={false}
-            content={<ChartTooltipContent indicator="line" className="capitalize" />}
+            content={
+              <ChartTooltipContent indicator="line" className="capitalize" />
+            }
           />
           <Bar
             dataKey="duracao"
@@ -104,7 +107,6 @@ export default function RankingDurancaoManutencaoEquipamento({ dados }: RankingD
               fontSize={12}
             />
             <LabelList
-
               dataKey="duracao"
               position="right"
               offset={8}
@@ -116,7 +118,7 @@ export default function RankingDurancaoManutencaoEquipamento({ dados }: RankingD
       </ChartContainer>
       <CardFooter className="flex-col gap-2 text-sm">
         <div className="flex items-center gap-2 font-medium leading-none text-center">
-          {`Referencia de ranking ano atual`}
+          {'Referencia de ranking ano atual'}
         </div>
       </CardFooter>
     </>

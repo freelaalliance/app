@@ -99,7 +99,6 @@ export default function PdfCargoPage() {
             id: '',
             nome: '',
             atribuicoes: '',
-            superior: false,
             experienciaMinima: '',
             escolaridadeMinima: '',
             treinamentos: []

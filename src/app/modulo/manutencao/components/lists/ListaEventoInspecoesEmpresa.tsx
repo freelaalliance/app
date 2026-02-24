@@ -1,29 +1,34 @@
-import Link from "next/link";
-import { AgendaInspecoesEmpresa } from "../../schemas/InspecaoSchema";
-import { differenceInDays, format } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { cn, formatarDataBrasil } from "@/lib/utils";
+import { formatarDataBrasil } from '@/lib/utils'
+import { differenceInDays } from 'date-fns'
+import Link from 'next/link'
+import type { AgendaInspecoesEmpresa } from '../../schemas/InspecaoSchema'
 
 interface EventoInspecaoProps {
   evento: AgendaInspecoesEmpresa
 }
 
 export function ListaEventoInspecoesEmpresa({ evento }: EventoInspecaoProps) {
-
-  const diferencaDias = differenceInDays(new Date(evento.agendadoPara), new Date())
+  const diferencaDias = differenceInDays(
+    new Date(evento.agendadoPara),
+    new Date()
+  )
 
   let statusInspecao: string
 
-  if (!evento.inspecaoRealizada && (diferencaDias < evento.equipamento.frequencia && diferencaDias > 0)) {
+  if (
+    !evento.inspecaoRealizada &&
+    diferencaDias < evento.equipamento.frequencia &&
+    diferencaDias > 0
+  ) {
     statusInspecao = 'Inspeção à ser realizada'
-  }
-  else if (!evento.inspecaoRealizada && diferencaDias >= evento.equipamento.frequencia) {
+  } else if (
+    !evento.inspecaoRealizada &&
+    diferencaDias >= evento.equipamento.frequencia
+  ) {
     statusInspecao = 'Inspeção agendada'
-  }
-  else if (evento.inspecaoRealizada) {
+  } else if (evento.inspecaoRealizada) {
     statusInspecao = 'Inspeção realizada'
-  }
-  else{
+  } else {
     statusInspecao = 'Inspeção atrasada'
   }
 
@@ -38,16 +43,18 @@ export function ListaEventoInspecoesEmpresa({ evento }: EventoInspecaoProps) {
       <div className="flex-1">
         <div className="flex items-center justify-between">
           <div className="font-medium">{statusInspecao}</div>
-          <div className="text-sm text-muted-foreground capitalize">{
-            formatarDataBrasil(new Date(evento.agendadoPara), false, 'PP')
-          }</div>
+          <div className="text-sm text-muted-foreground capitalize">
+            {formatarDataBrasil(new Date(evento.agendadoPara), false, 'PP')}
+          </div>
         </div>
         <p className="text-sm text-muted-foreground">
-          {
-            `${evento.equipamento.codigo} - ${evento.equipamento.nome}`
-          }
+          {`${evento.equipamento.codigo} - ${evento.equipamento.nome}`}
         </p>
-        <Link href={`${idModulo}/equipamento?id=${evento.equipamento.id}&nome=${evento.equipamento.nome}`} className="text-primary hover:underline" prefetch={false}>
+        <Link
+          href={`${idModulo}/equipamento?id=${evento.equipamento.id}&nome=${evento.equipamento.nome}`}
+          className="text-primary hover:underline"
+          prefetch={false}
+        >
           Inspecionar
         </Link>
       </div>

@@ -29,14 +29,10 @@ export function CargoPDF({ cargo }: CargoPDFProps) {
           <h2 className="text-xl font-semibold text-gray-800">Informações Básicas</h2>
         </div>
         
-        <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="grid mb-6">
           <div>
             <p className="text-sm font-medium text-gray-600">Nome do Cargo</p>
             <p className="text-base font-semibold">{cargo.nome}</p>
-          </div>
-          <div>
-            <p className="text-sm font-medium text-gray-600">Exige ensino superior</p>
-            <p className="text-base">{cargo.superior ? 'Sim' : 'Não'}</p>
           </div>
         </div>
 
