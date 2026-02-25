@@ -179,7 +179,7 @@ export function NovoDocumentoForm({
 
   const handleSubmit = async (data: NovoDocumentoFormType) => {
     const categoriaSelecionada = listaCategoriasDocumentos.find(categoria => categoria.id === data.categoriaDocumento)
-    if(categoriaSelecionada?.nome.toUpperCase() !== 'FORMULÁRIOS E REGISTROS'){
+    if(categoriaSelecionada?.nome.toUpperCase() !== 'FORMULÁRIOS' && categoriaSelecionada?.nome.toUpperCase() !== 'REGISTROS'){
       if(!data.dataRevisao){
         formNovoDocumento.setError('dataRevisao', {
           message: 'Data de revisão é obrigatória para esta categoria',
