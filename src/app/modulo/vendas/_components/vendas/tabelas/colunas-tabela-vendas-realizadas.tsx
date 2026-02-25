@@ -28,6 +28,10 @@ export const columnsVendasCliente: ColumnDef<VendasCliente>[] = [
     header: 'Código',
   },
   {
+    accessorKey: 'cliente.pessoa.nome',
+    header: 'Cliente',
+  },
+  {
     accessorKey: 'usuario',
     header: 'Vendedor',
   },

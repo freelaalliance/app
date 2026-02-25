@@ -1,5 +1,6 @@
 import { axiosInstance } from '@/lib/AxiosLib'
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { id } from 'date-fns/locale'
 import { toast } from 'sonner'
 import type { VendaDetalhada, VendasCliente } from '../_schemas/vendas.schema'
 
@@ -9,6 +10,19 @@ export function useVenda(id: string) {
     queryFn: async () => {
       const response = await axiosInstance.get<{ dados: VendaDetalhada }>(
         `/vendas/${id}/cliente`
+      )
+      return response.data.dados
+    },
+    enabled: !!id,
+  })
+}
+
+export function useListaVendas() {
+  return useQuery<VendasCliente[]>({
+    queryKey: ['lista-vendas'],
+    queryFn: async () => {
+      const response = await axiosInstance.get<{ dados: VendasCliente[] }>(
+        '/vendas'
       )
       return response.data.dados
     },

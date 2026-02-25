@@ -1,14 +1,18 @@
 'use client'
 
-import { Package, Star, UserCheck, Users } from 'lucide-react'
-import { useTopCliente, useTopProduto, useTotalClientes, useTotalProdutos } from '../../_servicos/useEstatisticas'
 import { IndicadorInformativo } from '@/components/IndicadorInfo'
+import { CircleDollarSign, Package, Star, Truck, UserCheck, Users } from 'lucide-react'
+import { columnsVendasCliente } from '../../_components/vendas/tabelas/colunas-tabela-vendas-realizadas'
+import { TabelaVendasCliente } from '../../_components/vendas/tabelas/vendas-realizadas'
+import { useTopCliente, useTopProduto, useTotalClientes, useTotalProdutos } from '../../_servicos/useEstatisticas'
+import { useListaVendas } from '../../_servicos/useVendas'
 
 export default function PainelVendasPage() {
   const { data: topCliente, isFetching: loadingCliente } = useTopCliente()
   const { data: topProduto, isFetching: loadingProduto } = useTopProduto()
   const { data: totalClientes, isFetching: loadingTotalClientes } = useTotalClientes()
   const { data: totalProdutos, isFetching: loadingTotalProdutos } = useTotalProdutos()
+  const { data: listaVendas, isFetching: loadingListaVendas } = useListaVendas()
 
   return (
     <div className="mx-auto py-6 space-y-8">
@@ -17,7 +21,7 @@ export default function PainelVendasPage() {
         <p className="text-muted-foreground text-sm">Acompanhe os principais dados de desempenho da empresa.</p>
       </div>
 
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <IndicadorInformativo
           titulo="Clientes Cadastrados"
           info={String(totalClientes?.toLocaleString() ?? 0)}
@@ -48,7 +52,20 @@ export default function PainelVendasPage() {
           icon={UserCheck}
           carregandoInformacao={loadingCliente}
         />
+        <IndicadorInformativo
+          titulo={'Total de Vendas'}
+          info={String(listaVendas?.length.toLocaleString() ?? 0)}
+          icon={CircleDollarSign}
+          carregandoInformacao={loadingListaVendas}
+        />
+        <IndicadorInformativo
+          titulo={'Total de Vendas expedidas'}
+          info={String(listaVendas?.filter(venda => venda.expedido).length.toLocaleString() ?? 0)}
+          icon={Truck}
+          carregandoInformacao={loadingListaVendas}
+        />
       </section>
+      <TabelaVendasCliente novaVenda={false} listaVendas={listaVendas ?? []} carregandoVendas={loadingListaVendas} colunasVenda={columnsVendasCliente} />
     </div>
   )
 }

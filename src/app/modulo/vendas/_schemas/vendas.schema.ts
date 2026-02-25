@@ -66,5 +66,6 @@ export type VendasCliente = {
   dataCadastro: Date
   expedido: boolean,
   qtdExpedicoes: number
+  cliente?: Cliente
 }
 
