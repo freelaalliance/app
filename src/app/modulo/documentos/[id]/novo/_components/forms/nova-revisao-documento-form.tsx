@@ -1,5 +1,6 @@
 import { cadastrarNovaRevisaoDocumento } from "@/app/modulo/documentos/_api/documentos"
 import { Button } from '@/components/ui/button'
+import { Calendar } from "@/components/ui/calendar"
 import { DialogClose, DialogFooter } from "@/components/ui/dialog"
 import {
   Form,
@@ -9,21 +10,20 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form'
+import { Input } from "@/components/ui/input"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { cn } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { format } from "date-fns"
+import { ptBR } from "date-fns/locale"
+import { CalendarIcon } from "lucide-react"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
 import { deleteFile } from "../../_actions/upload-actions"
 import UploadForm from "../upload/upload-documentos"
-import { Input } from "@/components/ui/input"
-import { cn } from "@/lib/utils"
-import { format } from "date-fns"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { CalendarIcon } from "lucide-react"
-import { ptBR } from "date-fns/locale"
-import { Calendar } from "@/components/ui/calendar"
 
 const schemaNovaRevisaoDocumentoForm = z.object({
   id: z.string().uuid(),
@@ -137,6 +137,7 @@ export function NovaRevisaoDocumentoForm({ idDocumento }: NovaRevisaoDocumentoFo
                       onSelect={field.onChange}
                       locale={ptBR}
                       captionLayout="dropdown"
+                      endMonth={addMonths(new Date(), 100)}
                     />
                   </PopoverContent>
                 </Popover>
