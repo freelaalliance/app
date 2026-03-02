@@ -40,7 +40,7 @@ import {
 import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { addYears, format } from 'date-fns'
+import { addMonths, addYears, format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { CalendarIcon, FolderPlus, Pencil, X } from 'lucide-react'
 import { useMemo, useState } from 'react'
@@ -405,6 +405,7 @@ export function NovoDocumentoForm({
                         disabled={date => date <= new Date()}
                         locale={ptBR}
                         captionLayout="dropdown"
+                        endMonth={addMonths(new Date(), 100)}
                       />
                     </PopoverContent>
                   </Popover>
