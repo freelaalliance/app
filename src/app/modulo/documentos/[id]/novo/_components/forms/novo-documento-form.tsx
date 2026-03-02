@@ -597,6 +597,7 @@ export function NovoDocumentoForm({
                         onSelect={field.onChange}
                         locale={ptBR}
                         captionLayout="dropdown"
+                        endMonth={addMonths(new Date(), 100)}
                       />
                     </PopoverContent>
                   </Popover>
