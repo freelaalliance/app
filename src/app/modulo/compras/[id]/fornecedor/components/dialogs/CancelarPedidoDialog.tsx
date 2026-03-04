@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 
-import { PedidosFornecedorType } from '@/app/modulo/compras/(schemas)/compras/schema-compras'
+import type { PedidosFornecedorType } from '@/app/modulo/compras/(schemas)/compras/schema-compras'
 import {
   AlertDialogAction,
   AlertDialogCancel,
@@ -14,39 +14,39 @@ import {
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 
-import { AlteraPedidoProps, cancelarPedido } from '../../(api)/ComprasApi'
+import { type AlteraPedidoProps, cancelarPedido } from '../../(api)/ComprasApi'
 
 export function CancelarPedido({ idPedido, idFornecedor }: AlteraPedidoProps) {
   const queryClient = useQueryClient()
 
   const { mutateAsync: cancelarPedidoFornecedor, isPending } = useMutation({
     mutationFn: cancelarPedido,
-    onSuccess: (data) => {
+    onSuccess: data => {
       if (data.status) {
         const listaPedidosFornecedor:
           | {
-              status: boolean
-              msg: string
-              dados: Array<PedidosFornecedorType>
-              error?: unknown
-            }
+            status: boolean
+            msg: string
+            dados: Array<PedidosFornecedorType>
+            error?: unknown
+          }
           | undefined = queryClient.getQueryData([
-          'pedidosFornecedor',
-          idFornecedor,
-        ])
+            'pedidosFornecedor',
+            idFornecedor,
+          ])
 
         queryClient.setQueryData(
           ['pedidosFornecedor', idFornecedor],
           listaPedidosFornecedor &&
-            data.dados && {
-              ...listaPedidosFornecedor,
-              dados: listaPedidosFornecedor.dados.map((pedido) => {
-                if (pedido.id === data.dados?.id) {
-                  return { ...pedido, cancelado: true }
-                }
-                return pedido
-              }),
-            },
+          data.dados && {
+            ...listaPedidosFornecedor,
+            dados: listaPedidosFornecedor.dados.map(pedido => {
+              if (pedido.id === data.dados?.id) {
+                return { ...pedido, cancelado: true }
+              }
+              return pedido
+            }),
+          }
         )
 
         toast.success(data.msg)
@@ -54,7 +54,7 @@ export function CancelarPedido({ idPedido, idFornecedor }: AlteraPedidoProps) {
         toast.warning(data.msg)
       }
     },
-    onError: (error) => {
+    onError: error => {
       toast.error('Erro ao cancelar o pedido', {
         description: error.message,
       })

@@ -11,7 +11,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-import { CancelarPedido } from '../../dialogs/CancelarPedidoDialog'
 import { ExcluirPedido } from '../../dialogs/ExcluirPedidoDialog'
 import { VisualizaDadosPedido } from '../../dialogs/VisualizaDadosPedidoDialog'
 

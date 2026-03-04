@@ -1,5 +1,5 @@
 import { axiosInstance } from '@/lib/AxiosLib'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { id } from 'date-fns/locale'
 import { toast } from 'sonner'
 import type { VendaDetalhada, VendasCliente } from '../_schemas/vendas.schema'
@@ -85,3 +85,25 @@ export function useDownloadPdfVenda(id: string) {
   })
 }
 
+export function useCancelarVenda(id: string) {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async () => {
+      const response = await axiosInstance.delete(`/vendas/${id}`)
+      return response.data
+    },
+    onMutate: () => {
+      toast.loading('Cancelando venda...')
+    },
+    onSuccess: () => {
+      toast.dismiss()
+      toast.success('Venda cancelada com sucesso!')
+      queryClient.invalidateQueries({ queryKey: ['lista-vendas'] })
+    },
+    onError: () => {
+      toast.dismiss()
+      toast.error('Erro ao cancelar venda')
+    },
+  })
+}

@@ -8,6 +8,8 @@ import {
 import { MoreVertical } from 'lucide-react'
 import Link from 'next/link'
 import type { VendasCliente } from '../../../_schemas/vendas.schema'
+import { CancelarVenda } from '../dialogs/CancelaVendaDialog'
+import { AlertDialog, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 
 interface MenuTabelaVendaClienteProps {
   dadosVenda: VendasCliente
@@ -32,6 +34,20 @@ export function MenuTabelaVendaCliente({
           <Link href={`/modulo/vendas/visualizar/${dadosVenda.id}`}>
             Visualizar venda
           </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <DropdownMenuItem
+                onSelect={e => {
+                  e.preventDefault()
+                }}
+              >
+                Cancelar venda
+              </DropdownMenuItem>
+            </AlertDialogTrigger>
+            <CancelarVenda idVenda={dadosVenda.id} />
+          </AlertDialog>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
