@@ -225,6 +225,25 @@ export async function baixarPdfPedido(idPedido: string) {
     })
 }
 
+export async function buscarItensVendidos() {
+  return await axiosInstance
+    .get<{
+      status: boolean
+      msg: string
+      dados: string[]
+    }>('pedido/itens/vendidos')
+    .then(resp => {
+      return resp.data
+    })
+    .catch(() => {
+      return {
+        status: false,
+        msg: 'Ocorreu um erro ao buscar os itens vendidos.',
+        dados: [] as string[],
+      }
+    })
+}
+
 export async function buscarItensAvaliativosRecebimento() {
   return await axiosInstance
     .get<Array<ItemAvaliacaoType>>('pedido/recebimento/avaliacao/itens')

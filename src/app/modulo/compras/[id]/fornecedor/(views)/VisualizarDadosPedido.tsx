@@ -162,6 +162,7 @@ export default function VisualizacaoDadosPedido({
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-auto">#</TableHead>
+                  <TableHead className="w-auto">Unidade</TableHead>
                   <TableHead className="w-3/4">Descrição</TableHead>
                   <TableHead className="w-auto">Qtd.</TableHead>
                 </TableRow>
@@ -170,6 +171,7 @@ export default function VisualizacaoDadosPedido({
                 {dadosPedido.itens.map((item, index) => (
                   <TableRow key={item.id}>
                     <TableCell>{index + 1}</TableCell>
+                    <TableCell>{item.unidade}</TableCell>
                     <TableCell>{item.descricao}</TableCell>
                     <TableCell>{item.quantidade}</TableCell>
                   </TableRow>

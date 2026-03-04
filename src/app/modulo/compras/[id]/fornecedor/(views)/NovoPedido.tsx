@@ -1,11 +1,12 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { addDays, format } from 'date-fns'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { addDays } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { CalendarIcon, Minus, Plus } from 'lucide-react'
+import { CalendarIcon, Check, Minus, Plus, Search } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
@@ -19,6 +20,14 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
 import { DialogClose, DialogFooter } from '@/components/ui/dialog'
 import {
   Form,
@@ -46,7 +55,7 @@ import {
 import { cn, formatarDataBrasil } from '@/lib/utils'
 
 import { useConfiguracoesCompras } from '@/hooks/useConfiguracao'
-import { salvarNovoPedido } from '../(api)/ComprasApi'
+import { buscarItensVendidos, salvarNovoPedido } from '../(api)/ComprasApi'
 import { getNumOrder } from '../utils/pedido-util'
 
 const CONFIG_KEYS = {
@@ -74,6 +83,9 @@ const schemaFormNovoPedido = z.object({
   }),
   itens: z.array(
     z.object({
+      unidade: z.string({
+        required_error: 'Obrigatório informar a unidade do item',
+      }),
       descricao: z.string({
         required_error: 'Obrigatório informar a descrição do item',
       }),
@@ -97,6 +109,8 @@ export interface NovoPedidoProps {
 export default function NovoPedidoView({ fornecedorId }: NovoPedidoProps) {
   const router = useRouter()
   const queryClient = useQueryClient()
+  const [openPopoverIndex, setOpenPopoverIndex] = useState<number | null>(null)
+
   const formPedido = useForm<formNovoPedidoType>({
     resolver: zodResolver(schemaFormNovoPedido),
     defaultValues: {
@@ -109,6 +123,7 @@ export default function NovoPedidoView({ fornecedorId }: NovoPedidoProps) {
         {
           descricao: '',
           quantidade: 1,
+          unidade: '',
         },
       ],
     },
@@ -116,6 +131,12 @@ export default function NovoPedidoView({ fornecedorId }: NovoPedidoProps) {
   })
 
   const { configuracoes } = useConfiguracoesCompras()
+
+  const { data: itensVendidos } = useQuery({
+    queryKey: ['itensVendidos'],
+    queryFn: buscarItensVendidos,
+    select: (data) => (data.status ? data.dados : []),
+  })
 
   const {
     fields: itens,
@@ -405,6 +426,7 @@ export default function NovoPedidoView({ fornecedorId }: NovoPedidoProps) {
                       adicionarItem({
                         descricao: '',
                         quantidade: 1,
+                        unidade: '',
                       })
                     }
                   >
@@ -420,16 +442,85 @@ export default function NovoPedidoView({ fornecedorId }: NovoPedidoProps) {
                   <div
                     // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                     key={index}
-                    className="flex flex-col md:flex-row py-2 md:p-4 md:rounded md:transition-all md:hover:bg-accent gap-2"
+                    className="flex flex-col md:flex-row py-2 md:p-4 md:rounded gap-2"
                   >
                     <FormField
                       key={`${item.id}-descricao`}
                       control={formPedido.control}
                       name={`itens.${index}.descricao`}
                       render={({ field }) => (
-                        <FormItem className="w-full">
+                        <FormItem className="w-1/2">
+                          <div className="flex gap-1">
+                            <FormControl>
+                              <Input
+                                {...field}
+                                placeholder="Descrição do item"
+                                autoComplete="off"
+                              />
+                            </FormControl>
+                            <Popover
+                              open={openPopoverIndex === index}
+                              onOpenChange={(open) =>
+                                setOpenPopoverIndex(open ? index : null)
+                              }
+                            >
+                              <PopoverTrigger asChild>
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="icon"
+                                  className="shrink-0"
+                                >
+                                  <Search className="size-4" />
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-[300px] p-0" align="end">
+                                <Command>
+                                  <CommandInput placeholder="Buscar item vendido..." />
+                                  <CommandList>
+                                    <CommandEmpty>Nenhum item encontrado.</CommandEmpty>
+                                    <CommandGroup>
+                                      {itensVendidos?.map((itemVendido) => (
+                                        <CommandItem
+                                          key={itemVendido}
+                                          value={itemVendido}
+                                          onSelect={() => {
+                                            formPedido.setValue(
+                                              `itens.${index}.descricao`,
+                                              itemVendido
+                                            )
+                                            setOpenPopoverIndex(null)
+                                          }}
+                                        >
+                                          <Check
+                                            className={cn(
+                                              'mr-2 size-4',
+                                              field.value === itemVendido
+                                                ? 'opacity-100'
+                                                : 'opacity-0'
+                                            )}
+                                          />
+                                          {itemVendido}
+                                        </CommandItem>
+                                      ))}
+                                    </CommandGroup>
+                                  </CommandList>
+                                </Command>
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      key={`${item.id}-unidade`}
+                      control={formPedido.control}
+                      name={`itens.${index}.unidade`}
+                      render={({ field }) => (
+                        <FormItem className="w-1/4">
                           <FormControl>
-                            <Input {...field} placeholder="Descrição do item" />
+                            <Input {...field} placeholder="Unidade do item" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

@@ -29,6 +29,7 @@ export type PedidosFornecedorType = {
     id: string
     descricao: string
     quantidade: number
+    unidade: string
   }>
   cadastro: {
     usuario: string
@@ -80,6 +81,7 @@ export type PedidosFornecedorEmpresaType = {
     id: string
     descricao: string
     quantidade: number
+    unidade: string
   }>
   cadastro: {
     usuario: string
